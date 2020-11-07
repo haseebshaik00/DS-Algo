@@ -60,6 +60,57 @@ public:
     }
 };
 
+class MinMaxStack
+{
+    vector<int> original_stack;
+    vector<int> min_stack;
+    vector<int> max_stack;
+
+public:
+
+    void push(int d)
+    {
+        int current_min=d;
+        int current_max=d;
+
+        if(min_stack.size())
+        {
+            current_min=min(min_stack[min_stack.size()-1],d);
+            current_max=max(max_stack[max_stack.size()-1],d);
+        }
+        min_stack.push_back(current_min);
+        max_stack.push_back(current_max);
+        original_stack.push_back(d);
+    }
+
+    int top()
+    {
+        return original_stack[original_stack.size()-1];
+    }
+
+    int getMin()
+    {
+        return min_stack[min_stack.size()-1];
+    }
+
+    int getMax()
+    {
+        return max_stack[max_stack.size()-1];
+    }
+
+    void pop()
+    {
+        original_stack.pop_back();
+        min_stack.pop_back();
+        max_stack.pop_back();
+    }
+
+    bool empty()
+    {
+        return original_stack.size()==0;
+    }
+};
+
 void input_array(int a[], int n)
 {
     for(int i=0;i<n;i++)
@@ -2017,6 +2068,37 @@ void stockSpan(int prices[], int n, int span[])
     }
 }
 
+int getMaxArea(int hist[], int n)
+{
+    stack<int> s;
+    int max_area = 0;
+    int tp;
+    int area_with_top;
+    int i = 0;
+    while (i < n)
+    {
+        if (s.empty() || hist[s.top()] <= hist[i])
+            s.push(i++);
+        else
+        {
+            tp = s.top();
+            s.pop();
+            area_with_top = hist[tp] * (s.empty() ? i : i - s.top() - 1);
+            if (max_area < area_with_top)
+                max_area = area_with_top;
+        }
+    }
+    while (s.empty() == false)
+    {
+        tp = s.top();
+        s.pop();
+        area_with_top = hist[tp] * (s.empty() ? i : i - s.top() - 1);
+        if (max_area < area_with_top)
+            max_area = area_with_top;
+    }
+    return max_area;
+}
+
 int main()
 {
     int ch;
@@ -2171,8 +2253,8 @@ int main()
     cout<<"126. Reverse a stack recursively"<<endl;
     cout<<"127. Balanced Paranthesis"<<endl;
     cout<<"128. Stock Span Stack"<<endl;
-    cout<<"129. "<<endl;
-    cout<<"130. "<<endl;
+    cout<<"129. Largest Histogram Area"<<endl;
+    cout<<"130. Min Max Stack"<<endl;
     cout<<"200. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -3959,11 +4041,28 @@ int main()
                         break;
                     }
         case 129 :  {
-
+                        int hist[] = {6, 2, 5, 4, 5, 1, 6};
+                        int n = sizeof(hist)/sizeof(hist[0]);
+                        cout << "Maximum area is " << getMaxArea(hist, n);
                         break;
                     }
         case 130 :  {
+                        MinMaxStack s;
+                        s.push(1);
+                        s.push(5);
+                        s.push(8);
+                        s.push(10);
 
+                        cout<<s.getMax()<<endl;
+                        s.pop();
+                        cout<<s.getMax()<<endl;
+                        cout<<s.getMin()<<endl;
+
+                        s.pop();
+                        s.pop();
+                        cout<<s.top()<<endl;
+                        cout<<s.getMax()<<endl;
+                        return 0;
                         break;
                     }
         case 200 :      break;
