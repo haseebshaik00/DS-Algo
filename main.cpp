@@ -7,6 +7,7 @@
 #include<set>
 #include<list>
 #include<stack>
+#include<queue>
 #define ll long long int
 //#include<bits/stdc++.h> - includes every library
 
@@ -108,6 +109,208 @@ public:
     bool empty()
     {
         return original_stack.size()==0;
+    }
+};
+
+class Queue
+{
+    int *a;
+    int cs,f,r,ms;
+
+public:
+
+    Queue(int ds=5)
+    {
+        a=new int[ds];
+        cs=0;ms=ds;f=0;r=ms-1;
+    }
+
+    bool isFull()
+    {
+        return cs==ms;
+    }
+
+    bool isEmpty()
+    {
+        return cs==0;
+    }
+
+    void push(int d)
+    {
+        if(!isFull())
+        {
+            r=(r+1)%ms;
+            a[r]=d;
+            cs++;
+        }
+    }
+
+    void pop()
+    {
+        if(!isEmpty())
+        {
+            f=(f+1)%ms;
+            cs--;
+        }
+    }
+
+    int front()
+    {
+        return a[f];
+    }
+
+    ~Queue()
+    {
+        if(a!=NULL)
+        {
+            delete []a;
+            a=NULL;
+        }
+    }
+};
+
+class QueueList
+{
+    int cs;
+    list<int> l;
+
+public:
+    QueueList()
+    {
+        cs=0;
+    }
+
+    bool isEmpty()
+    {
+        return cs==0;
+    }
+
+    void push(int d)
+    {
+        l.push_back(d);
+        cs++;
+    }
+
+    void pop()
+    {
+        if(!isEmpty())
+        {
+            l.pop_front();
+            cs--;
+        }
+    }
+    int front()
+    {
+        return l.front();
+    }
+};
+
+class StackFromQueue
+{
+    queue<int> q1;
+    queue<int> q2;
+
+public:
+    void push(int d)
+    {
+        q1.push(d);
+    }
+
+    void pop()
+    {
+        if(q1.empty())
+            return;
+        while(q1.size()>1)
+        {
+            q2.push(q1.front());
+            q1.pop();
+        }
+        q1.pop();
+        swap(q1,q2);
+    }
+
+    int top()
+    {
+        if(q1.empty())
+            return 0;
+        while(q1.size()>1)
+        {
+            q2.push(q1.front());
+            q1.pop();
+        }
+        int d=q1.front();
+        q2.push(q1.front());
+        q1.pop();
+        swap(q1,q2);
+        return d;
+    }
+
+    int sizein()
+    {
+        return q1.size()+q2.size();
+    }
+    bool isEmpty()
+    {
+        return sizein()==0;
+    }
+};
+
+class QueueFromStack
+{
+    stack<int> s1;
+    stack<int> s2;
+
+public:
+    void push(int d)
+    {
+        s1.push(d);
+    }
+
+    void pop()
+    {
+        if(s1.empty())
+            return;
+        while(s1.size()>1)
+        {
+            s2.push(s1.top());
+            s1.pop();
+        }
+        s1.pop();
+        while(s2.size()>0)
+        {
+            s1.push(s2.top());
+            s2.pop();
+        }
+    }
+
+    int top()
+    {
+        if(s1.empty())
+            return 0;
+        while(s1.size()>1)
+        {
+            s2.push(s1.top());
+            s1.pop();
+        }
+        int d=s1.top();
+        s2.push(s1.top());
+        s1.pop();
+        while(s2.size()>0)
+        {
+            s1.push(s2.top());
+            s2.pop();
+        }
+        return d;
+    }
+
+    int sizein()
+    {
+        return s1.size()+s2.size();
+    }
+
+    bool isEmpty()
+    {
+        return sizein()==0;
     }
 };
 
@@ -2255,6 +2458,26 @@ int main()
     cout<<"128. Stock Span Stack"<<endl;
     cout<<"129. Largest Histogram Area"<<endl;
     cout<<"130. Min Max Stack"<<endl;
+    cout<<"131. Queue"<<endl;
+    cout<<"132. Queue using List STL"<<endl;
+    cout<<"133. Queue STL"<<endl;
+    cout<<"134. First Non Repeating Character"<<endl;
+    cout<<"135. Stack using 2 Queues"<<endl;
+    cout<<"136. Queue using 2 Stacks"<<endl;
+    cout<<"137. "<<endl;
+    cout<<"138. "<<endl;
+    cout<<"139. "<<endl;
+    cout<<"140. "<<endl;
+    cout<<"141. "<<endl;
+    cout<<"142. "<<endl;
+    cout<<"143. "<<endl;
+    cout<<"144. "<<endl;
+    cout<<"145. "<<endl;
+    cout<<"146. "<<endl;
+    cout<<"147. "<<endl;
+    cout<<"148. "<<endl;
+    cout<<"149. "<<endl;
+    cout<<"150. "<<endl;
     cout<<"200. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -4063,6 +4286,150 @@ int main()
                         cout<<s.top()<<endl;
                         cout<<s.getMax()<<endl;
                         return 0;
+                        break;
+                    }
+        case 131 :  {
+                        Queue q;
+                        for(int i=0;i<=6;i++)
+                            q.push(i);
+                        q.pop();
+                        q.pop();
+                        q.push(7);
+                        while(!q.isEmpty())
+                        {
+                            cout<<q.front()<<endl;
+                            q.pop();
+                        }
+                        break;
+                    }
+        case 132 :  {
+                        QueueList q;
+                        for(int i=0;i<5;i++)
+                            q.push(i);
+                        while(!q.isEmpty())
+                        {
+                            cout<<q.front()<<endl;
+                            q.pop();
+                        }
+                        break;
+                    }
+        case 133 :  {
+                        queue<int> q;
+                        for(int i=1;i<10;i++)
+                            q.push(i);
+                        while(!q.empty())
+                        {
+                            cout<<q.front()<<endl;
+                            q.pop();
+                        }
+                        break;
+                    }
+        case 134 :  {
+                        queue<char> q;
+                        char d;
+                        int f[27]={0};
+                        cin>>d;
+                        while(d!='.')
+                        {
+                            q.push(d);
+                            f[d-'a']++;
+                            while(!q.empty())
+                            {
+                                int idx=q.front()-'a';
+                                if(f[idx]>1)
+                                    q.pop();
+                                else
+                                {
+                                    cout<<q.front()<<endl;
+                                    break;
+                                }
+                            }
+                            if(q.empty())
+                                cout<<"-1"<<endl;
+                            cin>>d;
+                        }
+                        break;
+                    }
+        case 135 :  {
+                        StackFromQueue s;
+                        s.push(1);
+                        s.push(2);
+                        s.push(3);
+                        while(!s.isEmpty())
+                        {
+                            cout<<s.top()<<endl;
+                            s.pop();
+                        }
+                        break;
+                    }
+        case 136 :  {
+                        QueueFromStack q;
+                        q.push(1);
+                        q.push(2);
+                        q.push(3);
+                        q.push(4);
+                        q.push(5);
+                        while(!q.isEmpty())
+                        {
+                            cout<<q.top()<<endl;
+                            q.pop();
+                        }
+                        break;
+                    }
+        case 137 :  {
+
+                        break;
+                    }
+        case 138 :  {
+
+                        break;
+                    }
+        case 139 :  {
+
+                        break;
+                    }
+        case 140 :  {
+
+                        break;
+                    }
+        case 141 :  {
+
+                        break;
+                    }
+        case 142 :  {
+
+                        break;
+                    }
+        case 143 :  {
+
+                        break;
+                    }
+        case 144 :  {
+
+                        break;
+                    }
+        case 145 :  {
+
+                        break;
+                    }
+        case 146 :  {
+
+                        break;
+                    }
+        case 147 :  {
+
+                        break;
+                    }
+        case 148 :  {
+
+                        break;
+                    }
+        case 149 :  {
+
+                        break;
+                    }
+        case 150 :  {
+
                         break;
                     }
         case 200 :      break;
