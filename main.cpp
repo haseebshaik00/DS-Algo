@@ -8,6 +8,7 @@
 #include<list>
 #include<stack>
 #include<queue>
+#include<deque>
 #define ll long long int
 //#include<bits/stdc++.h> - includes every library
 
@@ -2458,14 +2459,16 @@ int main()
     cout<<"128. Stock Span Stack"<<endl;
     cout<<"129. Largest Histogram Area"<<endl;
     cout<<"130. Min Max Stack"<<endl;
+    cout<<endl<<"******Queue******"<<endl;
     cout<<"131. Queue"<<endl;
     cout<<"132. Queue using List STL"<<endl;
     cout<<"133. Queue STL"<<endl;
     cout<<"134. First Non Repeating Character"<<endl;
     cout<<"135. Stack using 2 Queues"<<endl;
     cout<<"136. Queue using 2 Stacks"<<endl;
-    cout<<"137. "<<endl;
-    cout<<"138. "<<endl;
+    cout<<endl<<"******Dequeue******"<<endl;
+    cout<<"137. Maximum Element"<<endl;
+    cout<<"138. Maximum length Unique Character Substring || Sliding Window || Not a Deque Problem"<<endl;
     cout<<"139. "<<endl;
     cout<<"140. "<<endl;
     cout<<"141. "<<endl;
@@ -4377,11 +4380,60 @@ int main()
                         break;
                     }
         case 137 :  {
+                        int n,k;
+                        int a[100000];
+                        cin>>n;
+                        for(int i=0;i<n;i++)
+                            cin>>a[i];
+                        cin>>k;
+                        //We have to process first k elements seperately
+                        deque<int> Q(k);
+                        int i;
+                        for(i=0;i<k;i++)
+                        {
+                            while(!Q.empty() &&a[i]>a[Q.back()]){
+                                Q.pop_back();
+                            }
+                            Q.push_back(i);
 
+                        }
+                        //Process the remaining elements
+                        for(;i<n;i++){
+                            cout<<a[Q.front()]<<" ";
+                            //1. Remove the elements which are not the part of the window(Contraction)
+                            while((!Q.empty() && (Q.front()<=i-k))){
+                                Q.pop_front();
+                            }
+                            //2. Remove the elements which are not useful and are in window
+                            while(!Q.empty() && a[i]>=a[Q.back()]){
+                                Q.pop_back();
+                            }
+                            //3. Add the new elements(Expansion)
+                            Q.push_back(i);
+                        }
+                        cout<<a[Q.front()]<<endl;
                         break;
                     }
         case 138 :  {
-
+                        char a[] = "babbbbb";
+                        int n = strlen(a);
+                        int current_len = 1, max_len = 1;
+                        int visited[256]={-1};
+                        visited[a[0]] = 0;
+                        for(int i=1;i<n;i++){
+                            int last_occ = visited[a[i]];
+                            //Expansion
+                            if(last_occ==-1||i-current_len>last_occ)
+                                current_len += 1;
+                            //Expansion + Contraction
+                            else{
+                                current_len = i - last_occ;
+                                max_len = max(current_len,max_len);
+                            }
+                            visited[a[i]] = i;
+                        }
+                        max_len = max(current_len,max_len);
+                        cout<<max_len<<endl;
                         break;
                     }
         case 139 :  {
