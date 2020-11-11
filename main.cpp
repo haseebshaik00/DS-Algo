@@ -1875,8 +1875,6 @@ Node* findMiddle(Node* head)
     return slow;
 }
 
-
-
 int kthNodeFromEnd(Node* head,int k)
 {
     Node* slow =head;
@@ -2303,6 +2301,83 @@ int getMaxArea(int hist[], int n)
     return max_area;
 }
 
+bool isprime(long long int n)
+{
+    for (long long int i=2; i<=sqrt(n); i++)
+        if (n%i == 0)
+            return false;
+    return true;
+}
+
+void sieve(vector<long long int> &v)
+{
+    vector<long long int> prime(100000,1);
+    prime[0] = 0;
+    prime[1] = 0;
+    for(long long int i=3; i<=100000; i=i+2)
+    {
+        if(prime[i]==1)
+        if(isprime(i)==true)
+        {
+            for(long long int j=3*i; j<=100000; j=j+2*i)
+            prime[j]=0;
+            v.push_back(i);
+        }
+    }
+}
+
+bool balancedParanthesisFull(char c[])
+{
+	stack<char> s;
+	for(int i=0;c[i]!='\0';i++)
+	{
+		if(c[i]=='(' || c[i]=='{' || c[i]=='[')
+			s.push(c[i]);
+		else if(s.empty())
+			return false;
+		else
+		{
+			if(c[i]==')' && s.top()=='(')
+				s.pop();
+			else if(c[i]=='}' && s.top()=='{')
+				s.pop();
+			else if(c[i]==']' && s.top()=='[')
+				s.pop();
+            else
+                return false;
+		}
+	}
+	if(s.empty())
+		return true;
+	else
+		return false;
+}
+
+bool DuplicateParenthisis(char c[],int n)
+{
+	stack<char> s;
+	for(int i=0;c[i]!='\0';i++)
+	{
+		if(c[i]==')')
+		{
+			char top=s.top();
+			s.pop();
+			int chars=0;
+			while(top!='(')
+			{
+				chars++;
+				top=s.top();
+				s.pop();
+			}
+			if(chars==0)
+				return true;
+		}
+		else
+			s.push(c[i]);
+	}
+	return false;
+}
+
 int main()
 {
     int ch;
@@ -2466,15 +2541,17 @@ int main()
     cout<<"134. First Non Repeating Character"<<endl;
     cout<<"135. Stack using 2 Queues"<<endl;
     cout<<"136. Queue using 2 Stacks"<<endl;
-    cout<<endl<<"******Dequeue******"<<endl;
+    cout<<endl<<"******Deque******"<<endl;
     cout<<"137. Maximum Element"<<endl;
     cout<<"138. Maximum length Unique Character Substring || Sliding Window || Not a Deque Problem"<<endl;
-    cout<<"139. "<<endl;
-    cout<<"140. "<<endl;
-    cout<<"141. "<<endl;
-    cout<<"142. "<<endl;
-    cout<<"143. "<<endl;
-    cout<<"144. "<<endl;
+    cout<<endl<<"******Challenges - Stack, Queue and Deque******"<<endl;
+    cout<<"139. Next Greater Element in an array"<<endl;
+    cout<<"140. Next Greater Element in an Circular array"<<endl;
+    cout<<"141. Playing  with cards"<<endl;
+    cout<<"142. Balanced Parenthesis all 3 parenthsis"<<endl;
+    cout<<"143. Redundant Parenthesis"<<endl;
+    cout<<"144. Importance of Time"<<endl;
+    cout<<endl<<"******Binary Tree******"<<endl;
     cout<<"145. "<<endl;
     cout<<"146. "<<endl;
     cout<<"147. "<<endl;
@@ -4437,27 +4514,179 @@ int main()
                         break;
                     }
         case 139 :  {
-
+                        int n;
+                        cin>>n;
+                        int a[n];
+                        int b[n]={-1};
+                        for(int i=0;i<n;i++)
+                            cin>>a[i];
+                        stack<int> s;
+                        s.push(0);
+                        for(int i=1;i<n;i++)
+                        {
+                            while(!s.empty() && a[i]>a[s.top()])
+                            {
+                                b[s.top()]=i;
+                                s.pop();
+                            }
+                            s.push(i);
+                        }
+                        while(!s.empty())
+                        {
+                            b[s.top()]=-1;
+                            s.pop();
+                        }
+                        for(int i=0;i<n;i++)
+                        {
+                            if(b[i]==-1)
+                                cout<<"-1"<<" ";
+                            else
+                                 cout<<a[b[i]]<<" ";
+                        }
                         break;
                     }
         case 140 :  {
-
+                        int n;
+                        cin>>n;
+                        int a[n];
+                        int b[n]={-1};
+                        for(int i=0;i<n;i++)
+                            cin>>a[i];
+                        stack<int> s;
+                        s.push(0);
+                        for(int i=1;i<n;i++)
+                        {
+                            while(!s.empty() && a[i]>a[s.top()])
+                            {
+                                b[s.top()]=i;
+                                s.pop();
+                            }
+                            s.push(i);
+                        }
+                        while(!s.empty())
+                        {
+                            b[s.top()]=-1;
+                            s.pop();
+                        }
+                        for(int i=0;i<n;i++)
+                        {
+                            if(a[i]>a[n-1])
+                            {
+                                b[n-1]=i;
+                                break;
+                            }
+                        }
+                        for(int i=0;i<n;i++)
+                        {
+                            if(b[i]==-1)
+                                cout<<"-1"<<" ";
+                            else
+                                cout<<a[b[i]]<<" ";
+                        }
                         break;
                     }
         case 141 :  {
-
+                        int n,q,a;
+                        cin>>n>>q;
+                        vector<stack<int> > v1;
+                        vector<stack<int> > v2;
+                        vector<long long int> v;
+                        v.push_back(2);
+                        sieve(v);
+                        stack<int> s;
+                        while(n--)
+                        {
+                            cin>>a;
+                            s.push(a);
+                        }
+                        v1.push_back(s);
+                        int i;
+                        for(i=0; i<q; i++)
+                        {
+                            stack<int> s1,s2;
+                            while(!v1[i].empty())
+                            {
+                                a = v1[i].top();
+                                v1[i].pop();
+                                if(a%v[i]==0)
+                                s2.push(a);
+                                else
+                                s1.push(a);
+                            }
+                            v1.push_back(s1);
+                            v2.push_back(s2);
+                        }
+                        for(int k=0; k<v2.size(); k++)
+                        {
+                            while(!v2[k].empty())
+                            {
+                                cout<<v2[k].top()<<endl;
+                                v2[k].pop();
+                            }
+                        }
+                        while(!v1[i].empty())
+                        {
+                            cout<<v1[i].top()<<endl;
+                            v1[i].pop();
+                        }
                         break;
                     }
         case 142 :  {
-
+                        char c[100001];
+                        cin>>c;
+                        if(balancedParanthesisFull(c))
+                            cout<<"Yes";
+                        else
+                            cout<<"No";
                         break;
                     }
         case 143 :  {
-
+                        int t;
+                        cin>>t;
+                        char c[101];
+                        while(t--)
+                        {
+                            cin>>c;
+                            if(DuplicateParenthisis(c,strlen(c)))
+                                cout<<"Duplicate"<<endl;
+                            else
+                                cout<<"Not Duplicates"<<endl;
+                        }
                         break;
                     }
         case 144 :  {
-
+                        int n,d,s=0,c;
+                        cin>>n;
+                        deque<int> q1;
+                        deque<int> q2;
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>d;
+                            q1.push_back(d);
+                        }
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>d;
+                            q2.push_back(d);
+                        }
+                        for(int i=0;i<n;i++)
+                        {
+                            c=1;
+                            while(q2.front()!=q1.front())
+                            {
+                                c++;
+                                int f=q1.front();
+                                q1.pop_front();
+                                q1.push_back(f);
+                            }
+                            if(q2.front()==q1.front())
+                            {
+                                q1.pop_front();
+                                q2.pop_front();
+                            }
+                            s+=c;
+                        }
+                        cout<<s;
                         break;
                     }
         case 145 :  {
