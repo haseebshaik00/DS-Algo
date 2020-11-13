@@ -315,6 +315,20 @@ public:
     }
 };
 
+class BinaryTreeNode
+{
+public:
+    int data;
+    BinaryTreeNode *left;
+    BinaryTreeNode *right;
+    BinaryTreeNode(int d)
+    {
+        data=d;
+        left=NULL;
+        right=NULL;
+    }
+};
+
 void input_array(int a[], int n)
 {
     for(int i=0;i<n;i++)
@@ -1008,7 +1022,8 @@ int pow_mod(int a,int b,int c)
 	return ans;
 }
 
-long long int modpowIter(long long int a, long long int b, long long int c) {
+long long int modpowIter(long long int a, long long int b, long long int c)
+{
         long long int ans=1;
         while(b != 0) {
                 if(b%2 == 1)
@@ -1643,7 +1658,8 @@ ll optimalGame(ll i,ll j){
     return max(pickFirst,pickLast);
 }
 
-void sumitup(int a[],int arr[],int t,int arri,int e,int s){
+void sumitup(int a[],int arr[],int t,int arri,int e,int s)
+{
 	if(t==0){
 		for(int i=0;i<arri;i++){
 			cout<<arr[i]<<" ";
@@ -2378,6 +2394,29 @@ bool DuplicateParenthisis(char c[],int n)
 	return false;
 }
 
+BinaryTreeNode* preorderBuild()
+{
+    int d;
+    cin>>d;
+
+    if(d==-1)
+        return NULL;
+
+    BinaryTreeNode *root = new BinaryTreeNode(d);
+    root->left=preorderBuild();
+    root->right=preorderBuild();
+    return root;
+}
+
+void preorderPrint(BinaryTreeNode *root)
+{
+    if(root==NULL)
+        return;
+    cout<<root->data<<" ";
+    preorderPrint(root->left);
+    preorderPrint(root->right);
+}
+
 int main()
 {
     int ch;
@@ -2552,7 +2591,7 @@ int main()
     cout<<"143. Redundant Parenthesis"<<endl;
     cout<<"144. Importance of Time"<<endl;
     cout<<endl<<"******Binary Tree******"<<endl;
-    cout<<"145. "<<endl;
+    cout<<"145. Preorder Binary Tree"<<endl;
     cout<<"146. "<<endl;
     cout<<"147. "<<endl;
     cout<<"148. "<<endl;
@@ -4690,7 +4729,8 @@ int main()
                         break;
                     }
         case 145 :  {
-
+                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1
+                        preorderPrint(root); // Output : 3 4 6 5 1
                         break;
                     }
         case 146 :  {
