@@ -2460,7 +2460,7 @@ void printKthlevel(BinaryTreeNode *root, int k)
 {
     if(root==NULL)
         return;
-    if(k==1)
+    if(k==0)
     {
         cout<<root->data<<" ";
         return;
@@ -2474,7 +2474,7 @@ void levelorderPrint(BinaryTreeNode *root)
 {
     int height = BinaryTreeHeight(root);
     cout<<"Level Order : ";
-    for(int i=1;i<=height;i++)
+    for(int i=0;i<height;i++)
         printKthlevel(root, i);
     cout<<endl;
 }
@@ -2645,6 +2645,51 @@ void rightView(BinaryTreeNode *root, int level, int &maxlevel)
     }
     rightView(root->right,level+1,maxlevel);
     rightView(root->left,level+1,maxlevel);
+}
+
+int printAtDistK(BinaryTreeNode *root, BinaryTreeNode *target, int k)
+{
+    if(root==NULL)
+        return -1;
+    if(root==target)
+    {
+        printKthlevel(target,k);
+        return 0;
+    }
+    int DL = printAtDistK(root->left,target,k);
+    if(DL!=-1)
+    {
+        if(DL+1==k)
+            cout<<root->data<<" ";
+        else
+            printKthlevel(root->right,k-2-DL);
+        return 1+DL;
+    }
+    int DR = printAtDistK(root->right,target,k);
+    if(DR!=-1)
+    {
+        if(DR+1==k)
+            cout<<root->data<<" ";
+        else
+            printKthlevel(root->left,k-2-DR);
+        return 1+DR;
+    }
+    return -1;
+}
+
+BinaryTreeNode * lca(BinaryTreeNode *root, int a, int b)
+{
+    if(root==NULL)
+        return NULL;
+    if(root->data==a || root->data==b)
+        return root;
+    BinaryTreeNode *left = lca(root->left,a,b);
+    BinaryTreeNode *right = lca(root->right,a,b);
+    if(left!=NULL && right!=NULL)
+        return root;
+    if(left!=NULL)
+        return left;
+    return right;
 }
 
 int main()
@@ -2835,8 +2880,18 @@ int main()
     cout<<"156. Array from Preorder and Inorder"<<endl;
     cout<<"157. Mirror the binary tree"<<endl;
     cout<<"158. Right View"<<endl;
-    cout<<"159. "<<endl;
-    cout<<"160. "<<endl;
+    cout<<"159. Print all the nodes at given distance K"<<endl;
+    cout<<"160. Lowest Common Ancestor(LCA)"<<endl;
+    cout<<"161. "<<endl;
+    cout<<"162. "<<endl;
+    cout<<"163. "<<endl;
+    cout<<"164. "<<endl;
+    cout<<"165. "<<endl;
+    cout<<"166. "<<endl;
+    cout<<"167. "<<endl;
+    cout<<"168. "<<endl;
+    cout<<"169. "<<endl;
+    cout<<"170. "<<endl;
     cout<<"200. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -4969,7 +5024,7 @@ int main()
                         break;
                     }
         case 145 :  {
-                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1
+                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1 or 8 10 1 -1 -1 6 9 -1 -1 7 -1 -1 3 -1 14 13 -1 -1 -1
                         cout<<endl<<"Preorder : ";
                         preorderPrint(root);    // Output : 3 4 6 5 1
                         cout<<endl<<"Postorder : ";
@@ -5067,10 +5122,54 @@ int main()
                         break;
                     }
         case 159 :  {
-
+                        BinaryTreeNode* root = preorderBuild(); //Input : 8 10 1 -1 -1 6 9 -1 -1 7 -1 -1 3 -1 14 13 -1 -1 -1
+                        cout<<"Kth dist nodes : ";
+                        BinaryTreeNode * target = root->left;
+                        printAtDistK(root,target,2);
                         break;
                     }
         case 160 :  {
+                        BinaryTreeNode* root = preorderBuild(); //Input : 8 10 1 -1 -1 6 9 -1 -1 7 -1 -1 3 -1 14 13 -1 -1 -1
+                        cout<<"LCA : "<<lca(root,1,9)->data<<endl;
+                        break;
+                    }
+        case 161 :  {
+
+                        break;
+                    }
+         case 162 : {
+
+                        break;
+                    }
+         case 163 : {
+
+                        break;
+                    }
+         case 164 : {
+
+                        break;
+                    }
+         case 165 : {
+
+                        break;
+                    }
+         case 166 : {
+
+                        break;
+                    }
+         case 167 : {
+
+                        break;
+                    }
+         case 168 : {
+
+                        break;
+                    }
+         case 169 : {
+
+                        break;
+                    }
+         case 170 : {
 
                         break;
                     }
