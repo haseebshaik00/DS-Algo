@@ -2604,49 +2604,6 @@ BinaryTreeNode *buildbbtreeFromArray(int a[],int s,int e)
     return root;
 }
 
-BinaryTreeNode * treeFromPreIn(int in[],int pre[],int s,int e)
-{
-    static int i = 0;   // static cz when the recursion comes back the variable will backtrack and we don't want that
-    if(s>e)
-        return NULL;
-    BinaryTreeNode *root  = new BinaryTreeNode(pre[i]);
-    int index = -1;
-    for(int j=s;j<=e;j++)
-    {
-        if(in[j]==pre[i])
-        {
-            index=j;
-            break;
-        }
-    }
-    i++;
-    root->left  = treeFromPreIn(in,pre,s,index-1);
-    root->right = treeFromPreIn(in,pre,index+1,e);
-    return root;
-}
-
-void mirror(BinaryTreeNode *root)
-{
-    if(root==NULL)
-        return;
-    swap(root->left,root->right);
-    mirror(root->left);
-    mirror(root->right);
-}
-
-void rightView(BinaryTreeNode *root, int level, int &maxlevel)
-{
-    if(root==NULL)
-        return;
-    if(level>maxlevel)
-    {
-        maxlevel=level;
-        cout<<root->data<<" ";
-    }
-    rightView(root->right,level+1,maxlevel);
-    rightView(root->left,level+1,maxlevel);
-}
-
 int main()
 {
     int ch;
@@ -2833,8 +2790,8 @@ int main()
     cout<<"154. Height Balanced Tree"<<endl;
     cout<<"155. Build Balanced Binary Tree from Array"<<endl;
     cout<<"156. Array from Preorder and Inorder"<<endl;
-    cout<<"157. Mirror the binary tree"<<endl;
-    cout<<"158. Right View"<<endl;
+    cout<<"157. Array from Preorder and Inorder"<<endl;
+    cout<<"158. "<<endl;
     cout<<"159. "<<endl;
     cout<<"160. "<<endl;
     cout<<"200. Exit"<<endl;
@@ -5044,26 +5001,15 @@ int main()
                         break;
                     }
         case 156 :  {
-                        int in[] = {3,2,8,4,1,6,7,5};
-                        int pre[] = {1,2,3,4,8,5,6,7};
-                        BinaryTreeNode *root = treeFromPreIn(in,pre,0,7);
-                        bfs2(root);
+
                         break;
                     }
         case 157 :  {
-                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1
-                        bfs2(root);
-                        mirror(root);
-                        cout<<"After Mirroring : "<<endl;
-                        bfs2(root);
+
                         break;
                     }
         case 158 :  {
-                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1
-                        int maxlevel=-1;
-                        cout<<"Right View : ";
-                        rightView(root,0,maxlevel);
-                        cout<<endl;
+
                         break;
                     }
         case 159 :  {
