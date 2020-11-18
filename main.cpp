@@ -341,6 +341,18 @@ class PairHeightBalance{
         bool balance;
 };
 
+class PairMaxSum
+{
+public:
+    int branch_sum;
+    int max_sum;
+    PairMaxSum ()
+    {
+        branch_sum=0;
+        max_sum = 0;
+    }
+};
+
 void input_array(int a[], int n)
 {
     for(int i=0;i<n;i++)
@@ -2420,6 +2432,16 @@ BinaryTreeNode* preorderBuild()
     return root;
 }
 
+BinaryTreeNode * levelorderBuild(BinaryTreeNode *root,int a[],int i,int n)
+{
+    if(i>n)
+        return NULL;
+    root = new BinaryTreeNode(a[i]);
+    root->left = levelorderBuild(root->left,a,2*i+1,n);
+    root->right = levelorderBuild(root->right,a,2*i+2,n);
+    return root;
+}
+
 void preorderPrint(BinaryTreeNode *root)
 {
     if(root==NULL)
@@ -2625,6 +2647,111 @@ BinaryTreeNode * treeFromPreIn(int in[],int pre[],int s,int e)
     return root;
 }
 
+BinaryTreeNode * treeFromPostIn(int in[],int post[],int s,int e)
+{
+    static int i = 7;   // static cz when the recursion comes back the variable will backtrack and we don't want that
+    if(s>e)
+        return NULL;
+    BinaryTreeNode *root  = new BinaryTreeNode(post[i]);
+    int index = -1;
+    for(int j=s;j<=e;j++)
+    {
+        if(in[j]==post[i])
+        {
+            index=j;
+            break;
+        }
+    }
+    i--;
+    root->right = treeFromPostIn(in,post,index+1,e);
+    root->left = treeFromPostIn(in,post,s,index-1);
+    return root;
+}
+
+int search(int a[], int s, int e, int value)
+{
+    for (int i = s; i <= e; i++)
+        if (a[i] == value)
+            return i;
+    return -1;
+}
+
+int *extrackKeys(int in[], int level[], int m, int n)
+{
+    int *newlevel = new int[m+5];//increased size to avoid 0 size array .
+    int j = 0;
+    for (int i = 0; i < n; i++)
+        if (search(in, 0, m-1, level[i]) != -1)
+            {
+                newlevel[j] = level[i];
+                j++;
+            }
+    return newlevel;
+}
+
+BinaryTreeNode *treeFromLevelIn(int in[], int level[], int s, int e,int n)
+{
+    if(s>e || n<=0)
+        return NULL;
+    BinaryTreeNode *root = new BinaryTreeNode(level[0]);
+    if (s == e)
+        return root;
+    int i = search(in, s, e, root->data);
+    int *llevel  = extrackKeys(in, level, i, n);
+    int *rlevel  = extrackKeys(in + i + 1, level, e-i, n);//here u were usinf n-i-1
+    root->left = treeFromLevelIn(in, llevel, s, i-1, i-s);
+    root->right = treeFromLevelIn(in, rlevel, i+1, e, e-i);
+    return root;
+}
+
+BinaryTreeNode * treeFromPrePost(int pre[],int post[],int s,int e)
+{
+    static int i=0;
+    if(s>e)
+        return NULL;
+    BinaryTreeNode *root  = new BinaryTreeNode(pre[i]);
+    i++;
+    int index = -1;
+    for(int j=s;j<=e;j++)
+    {
+        if(post[j]==pre[i])
+        {
+            index=j;
+            break;
+        }
+    }
+    if(index!=-1)
+    {
+        root->left = treeFromPrePost(pre,post,s,index);
+        root->right = treeFromPrePost(pre,post,index+1,e);
+    }
+    return root;
+}
+
+BinaryTreeNode * treeFromPrePreM(int pre[],int prem[],int s,int e)
+{
+    static int i=0;
+    if(s>e)
+        return NULL;
+    BinaryTreeNode *root = new BinaryTreeNode(pre[i]);
+    i++;
+    int index=-1;
+    for (int j=s; j<=e;j++)
+    {
+        if (pre[i] == prem[j])
+        {
+            index=j;
+            break;
+        }
+    }
+    if(index!=-1)
+    {
+        root->left = treeFromPrePreM(pre,prem,index,e);
+        root->right = treeFromPrePreM(pre,prem,s+1,index-1);
+    }
+    return root;
+}
+
 void mirror(BinaryTreeNode *root)
 {
     if(root==NULL)
@@ -2690,6 +2817,45 @@ BinaryTreeNode * lca(BinaryTreeNode *root, int a, int b)
     if(left!=NULL)
         return left;
     return right;
+}
+
+PairMaxSum maxSumPath(BinaryTreeNode *root)
+{
+    PairMaxSum p;
+    if(root==NULL)
+        return p;
+    PairMaxSum left = maxSumPath(root->left);
+    PairMaxSum right = maxSumPath(root->right);
+    int op1 = root->data;
+    int op2 = left.branch_sum + root->data;
+    int op3 = right.branch_sum + root->data;
+    int op4 = left.branch_sum + right.branch_sum + root->data;
+
+    int current_ans_through_root = max(op1,max(op2,max(op3,op4)));
+
+    p.branch_sum = max(left.branch_sum,max(right.branch_sum,0))+root->data;
+    p.max_sum = max(left.max_sum,max(right.max_sum,current_ans_through_root));
+    return p;
+}
+
+int nodeLength(BinaryTreeNode *root, int key, int level)
+{
+    if(root==NULL)
+        return -1;
+    if(root->data==key)
+        return level;
+    int left = nodeLength(root->left,key,level+1);
+    if(left!=-1)
+        return left;
+    return nodeLength(root->right,key,level+1);
+}
+
+int findDistance(BinaryTreeNode *root, int a, int b)
+{
+    BinaryTreeNode *la = lca(root,a,b);
+    int l1 = nodeLength(la,a,0);
+    int l2 = nodeLength(la,b,0);
+    return l1+l2;
 }
 
 int main()
@@ -2882,16 +3048,29 @@ int main()
     cout<<"158. Right View"<<endl;
     cout<<"159. Print all the nodes at given distance K"<<endl;
     cout<<"160. Lowest Common Ancestor(LCA)"<<endl;
-    cout<<"161. "<<endl;
-    cout<<"162. "<<endl;
-    cout<<"163. "<<endl;
-    cout<<"164. "<<endl;
-    cout<<"165. "<<endl;
-    cout<<"166. "<<endl;
-    cout<<"167. "<<endl;
-    cout<<"168. "<<endl;
-    cout<<"169. "<<endl;
-    cout<<"170. "<<endl;
+    cout<<"161. Maximum sum Path from any node to node"<<endl;
+    cout<<"162. Shortest distance between any 2 nodes"<<endl;
+    cout<<endl<<"******Some extra ques of Binary Tree******"<<endl;
+    cout<<"163. Level Order Build and Print"<<endl;
+    cout<<"164. Binary Tree from Preorder and Inorder"<<endl;
+    cout<<"165. Binary Tree from Postorder and Inorder"<<endl;
+    cout<<"166. Binary Tree from Levelorder and Inorder"<<endl;
+    cout<<"167. Full Binary Tree from Preorder and Postorder"<<endl;
+    cout<<"168. Full Binary Tree from Preorder and Preorder of it's mirror tree"<<endl;
+    cout<<endl<<"******Stack Conversions******"<<endl;
+    cout<<"169. Infix to Postfix Conversion"<<endl;
+    cout<<"170. Prefix to Infix Conversion"<<endl;
+    cout<<"171. Prefix to Postfix Conversion"<<endl;
+    cout<<"172. Postfix to Prefix Conversion"<<endl;
+    cout<<"173. Postfix to Infix Conversion"<<endl;
+    cout<<"174. Infix to Prefix Conversion"<<endl;
+    cout<<endl<<"******Binary Search Trees******"<<endl;
+    cout<<"175. "<<endl;
+    cout<<"176. "<<endl;
+    cout<<"177. "<<endl;
+    cout<<"178. "<<endl;
+    cout<<"179. "<<endl;
+    cout<<"180. "<<endl;
     cout<<"200. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -5134,35 +5313,55 @@ int main()
                         break;
                     }
         case 161 :  {
-
+                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1
+                        cout<<"Max Sum Path : "<<maxSumPath(root).max_sum<<endl;
                         break;
                     }
          case 162 : {
-
+                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1
+                        cout<<"Shortest Distance : "<<findDistance(root,6,1)<<endl;
                         break;
                     }
          case 163 : {
-
+                        int a[] = {10,20,30,40,50,60,70,80,90};
+                        BinaryTreeNode *root;
+                        BinaryTreeNode *root1 = levelorderBuild(root,a,0,8);
+                        bfs2(root1);
                         break;
                     }
          case 164 : {
-
+                        int in[] = {3,2,8,4,1,6,7,5};
+                        int pre[] = {1,2,3,4,8,5,6,7};
+                        BinaryTreeNode *root = treeFromPreIn(in,pre,0,7);
+                        bfs2(root);
                         break;
                     }
          case 165 : {
-
+                        int in[]   = {4, 8, 2, 5, 1, 6, 3, 7};
+                        int post[] = {8, 4, 5, 2, 6, 7, 3, 1};
+                        BinaryTreeNode *root = treeFromPostIn(in,post,0,7);
+                        bfs2(root);
                         break;
                     }
          case 166 : {
-
+                        int ino[]    = {4, 8, 10, 12, 14, 20, 22};
+                        int level[] = {20, 8, 22, 4, 12, 10, 14};
+                        BinaryTreeNode *root = treeFromLevelIn(ino,level,0,6,7);
+                        bfs2(root);
                         break;
                     }
          case 167 : {
-
+                        int pre[] = {1, 2, 4, 8, 9, 5, 3, 6, 7};
+                        int post[] = {8, 9, 4, 5, 2, 6, 7, 3, 1};
+                        BinaryTreeNode *root = treeFromPrePost(pre,post,0,8);
+                        bfs2(root);
                         break;
                     }
          case 168 : {
-
+                        int pre[] = {1, 2, 4, 5, 3, 6, 7};
+                        int prem[] =  {1 ,3 ,7 ,6 ,2 ,5 ,4};
+                        BinaryTreeNode *root = treeFromPrePreM(pre,prem,0,6);
+                        bfs2(root);
                         break;
                     }
          case 169 : {
@@ -5170,6 +5369,46 @@ int main()
                         break;
                     }
          case 170 : {
+
+                        break;
+                    }
+        case 171 :  {
+
+                        break;
+                    }
+        case 172 :  {
+
+                        break;
+                    }
+        case 173 :  {
+
+                        break;
+                    }
+        case 174 :  {
+
+                        break;
+                    }
+        case 175 :  {
+
+                        break;
+                    }
+        case 176 :  {
+
+                        break;
+                    }
+        case 177 :  {
+
+                        break;
+                    }
+        case 178 :  {
+
+                        break;
+                    }
+        case 179 :  {
+
+                        break;
+                    }
+        case 180 :  {
 
                         break;
                     }
