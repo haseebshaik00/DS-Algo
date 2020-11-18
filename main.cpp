@@ -3057,7 +3057,7 @@ int main()
     cout<<"166. Binary Tree from Levelorder and Inorder"<<endl;
     cout<<"167. Full Binary Tree from Preorder and Postorder"<<endl;
     cout<<"168. Full Binary Tree from Preorder and Preorder of it's mirror tree"<<endl;
-    cout<<endl<<"******Stack Conversions******"<<endl;
+    cout<<endl<<"******Stack Conversions (Infix, Postfix and Prefix)******"<<endl;
     cout<<"169. Infix to Postfix Conversion"<<endl;
     cout<<"170. Prefix to Infix Conversion"<<endl;
     cout<<"171. Prefix to Postfix Conversion"<<endl;
