@@ -3060,6 +3060,83 @@ void infixtoprefix(string c)
     cout<<d<<endl;
 }
 
+BinaryTreeNode *BSTinsertNode(BinaryTreeNode *bstroot, int d)
+{
+    if(bstroot==NULL)
+        return new BinaryTreeNode(d);
+    if(d<=bstroot->data)
+        bstroot->left=BSTinsertNode(bstroot->left,d);
+    else
+        bstroot->right=BSTinsertNode(bstroot->right,d);
+    return bstroot;
+}
+
+BinaryTreeNode *BSTbuild()
+{
+    int d;
+    cin>>d;
+    BinaryTreeNode *bstroot = NULL;
+    while(d!=-1)
+    {
+        bstroot = BSTinsertNode(bstroot, d);
+        cin>>d;
+    }
+    return bstroot;
+}
+
+bool BSTSearch(BinaryTreeNode *bstroot, int d)
+{
+    if(bstroot==NULL)
+        return false;
+    if(bstroot->data==d)
+        return true;
+    if(d<=bstroot->data)
+        return BSTSearch(bstroot->left,d);
+    else
+        return BSTSearch(bstroot->right,d);
+}
+
+//https://ide.codingblocks.com/s/23088
+BinaryTreeNode *BSTdelete(BinaryTreeNode *bstroot, int d)
+{
+    if(bstroot==NULL)
+        return NULL;
+    if(d<bstroot->data)
+        bstroot->left = BSTdelete(bstroot->left,d);
+    else if(d==bstroot->data)
+    {
+        if(bstroot->left==NULL && bstroot->right==NULL)
+        {
+            delete bstroot;
+            return NULL;
+        }
+        else if(bstroot->left!=NULL && bstroot->right==NULL)
+        {
+            BinaryTreeNode *temp = bstroot->left;
+            delete bstroot;
+            return temp;
+        }
+        else if(bstroot->left==NULL && bstroot->right!=NULL)
+        {
+            BinaryTreeNode *temp = bstroot->left;
+            delete bstroot;
+            return temp;
+        }
+        else
+        {
+            BinaryTreeNode *temp = bstroot->right;
+            while(temp->left!=NULL)
+                temp=temp->left;
+            bstroot->data = temp->data;
+            bstroot->right = BSTdelete(bstroot->right,temp->data);
+            return bstroot;
+        }
+    }
+    else
+        bstroot->right = BSTdelete(bstroot->right,d);
+    return bstroot;
+}
+
 int main()
 {
     int ch;
@@ -3267,9 +3344,9 @@ int main()
     cout<<"173. Postfix to Infix Conversion"<<endl;
     cout<<"174. Infix to Prefix Conversion"<<endl;
     cout<<endl<<"******Binary Search Trees******"<<endl;
-    cout<<"175. "<<endl;
-    cout<<"176. "<<endl;
-    cout<<"177. "<<endl;
+    cout<<"175. Insertion and Build"<<endl;
+    cout<<"176. Searching"<<endl;
+    cout<<"177. Deletion"<<endl;
     cout<<"178. "<<endl;
     cout<<"179. "<<endl;
     cout<<"180. "<<endl;
@@ -5597,15 +5674,22 @@ int main()
                         break;
                     }
         case 175 :  {
-
+                        BinaryTreeNode *bstroot = BSTbuild(); // Input : 5 3 7 1 6 8 -1
+                        bfs2(bstroot);
                         break;
                     }
         case 176 :  {
-
+                        BinaryTreeNode *bstroot = BSTbuild(); // Input : 5 3 7 1 6 8 -1
+                        if(BSTSearch(bstroot,8))
+                            cout<<"Present"<<endl;
+                        else
+                            cout<<"Absent"<<endl;
                         break;
                     }
         case 177 :  {
-
+                        BinaryTreeNode *bstroot = BSTbuild(); // Input : 5 3 7 1 6 8 -1
+                        bstroot=BSTdelete(bstroot, 5);
+                        bfs(bstroot);
                         break;
                     }
         case 178 :  {
