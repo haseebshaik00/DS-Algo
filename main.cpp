@@ -2858,6 +2858,208 @@ int findDistance(BinaryTreeNode *root, int a, int b)
     return l1+l2;
 }
 
+int prec(char c)
+{
+    if(c == '^')
+    return 3;
+    else if(c == '*' || c == '/')
+    return 2;
+    else if(c == '+' || c == '-')
+    return 1;
+    else
+    return -1;
+}
+
+void infixtopostfix(string c)
+{
+    stack<char> s;
+    int n=c.length();
+    string a;
+    for(int i=0;i<n;i++)
+    {
+        if(c[i]>='a' && c[i]<='z' || c[i]>='A' && c[i]<='Z')
+            a+=c[i];
+        else if(c[i]=='(')
+            s.push(c[i]);
+        else if(c[i]==')')
+        {
+            while(!s.empty() && s.top()!='(')
+            {
+                char b=s.top();
+                s.pop();
+                a+= b;
+            }
+            if(s.top()=='(')
+                s.pop();
+        }
+        else
+        {
+            while(!s.empty() && prec(c[i])<=prec(s.top()))
+            {
+                char b=s.top();
+                s.pop();
+                a+= b;
+            }
+            s.push(c[i]);
+        }
+    }
+    while(!s.empty())
+    {
+        char b=s.top();
+        s.pop();
+        a+= b;
+    }
+    cout<<a<<endl;
+}
+
+bool isOperand(char c)
+{
+    return !(!isalpha(c) && !isdigit(c));
+}
+
+bool isOperator(char c)
+{
+    if(c=='+' || c=='-' || c=='*' || c=='/' || c=='^')
+        return true;
+    else
+        return false;
+}
+
+void prefixtoinfix(string c)
+{
+    stack<string> s;
+    int l=c.length();
+    for(int i=l-1;i>=0;i--)
+    {
+        if(isOperator(c[i]))
+        {
+            string a=s.top();s.pop();
+            string b=s.top();s.pop();
+            s.push("("+a+c[i]+b+")");
+        }
+        else
+            s.push(string(1,c[i]));
+    }
+    cout<<s.top();
+}
+
+void prefixtopostfix(string c)
+{
+    stack<string> s;
+    int l=c.length();
+    for(int i=l-1;i>=0;i--)
+    {
+        if(isOperator(c[i]))
+        {
+            string a=s.top();s.pop();
+            string b=s.top();s.pop();
+            s.push(a+b+c[i]);
+        }
+        else
+            s.push(string(1,c[i]));
+    }
+    cout<<s.top();
+}
+
+void postfixtoprefix(string c)
+{
+    stack<string> s;
+    int l=c.length();
+    for(int i=0;i<l;i++)
+    {
+        if(isOperator(c[i]))
+        {
+            string a=s.top();s.pop();
+            string b=s.top();s.pop();
+            s.push(c[i]+b+a);
+        }
+        else
+            s.push(string(1,c[i]));
+    }
+    string ans = "";
+    while (!s.empty()) {
+        ans += s.top();
+        s.pop();
+    }
+    cout<<ans<<endl;
+}
+
+void postfixtoinfix(string c)
+{
+    stack<string> s;
+    int l=c.length();
+    for(int i=0;i<l;i++)
+    {
+        if(isOperator(c[i]))
+        {
+            string a=s.top();s.pop();
+            string b=s.top();s.pop();
+            s.push("("+b+c[i]+a+")");
+        }
+        else
+            s.push(string(1,c[i]));
+    }
+    cout<<s.top()<<endl;
+}
+
+string infixtopostfix2(string c)
+{
+    stack<char> s;
+    int n=c.length();
+    string a;
+    for(int i=0;i<n;i++)
+    {
+        if(c[i]>='a' && c[i]<='z' || c[i]>='A' && c[i]<='Z')
+            a+=c[i];
+        else if(c[i]=='(')
+            s.push(c[i]);
+        else if(c[i]==')')
+        {
+            while(!s.empty() && s.top()!='(')
+            {
+                char b=s.top();
+                s.pop();
+                a+= b;
+            }
+            if(s.top()=='(')
+                s.pop();
+        }
+        else
+        {
+            while(!s.empty() && prec(c[i])<=prec(s.top()))
+            {
+                char b=s.top();
+                s.pop();
+                a+= b;
+            }
+            s.push(c[i]);
+        }
+    }
+    while(!s.empty())
+    {
+        char b=s.top();
+        s.pop();
+        a+= b;
+    }
+    return a;
+}
+
+void infixtoprefix(string c)
+{
+    int l=c.length();
+    reverse(c.begin(),c.end());
+    for(int i=0;i<l;i++)
+    {
+        if(c[i]==')')
+            c[i]='(';
+        else if(c[i]=='(')
+            c[i]=')';
+    }
+    string d=infixtopostfix2(c);
+    reverse(d.begin(),d.end());
+    cout<<d<<endl;
+}
+
 int main()
 {
     int ch;
@@ -5365,27 +5567,33 @@ int main()
                         break;
                     }
          case 169 : {
-
+                        string a="a+b*(c^d-e)^(f+g*h)-i";
+                        infixtopostfix(a);
                         break;
                     }
          case 170 : {
-
+                        string s="*-a/bc-/akl";
+                        prefixtoinfix(s);
                         break;
                     }
         case 171 :  {
-
+                        string s="*-a/bc-/akl";
+                        prefixtopostfix(s);
                         break;
                     }
         case 172 :  {
-
+                        string s="abc/-ak/l-*";
+                        postfixtoprefix(s);
                         break;
                     }
         case 173 :  {
-
+                        string s="ab*c+";
+                        postfixtoinfix(s);
                         break;
                     }
         case 174 :  {
-
+                        string s="(a-b/c)*(a/k-l)";
+                        infixtoprefix(s);
                         break;
                     }
         case 175 :  {
