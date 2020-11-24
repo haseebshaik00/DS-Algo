@@ -9,6 +9,7 @@
 #include<stack>
 #include<queue>
 #include<deque>
+#include<map>
 #define ll long long int
 //#include<bits/stdc++.h> - includes every library
 
@@ -351,6 +352,13 @@ public:
         branch_sum=0;
         max_sum = 0;
     }
+};
+
+class BSTLL
+{
+public:
+    BinaryTreeNode *head;
+    BinaryTreeNode *tail;
 };
 
 void input_array(int a[], int n)
@@ -3137,6 +3145,95 @@ BinaryTreeNode *BSTdelete(BinaryTreeNode *bstroot, int d)
     return bstroot;
 }
 
+bool isBST(BinaryTreeNode *bstroot, int minV=INT_MIN, int maxV=INT_MAX)
+{
+    if(bstroot==NULL)
+        return true;
+    if(bstroot->data>minV && bstroot->data<maxV && isBST(bstroot->left, minV, bstroot->data) && isBST(bstroot->right, bstroot->data, maxV))
+        return true;
+    return false;
+}
+
+BSTLL flatten(BinaryTreeNode *bstroot)
+{
+    BSTLL l;
+    if(bstroot==NULL)
+    {
+        l.head=NULL;
+        l.tail=NULL;
+        return l;
+    }
+    // Leaf Node
+    if(bstroot->left==NULL && bstroot->right==NULL)
+    {
+        l.head=bstroot;
+        l.tail=bstroot;
+        return l;
+    }
+    // Left is Not NULL
+    if(bstroot->left!=NULL && bstroot->right==NULL)
+    {
+        BSTLL leftLL = flatten(bstroot->left);
+        leftLL.tail->right = bstroot;
+        l.head = leftLL.head;
+        l.tail=bstroot;
+        return l;
+    }
+    //Right is Not NULL
+    if(bstroot->left==NULL && bstroot->right!=NULL)
+    {
+        BSTLL rightLL = flatten(bstroot->right);
+        bstroot->right = rightLL.head;
+        l.head = bstroot;
+        l.tail = rightLL.tail;
+        return l;
+    }
+    //Both Sides are not NULL
+    BSTLL leftLL = flatten(bstroot->left);
+    BSTLL rightLL = flatten(bstroot->right);
+    leftLL.tail->right = bstroot;
+    bstroot->right = rightLL.head;
+    l.head = leftLL.head;
+    l.tail = rightLL.tail;
+    return l;
+}
+
+BinaryTreeNode *arraytoBST(BinaryTreeNode *bstroot, int a[], int s, int e, int n)
+{
+    if(s>e)
+        return NULL;
+    int mid = (s+e)/2;
+    bstroot = new BinaryTreeNode(a[mid]);
+    bstroot->left = arraytoBST(bstroot->left, a, s, mid-1, n);
+    bstroot->right = arraytoBST(bstroot->right, a, mid+1, e, n);
+    return bstroot;
+}
+
+int catalanNo(int n)
+{
+    return recFact(2*n)/(pow(recFact(n),2)*(n+1));
+}
+
+void helper(BinaryTreeNode *rt,map<int,pair<int,int>>&hashmap,int level,int hd){
+	if(rt==NULL)return;
+	if(hashmap.find(hd)==hashmap.end())
+		hashmap.insert({hd,{rt->data,level}});
+	else{
+		pair<int ,int >p=hashmap[hd];
+		if(level>=p.second)
+			hashmap[hd]={rt->data,level};
+	}
+	helper(rt->left,hashmap,level+1,hd-1);
+	helper(rt->right,hashmap,level+1,hd+1);
+}
+
+void TreeBottomView(BinaryTreeNode *rt){
+	map<int,pair<int,int>>hashmap;
+	helper(rt,hashmap,0,0);
+	for(auto it:hashmap)
+		cout<<it.second.first<<" ";
+}
+
 int main()
 {
     int ch;
@@ -3347,9 +3444,29 @@ int main()
     cout<<"175. Insertion and Build"<<endl;
     cout<<"176. Searching"<<endl;
     cout<<"177. Deletion"<<endl;
-    cout<<"178. "<<endl;
-    cout<<"179. "<<endl;
-    cout<<"180. "<<endl;
+    cout<<"178. Check the tree BST or not"<<endl;
+    cout<<"179. Flatten the BST"<<endl;
+    cout<<"180. Balanced tree from a sorted array"<<endl;
+    cout<<"181. Catalan Number"<<endl;
+    cout<<endl<<"******Challenges - Binary Trees******"<<endl;
+    cout<<"182. Bottom View"<<endl;
+    cout<<"183. "<<endl;
+    cout<<"184. "<<endl;
+    cout<<"185. "<<endl;
+    cout<<"186. "<<endl;
+    cout<<"187. "<<endl;
+    cout<<"188. "<<endl;
+    cout<<"189. "<<endl;
+    cout<<"190. "<<endl;
+    cout<<"191. "<<endl;
+    cout<<"192. "<<endl;
+    cout<<"193. "<<endl;
+    cout<<"194. "<<endl;
+    cout<<"195. "<<endl;
+    cout<<"196. "<<endl;
+    cout<<"197. "<<endl;
+    cout<<"198. "<<endl;
+    cout<<"199. "<<endl;
     cout<<"200. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -5693,14 +5810,71 @@ int main()
                         break;
                     }
         case 178 :  {
-
+                        BinaryTreeNode *bstroot = BSTbuild(); // Input : 5 3 7 1 6 8 -1
+                        if(isBST(bstroot))
+                            cout<<"BST"<<endl;
+                        else
+                            cout<<"Not a BST"<<endl;
                         break;
                     }
         case 179 :  {
-
+                        BinaryTreeNode *bstroot = BSTbuild(); // Input : 5 3 7 1 6 8 -1
+                        BSTLL l = flatten(bstroot);
+                        BinaryTreeNode *temp = l.head;
+                        while(temp)
+                        {
+                            cout<<temp->data<<"->";
+                            temp=temp->right;
+                        }
                         break;
                     }
         case 180 :  {
+                        int a[] = {1,2,3,4,5,6,7};
+                        BinaryTreeNode *bstroot1;
+                        bstroot1 = arraytoBST(bstroot1, a, 0, 6, 7);
+                        bfs(bstroot1);
+                        break;
+                    }
+        case 181 :  {
+                        cout<<"No. of BSTs possible = "<<catalanNo(3);
+                        break;
+                    }
+        case 182 :  {
+                        int a[] = {10,20,30,40,50,60,70,80,90};
+                        BinaryTreeNode *root;
+                        BinaryTreeNode *root1 = levelorderBuild(root,a,0,8);
+                        TreeBottomView(root1);
+                        break;
+                    }
+        case 183 :  {
+
+                        break;
+                    }
+        case 184 :  {
+
+                        break;
+                    }
+        case 185 :  {
+
+                        break;
+                    }
+        case 186 :  {
+
+                        break;
+                    }
+        case 187 :  {
+
+                        break;
+                    }
+        case 188 :  {
+
+                        break;
+                    }
+        case 189 :  {
+
+                        break;
+                    }
+        case 190 :  {
 
                         break;
                     }
