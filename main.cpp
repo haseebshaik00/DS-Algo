@@ -361,6 +361,77 @@ public:
     BinaryTreeNode *tail;
 };
 
+class Heap
+{
+    vector<int> v;
+    bool minheap;
+
+    bool compareHeap(int a, int b)
+    {
+        if(minheap)
+            return a<b;
+        else
+            return a>b;
+    }
+
+    void heapify(int idx)
+    {
+        int lc = 2*idx;
+        int rc = lc+1;
+        int min_idx = idx;
+        int last = v.size()-1;
+
+        if(lc<=last && compareHeap(v[lc],v[idx]))
+            min_idx = lc;
+        if(rc<=last && compareHeap(v[rc],v[min_idx]))
+            min_idx = rc;
+        if(min_idx!=idx)
+        {
+            swap(v[idx],v[min_idx]);
+            heapify(min_idx);
+        }
+    }
+
+public:
+
+    Heap(int default_size=10, bool type = true)
+    {
+        v.reserve(default_size);
+        v.push_back(-1);
+        minheap=type;
+    }
+
+    void push(int d)
+    {
+        v.push_back(d);
+        int idx=v.size()-1;
+        int parent = idx/2;
+        while(idx>1 && compareHeap(v[idx],v[parent]))
+        {
+            swap(v[idx],v[parent]);
+            idx=parent;
+            parent=parent/2;
+        }
+    }
+
+    int get()
+    {
+        return v[1];
+    }
+
+    bool isEmpty()
+    {
+        return v.size()==1;
+    }
+
+    void pop()
+    {
+        swap(v[1],v[v.size()-1]);
+        v.pop_back();
+        heapify(1);
+    }
+};
+
 void input_array(int a[], int n)
 {
     for(int i=0;i<n;i++)
@@ -3451,7 +3522,7 @@ int main()
     cout<<endl<<"******Challenges - Binary Trees******"<<endl;
     cout<<"182. Bottom View"<<endl;
     cout<<endl<<"******Heaps******"<<endl;
-    cout<<"183. Insertion"<<endl;
+    cout<<"183. Insertion and Deletion min/max Element"<<endl;
     cout<<"184. "<<endl;
     cout<<"185. "<<endl;
     cout<<"186. "<<endl;
@@ -5848,7 +5919,14 @@ int main()
                         break;
                     }
         case 183 :  {
-
+                        Heap h;
+                        for(int i=0;i<10;i++)
+                            h.push(i);
+                        while(!h.isEmpty())
+                        {
+                            cout<<h.get()<<" ";
+                            h.pop();
+                        }
                         break;
                     }
         case 184 :  {
