@@ -432,6 +432,30 @@ public:
     }
 };
 
+class Person
+{
+public:
+    string name;
+    int age;
+    Person()
+    {
+    }
+    Person(string a,int b)
+    {
+        name=a;
+        age=b;
+    }
+};
+
+class Personcompare
+{
+public:
+    bool operator()(Person A, Person B)
+    {
+        return A.age>B.age;
+    }
+};
+
 void input_array(int a[], int n)
 {
     for(int i=0;i<n;i++)
@@ -3305,6 +3329,89 @@ void TreeBottomView(BinaryTreeNode *rt){
 		cout<<it.second.first<<" ";
 }
 
+void buildHeap(vector<int> &v)
+{
+    for(int i=2;i<v.size();i++)
+    {
+        int idx=i;
+        int parent=i/2;
+        while(idx>1 && v[idx]>v[parent])
+        {
+            swap(v[idx],v[parent]);
+            idx=parent;
+            parent/=2;
+        }
+    }
+}
+
+void heapify(vector<int> &v, int idx)
+{
+    int lc = 2*idx;
+    int rc = lc+1;
+    int min_idx = idx;
+    int last = v.size()-1;
+
+    if(lc<=last && v[lc]>v[idx])// maxheap
+        min_idx = lc;
+    if(rc<=last && v[rc]>v[min_idx])
+        min_idx = rc;
+    if(min_idx!=idx)
+    {
+        swap(v[idx],v[min_idx]);
+        heapify(v,min_idx);
+    }
+}
+
+void buildHeapFast(vector<int> &v)
+{
+    for(int i=(v.size()-1)/2;i>=1;i--)
+        heapify(v,i);
+}
+
+void heapifyHeapSort(vector<int> &v, int idx, int n)
+{
+    int lc = 2*idx;
+    int rc = lc+1;
+    int min_idx = idx;
+    int last = n-1;
+
+    if(lc<=last && v[lc]>v[idx])// maxheap
+        min_idx = lc;
+    if(rc<=last && v[rc]>v[min_idx])
+        min_idx = rc;
+    if(min_idx!=idx)
+    {
+        swap(v[idx],v[min_idx]);
+        heapifyHeapSort(v,min_idx,n);
+    }
+}
+
+void heapSort(vector<int> &v)
+{
+    buildHeapFast(v);
+    int n=v.size();
+    while(n>1)
+    {
+        swap(v[1],v[n-1]);
+        n--;
+        heapifyHeapSort(v,1,n);
+    }
+}
+
+int joinRopes(int r[], int n)
+{
+    priority_queue<int, vector<int>, greater<int>> pq(r,r+n);
+    int cost=0;
+    while(pq.size()>1)
+    {
+        int A=pq.top(); pq.pop();
+        int B=pq.top(); pq.pop();
+        cost += (A+B);
+        pq.push(A+B);
+    }
+    return cost;
+}
+
 int main()
 {
     int ch;
@@ -3523,13 +3630,13 @@ int main()
     cout<<"182. Bottom View"<<endl;
     cout<<endl<<"******Heaps******"<<endl;
     cout<<"183. Insertion and Deletion min/max Element"<<endl;
-    cout<<"184. "<<endl;
-    cout<<"185. "<<endl;
-    cout<<"186. "<<endl;
-    cout<<"187. "<<endl;
-    cout<<"188. "<<endl;
-    cout<<"189. "<<endl;
-    cout<<"190. "<<endl;
+    cout<<"184. Converting Array/Vector into Heap(Inplace) - O(n logn)"<<endl;
+    cout<<"185. Converting Array/Vector into Heap(Inplace) - O(n)"<<endl;
+    cout<<"186. Heap Sort (Inplace)"<<endl;
+    cout<<"187. Priority Queue STL"<<endl;
+    cout<<"188. Priority Queue for Custom Classes"<<endl;
+    cout<<"189. Join the Ropes"<<endl;
+    cout<<"190. Running median of a integer stream"<<endl;
     cout<<"191. "<<endl;
     cout<<"192. "<<endl;
     cout<<"193. "<<endl;
@@ -5930,30 +6037,155 @@ int main()
                         break;
                     }
         case 184 :  {
-
+                        vector<int> v{-1,10,20,5,6,1,8,9,4};
+                        buildHeap(v);
+                        for(auto x:v)
+                            cout<<x<<" ";
                         break;
                     }
         case 185 :  {
-
+                        vector<int> v{-1,10,20,5,6,1,8,9,4};
+                        buildHeapFast(v);
+                        for(auto x:v)
+                            cout<<x<<" ";
                         break;
                     }
         case 186 :  {
-
+                        vector<int> v{-1,10,20,5,6,1,8,9,4};
+                        heapSort(v);
+                        for(auto x:v)
+                            cout<<x<<" ";
                         break;
                     }
         case 187 :  {
-
+                        priority_queue<int> pmax; //by default maxHeap
+                        priority_queue<int, vector<int>, greater<int>> p; //for minimum
+                        int n;
+                        cin>>n;
+                        for(int i=0;i<n;i++)
+                        {
+                            int d;
+                            cin>>d;
+                            p.push(d);
+                        }
+                        while(!p.empty())
+                        {
+                            cout<<p.top()<<" ";
+                            p.pop();
+                        }
                         break;
                     }
         case 188 :  {
-
+                        priority_queue<Person, vector<Person>, Personcompare> pq;
+                        Person p("A",12);
+                        pq.push(p);
+                        Person p1("B",99);
+                        pq.push(p1);
+                        Person p2("C",0);
+                        pq.push(p2);
+                        Person p3("D",9);
+                        pq.push(p3);
+                        Person p4("E",48);
+                        pq.push(p4);
+                        for(int i=0;i<3;i++)
+                        {
+                            Person p = pq.top();
+                            cout<<p.name<<" "<<p.age<<endl;
+                            pq.pop();
+                        }
                         break;
                     }
         case 189 :  {
-
+                        int r[]={4,3,2,6};
+                        cout<<joinRopes(r,4)<<endl;
                         break;
                     }
         case 190 :  {
+                        priority_queue<int> pmax;
+                        priority_queue<int, vector<int>, greater<int>> pmin;
+                        int d;
+                        cin>>d;
+                        pmax.push(d);
+                        float med=d;
+                        cout<<"Median = "<<med<<endl;
+                        cin>>d;
+                        while(d!=-1)
+                        {
+                            if(pmax.size()>pmin.size())
+                            {
+                                if(d<med)
+                                {
+                                    pmin.push(pmax.top());
+                                    pmax.pop();
+                                    pmax.push(d);
+                                }
+                                else
+                                    pmin.push(d);
+                                med = (pmax.top()+pmin.top())/2.0;
+                            }
+                            else if(pmax.size()==pmin.size())
+                            {
+                                if(d<med)
+                                {
+                                    pmax.push(d);
+                                    med=pmax.top();
+                                }
+                                else
+                                {
+                                    pmin.push(d);
+                                    med=pmin.top();
+                                }
+                            }
+                            else
+                            {
+                                if(d>med)
+                                {
+                                    pmax.push(pmin.top());
+                                    pmin.pop();
+                                    pmin.push(d);
+                                }
+                                else
+                                    pmax.push(d);
+                                med = (pmax.top()+pmin.top())/2.0;
+                            }
+                            cout<<"Median = "<<med<<endl;
+                            cin>>d; // Input : 0 0 1 1 3 4 5 8 9
+                        }
+                        break;
+                    }
+        case 191 :  {
+
+                        break;
+                    }
+        case 192 :  {
+
+                        break;
+                    }
+        case 193 :  {
+
+                        break;
+                    }
+        case 194 :  {
+
+                        break;
+                    }
+        case 195 :  {
+
+                        break;
+                    }
+        case 196 :  {
+
+                        break;
+                    }
+        case 197 :  {
+
+                        break;
+                    }
+        case 198 :  {
+
+                        break;
+                    }
+        case 199 :  {
 
                         break;
                     }
