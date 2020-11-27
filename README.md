@@ -12,13 +12,14 @@
 11) Linked Lists
 12) Stack
 13) Queues
-14) Binary Tree and BST
-15) Heaps
-16) Hash Tables
-17) Tries
-18) Greedy Algorithms
-19) Dynamic Programming 
-20) Graph Algorithms
+14) Deque
+15) Binary Tree and BST
+16) Heaps
+17) Hash Tables
+18) Tries
+19) Greedy Algorithms
+20) Dynamic Programming 
+21) Graph Algorithms
 
 The main.cpp file contains some most imp and generic question of Competitive Programming.
 
