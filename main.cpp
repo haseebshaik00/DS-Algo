@@ -1,3 +1,4 @@
+//#include<bits/stdc++.h> - includes every library
 #include<iostream>
 #include<cstring>
 #include<cmath>
@@ -11,8 +12,6 @@
 #include<deque>
 #include<map>
 #define ll long long int
-//#include<bits/stdc++.h> - includes every library
-
 using namespace std;
 typedef pair<int, pair<int,int>> node;
 
@@ -3487,7 +3486,7 @@ int main()
 {
     int ch;
     do{
-    cout<<endl<<"*****MENU*****"<<endl;
+    cout<<endl<<"******MENU******"<<endl;
     cout<<endl<<"*****Arrays*****"<<endl;
     cout<<"1. Linear Search"<<endl;
     cout<<"2. Binary Search"<<endl;
