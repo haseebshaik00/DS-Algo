@@ -11,6 +11,7 @@
 #include<queue>
 #include<deque>
 #include<map>
+#include<unordered_map>
 #define ll long long int
 using namespace std;
 typedef pair<int, pair<int,int>> node;
@@ -3502,6 +3503,29 @@ int kthSmallestOptimised(int a[4][4],int n, int k)
     return pq.top().first;
 }
 
+void kTop(int a[], int n, int k)
+{
+    vector<int> top(k + 1);
+    unordered_map<int, int> freq;
+    for (int m = 0; m < n; m++) {
+    freq[a[m]]++;
+    top[k] = a[m];
+    auto it = find(top.begin(), top.end() - 1, a[m]);
+    for (int i = distance(top.begin(), it) - 1; i >= 0; --i)
+    {
+        if (freq[top[i]] < freq[top[i + 1]])
+            swap(top[i], top[i + 1]);
+        else if ((freq[top[i]] == freq[top[i + 1]]) && (top[i] > top[i + 1]))
+            swap(top[i], top[i + 1]);
+        else
+            break;
+    }
+    for (int i = 0; i < k && top[i] != 0; ++i)
+        cout<<top[i]<<" ";
+    }
+    cout<<endl;
+}
+
 int main()
 {
     int ch;
@@ -3730,10 +3754,11 @@ int main()
     cout<<"191. Merge k sorted Arrays"<<endl;
     cout<<"192. Kth Smallest Element in a sorted row and column Matrix"<<endl;
     cout<<"193. Kth Smallest Element in a sorted row and column Matrix Optimised"<<endl;
-    cout<<endl<<"******Challenges - Binary Trees******"<<endl;
+    cout<<endl<<"******Challenges - Heaps******"<<endl;
     cout<<"194. Hotel Visit"<<endl;
     cout<<"195. Top k most frequent number in a stream using Heap"<<endl;
     cout<<"196. Top k most frequent number in a stream using Hashmap"<<endl;
+    cout<<endl<<"******Hashing/Hashtable******"<<endl;
     cout<<"197. "<<endl;
     cout<<"198. "<<endl;
     cout<<"199. "<<endl;
@@ -6284,7 +6309,10 @@ int main()
                         break;
                     }
         case 196 :  {
-
+                        int k = 4;
+                        int arr[] = { 5, 2, 1, 3, 2 };
+                        int n = sizeof(arr) / sizeof(arr[0]);
+                        kTop(arr, n, k);
                         break;
                     }
         case 197 :  {
