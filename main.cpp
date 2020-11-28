@@ -14,6 +14,7 @@
 //#include<bits/stdc++.h> - includes every library
 
 using namespace std;
+typedef pair<int, pair<int,int>> node;
 
 bool p[1000001]={false};
 char words[][10]={"zero","one","two","three","four","five","six","seven","eight","nine"};
@@ -3412,6 +3413,76 @@ int joinRopes(int r[], int n)
     return cost;
 }
 
+vector<int> mergeKsortedArrays(vector<vector<int>> v)
+{
+    vector<int> res;
+    priority_queue<node, vector<node>, greater<node>> pq;
+    for(int i=0;i<v.size();i++)
+        pq.push({v[i][0],{i,0}});
+    while(!pq.empty())
+    {
+        node p = pq.top();
+        pq.pop();
+        int element = p.first;
+        int x=p.second.first;
+        int y=p.second.second;
+        res.push_back(element);
+        if(y+1<v[x].size())
+            pq.push({v[x][y+1],{x,y+1}});
+    }
+    return res;
+}
+
+int kthSmallest(int a[4][4],int n, int k)
+{
+    priority_queue<node, vector<node>, greater<node>> pq;
+    int b[n][n]={0};
+    for(int i=0;i<n;i++)
+    {
+        pq.push({a[0][i],{0,i}});
+        b[0][i]=-1;
+    }
+    node ans;
+    while(k--)
+    {
+        ans =pq.top();
+        pq.pop();
+        int element = ans.first;
+        int i = ans.second.first;
+        int j = ans.second.second;
+        if(b[i+1][j]!=-1 && i+1<n)
+        {
+            pq.push({a[i+1][j],{i+1,j}});
+            b[i+1][j]=-1;
+        }
+        if(b[i][j+1]!=-1 && j+1<n)
+        {
+            pq.push({a[i][j+1],{i,j+1}});
+            b[i][j+1]=-1;
+        }
+    }
+    return pq.top().first;
+}
+
+int kthSmallestOptimised(int a[4][4],int n, int k)
+{
+    priority_queue<node, vector<node>, greater<node>> pq;
+    for(int i=0;i<n;i++)
+        pq.push({a[0][i],{0,i}});
+    node ans;
+    while(k--)
+    {
+        ans=pq.top();
+        pq.pop();
+        int element = ans.first;
+        int i = ans.second.first;
+        int j = ans.second.second;
+        if(i+1<n)
+            pq.push({a[i+1][j],{i+1,j}});
+    }
+    return pq.top().first;
+}
+
 int main()
 {
     int ch;
@@ -3637,10 +3708,11 @@ int main()
     cout<<"188. Priority Queue for Custom Classes"<<endl;
     cout<<"189. Join the Ropes"<<endl;
     cout<<"190. Running median of a integer stream"<<endl;
-    cout<<"191. "<<endl;
-    cout<<"192. "<<endl;
-    cout<<"193. "<<endl;
-    cout<<"194. "<<endl;
+    cout<<"191. Merge k sorted Arrays"<<endl;
+    cout<<"192. Kth Smallest Element in a sorted row and column Matrix"<<endl;
+    cout<<"193. Kth Smallest Element in a sorted row and column Matrix Optimised"<<endl;
+    cout<<endl<<"******Challenges - Binary Trees******"<<endl;
+    cout<<"194. Hotel Visit"<<endl;
     cout<<"195. "<<endl;
     cout<<"196. "<<endl;
     cout<<"197. "<<endl;
@@ -6101,72 +6173,54 @@ int main()
                         break;
                     }
         case 190 :  {
-                        priority_queue<int> pmax;
-                        priority_queue<int, vector<int>, greater<int>> pmin;
-                        int d;
-                        cin>>d;
-                        pmax.push(d);
-                        float med=d;
-                        cout<<"Median = "<<med<<endl;
-                        cin>>d;
-                        while(d!=-1)
-                        {
-                            if(pmax.size()>pmin.size())
-                            {
-                                if(d<med)
-                                {
-                                    pmin.push(pmax.top());
-                                    pmax.pop();
-                                    pmax.push(d);
-                                }
-                                else
-                                    pmin.push(d);
-                                med = (pmax.top()+pmin.top())/2.0;
-                            }
-                            else if(pmax.size()==pmin.size())
-                            {
-                                if(d<med)
-                                {
-                                    pmax.push(d);
-                                    med=pmax.top();
-                                }
-                                else
-                                {
-                                    pmin.push(d);
-                                    med=pmin.top();
-                                }
-                            }
-                            else
-                            {
-                                if(d>med)
-                                {
-                                    pmax.push(pmin.top());
-                                    pmin.pop();
-                                    pmin.push(d);
-                                }
-                                else
-                                    pmax.push(d);
-                                med = (pmax.top()+pmin.top())/2.0;
-                            }
-                            cout<<"Median = "<<med<<endl;
-                            cin>>d; // Input : 0 0 1 1 3 4 5 8 9
-                        }
+
                         break;
                     }
         case 191 :  {
-
+                        vector<vector<int>> v{{2,5,7,8},{2,7,8,9,9},{9,9,9,10},{10,27,344,443}};
+                        vector<int> res = mergeKsortedArrays(v);
+                        for(auto x:res)
+                            cout<<x<<" ";
                         break;
                     }
         case 192 :  {
-
+                        //11 16 21 25 26 30 31 33 34 36 38 40 41 46 49 50
+                        int mat[4][4]= {{11, 21, 31, 41},{16, 26, 36, 46},{25, 30, 38, 49},{33, 34, 40, 50}};
+                        cout<<kthSmallest(mat,4,12);
                         break;
                     }
         case 193 :  {
-
+                        //11 16 21 25 26 30 31 33 34 36 38 40 41 46 49 50
+                        int mat[4][4]= {{11, 21, 31, 41},{16, 26, 36, 46},{25, 30, 38, 49},{33, 34, 40, 50}};
+                        cout<<kthSmallestOptimised(mat,4,12);
                         break;
                     }
         case 194 :  {
-
+                        ll n,k,d;
+                        cin>>n>>k;
+                        priority_queue<ll> pq;
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>d;
+                            if(d==1)
+                            {
+                                ll a,b;
+                                cin>>a>>b;
+                                ll c=pow(a,2)+pow(b,2);
+                                if(i>=k)
+                                {
+                                    if(pq.top()>c)
+                                    {
+                                        pq.pop();
+                                        pq.push(c);
+                                    }
+                                }
+                                else
+                                    pq.push(c);
+                            }
+                            else
+                                cout<<pq.top()<<endl;
+                        }
                         break;
                     }
         case 195 :  {
