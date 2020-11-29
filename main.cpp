@@ -3800,7 +3800,7 @@ int main()
     cout<<"194. Hotel Visit"<<endl;
     cout<<"195. Top k most frequent number in a stream using Heap"<<endl;
     cout<<"196. Top k most frequent number in a stream using Hashmap"<<endl;
-    cout<<endl<<"******Hashing******"<<endl;
+    cout<<endl<<"******Hashing/Hashing******"<<endl;
     cout<<"197. "<<endl;
     cout<<"198. "<<endl;
     cout<<"199. "<<endl;
