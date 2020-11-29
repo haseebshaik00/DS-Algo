@@ -477,6 +477,48 @@ class functor{
     }
 };
 
+class HashtableNode
+{
+public:
+    string key;
+    int val;
+    HashtableNode *next;
+
+    HashtableNode(string key, int val)
+    {
+        this->key = key;
+        this->val = val;
+        next = NULL;
+    }
+
+    ~HashtableNode()
+    {
+        if(next!=NULL)
+            delete next;
+    }
+};
+
+class Hashtable
+{
+    HashtableNode **table;
+    int current_size;
+    int table_size;
+
+    //int
+
+    Hashtable(int ts=7)
+    {
+        table_size = ts;
+        current_size = 0;
+        table = new HashtableNode*[table_size];
+        for(int i=0;i<table_size;i++)
+            table[i]=NULL;
+    }
+
+    //void insert(int )
+};
+
+
 void input_array(int a[], int n)
 {
     for(int i=0;i<n;i++)
@@ -3758,7 +3800,7 @@ int main()
     cout<<"194. Hotel Visit"<<endl;
     cout<<"195. Top k most frequent number in a stream using Heap"<<endl;
     cout<<"196. Top k most frequent number in a stream using Hashmap"<<endl;
-    cout<<endl<<"******Hashing/Hashtable******"<<endl;
+    cout<<endl<<"******Hashing******"<<endl;
     cout<<"197. "<<endl;
     cout<<"198. "<<endl;
     cout<<"199. "<<endl;
@@ -6272,16 +6314,23 @@ int main()
                         //1
                         //5 2
                         //5 1 3 5 2
-                        //Output : 5 1 5 1 3 5 1 5 1
+                        //Output :
+                        //5
+                        //1 5
+                        //1 3
+                        //5 1
+                        //5 1
                         int t;int n,k;
                         cin>>t;
                         int *arr;
                         while(t--)
                         {
-                         priority_queue<abc,vector<abc>,functor>pq;//Preparing a priority queue of abc type(ie. based on the number and on the frequency)
+                         priority_queue<abc,vector<abc>,functor>pq;
+                         //Preparing a priority queue of abc type(ie. based on the number and on the frequency)
                          cin>>n>>k;
                          arr=new int[n];int nn;
-                         int count[100]={0};//To maintain frequency count of each number
+                         int count[100]={0};
+                         //To maintain frequency count of each number
                          for(int i=0;i<n;i++)
                             cin>>arr[i];
                          for(int i=0;i<n;i++)
