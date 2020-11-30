@@ -3735,6 +3735,16 @@ void kTop(int a[], int n, int k)
     cout<<endl;
 }
 
+void verticalOrderPrint(BinaryTreeNode *root, int d, map<int,vector<int>> &m)
+{
+    if(root==NULL)
+        return;
+    m[d].push_back(root->data);
+    verticalOrderPrint(root->left,d-1,m);
+    verticalOrderPrint(root->right,d+1,m);
+    return;
+}
+
 int main()
 {
     int ch;
@@ -3971,7 +3981,20 @@ int main()
     cout<<"197. Hash Implementation"<<endl;
     cout<<"198. Map STL"<<endl;
     cout<<"199. Unordered Map STL Custom class"<<endl;
-    cout<<"200. Exit"<<endl;
+    cout<<"200. Unordered Map Phonebook"<<endl;
+    cout<<"201. Vertical Order Print of a binary tree"<<endl;
+    cout<<endl<<"******Challenges-Hashing/Hashing******"<<endl;
+    cout<<"202. "<<endl;
+    cout<<"203. "<<endl;
+    cout<<"204. "<<endl;
+    cout<<"205. "<<endl;
+    cout<<"206. "<<endl;
+    cout<<"207. "<<endl;
+    cout<<"208. "<<endl;
+    cout<<"209. "<<endl;
+    cout<<"210. "<<endl;
+    cout<<"211. "<<endl;
+    cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
 
@@ -6625,9 +6648,90 @@ int main()
                         cout<<endl<<"S3 marks = "<<m[s3]<<endl;
                         break;
                     }
-        case 200 :      break;
+        case 200 :  {
+                        unordered_map<string, vector<string>> phonebook;
+                        phonebook["haseeb"].push_back("100");
+                        phonebook["haseeb"].push_back("200");
+                        phonebook["haseeb"].push_back("300");
+                        phonebook["haseeb"].push_back("400");
+                        phonebook["aman"].push_back("500");
+                        phonebook["aman"].push_back("600");
+                        phonebook["aman"].push_back("700");
+                        phonebook["aman"].push_back("800");
+
+                        //Iterate
+                        for(auto p:phonebook)
+                        {
+                            cout<<"Name = "<<p.first<<" -> ";
+                            for(string s:p.second)
+                                cout<<s<<",";
+                            cout<<endl;
+                        }
+
+                        //Search and Print
+                        string name;
+                        cin>>name;
+                        if(phonebook.count(name)==0)
+                            cout<<"Absent!";
+                        else
+                        {
+                            for(auto s:phonebook[name])
+                                cout<<s<<",";
+                        }
+                        break;
+                    }
+        case 201 :  {
+                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1 or 8 10 1 -1 -1 6 9 -1 -1 7 -1 -1 3 -1 14 13 -1 -1 -1
+                        map<int, vector<int>> m;
+                        int d=0;
+                        verticalOrderPrint(root,d,m);
+                        for(auto x:m)
+                        {
+                            cout<<x.first<<"->";
+                            for(auto y:x.second)
+                                cout<<y<<",";
+                            cout<<endl;
+                        }
+                        break;
+                    }
+        case 202 :  {
+
+                        break;
+                    }
+        case 203 :  {
+
+                        break;
+                    }
+        case 204 :  {
+
+                        break;
+                    }
+        case 205 :  {
+
+                        break;
+                    }
+        case 206 :  {
+
+                        break;
+                    }
+        case 207 :  {
+
+                        break;
+                    }
+        case 208 :  {
+
+                        break;
+                    }
+        case 209 :  {
+
+                        break;
+                    }
+        case 210 :  {
+
+                        break;
+                    }
         default: cout<<"Try Again";
-                    break;
+                        break;
         }
     }while(ch!=200);
 	return 0;
