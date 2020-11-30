@@ -504,9 +504,73 @@ class Hashtable
     int current_size;
     int table_size;
 
-    //int
+    int hashFn(string key)
+    {
+        int idx=0,p=1;
+        for(int j=0;j<key.length();j++)
+        {
+            idx += (key[j]*p)%table_size;
+            idx %= table_size;
+            p = (p*27)%table_size;
+        }
+        return idx;
+    }
 
-    Hashtable(int ts=7)
+    bool isPrime(int n)
+    {
+        if (n <= 1)
+            return false;
+        if (n <= 3)
+            return true;
+        if (n%2 == 0 || n%3 == 0)
+            return false;
+        for (int i=5; i*i<=n; i=i+6)
+        {
+            if (n%i == 0 || n%(i+2) == 0)
+                return false;
+        }
+        return true;
+    }
+
+    int nextPrime(int N)
+    {
+        if (N <= 1)
+            return 2;
+        int prime = N;
+        bool found = false;
+        while (!found) {
+            prime++;
+            if (isPrime(prime))
+                found = true;
+        }
+        return prime;
+    }
+
+    void rehash()
+    {
+        HashtableNode **oldTable = table;
+        int oldTable_size = table_size;
+        table_size = 2*table_size;
+        table_size = nextPrime(table_size);
+        table = new HashtableNode*[table_size];
+        for(int i=0;i<table_size;i++)
+            table[i]=NULL;
+        for(int i=0;i<oldTable_size;i++)
+        {
+            HashtableNode *temp = oldTable[i];
+            while(temp!=NULL)
+            {
+                insert(temp->key,temp->val);
+                temp=temp->next;
+            }
+            if(oldTable!=NULL)
+                delete oldTable[i];
+        }
+        delete []oldTable;
+    }
+
+public:
+    Hashtable(int ts=5)
     {
         table_size = ts;
         current_size = 0;
@@ -515,9 +579,112 @@ class Hashtable
             table[i]=NULL;
     }
 
-    //void insert(int )
+    void print()
+    {
+        for(int i=0;i<table_size;i++)
+        {
+            HashtableNode *temp = table[i];
+            cout<<"Bucket "<<i<<" : ";
+            while(temp!=NULL)
+            {
+                cout<<"("<<temp->key<<"="<<temp->val<<")->";
+                temp=temp->next;
+            }
+            cout<<"NULL"<<endl;
+        }
+    }
+
+    void insert(string key, int val)
+    {
+        int idx = hashFn(key);
+        HashtableNode *n = new HashtableNode(key,val);
+        n->next = table[idx];
+        table[idx]=n;
+        current_size++;
+
+        //rehashing and load factor
+        float load_factor = current_size/(1.0 * table_size);
+        float threshold_value = 2.0;
+        if(load_factor > threshold_value) // then rehash
+            rehash();
+    }
+
+    int* search(string key)
+    {
+        int idx = hashFn(key);
+        HashtableNode *temp = table[idx];
+        while(temp!=NULL)
+        {
+            if(temp->key==key)
+                return &temp->val;
+            temp=temp->next;
+        }
+        return NULL; // for template class return NULL and make the return type of the function as T*
+    }
+
+    void erase(string key)
+    {
+        int idx = hashFn(key);
+        HashtableNode *temp = table[idx];
+        HashtableNode *prev = NULL;
+        while(temp!=NULL)
+        {
+            if(temp->key==key)
+            {
+                if(prev!=NULL)
+                    prev->next = temp->next;
+                else
+                    table[idx] = temp->next;
+                temp->next = NULL; // necessary otherwise the delete temp will delete the whole LL starting from this node
+                delete temp;
+                return;
+            }
+            prev = temp;
+            temp = temp->next;
+        }
+    }
+
+    int& operator[](string key)
+    {
+        int *f = search(key);
+        if(f==NULL)
+        {
+            int garbage;
+            insert(key,garbage);
+            f=search(key);
+        }
+        return *f;
+    }
 };
 
+class StudentMap
+{
+public:
+    string fname;
+    string lname;
+    string rollno;
+
+    StudentMap (string a, string b, string c)
+    {
+        fname=a;
+        lname=b;
+        rollno=c;
+    }
+
+    bool operator==(const StudentMap &s) const{
+        return rollno == s.rollno?true:false;
+    }
+};
+
+class HashFn
+{
+public:
+    size_t operator()(const StudentMap &s)const
+    //size_t is unsigned int data type used to represent size of some memory in bytes
+    {
+        return s.fname.length()+s.lname.length();
+    }
+};
 
 void input_array(int a[], int n)
 {
@@ -3801,9 +3968,9 @@ int main()
     cout<<"195. Top k most frequent number in a stream using Heap"<<endl;
     cout<<"196. Top k most frequent number in a stream using Hashmap"<<endl;
     cout<<endl<<"******Hashing/Hashing******"<<endl;
-    cout<<"197. "<<endl;
-    cout<<"198. "<<endl;
-    cout<<"199. "<<endl;
+    cout<<"197. Hash Implementation"<<endl;
+    cout<<"198. Map STL"<<endl;
+    cout<<"199. Unordered Map STL Custom class"<<endl;
     cout<<"200. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -6365,15 +6532,97 @@ int main()
                         break;
                     }
         case 197 :  {
+                        Hashtable price_menu;
+                        price_menu.insert("Burger", 125);
+                        price_menu.insert("Pizza", 151);
+                        price_menu.insert("Water", 10);
+                        price_menu.insert("Hot Water", 12);
+                        price_menu.insert("Chicken Tikka", 203);
+                        price_menu.insert("Biriyani", 357);
+                        price_menu.insert("Mandi", 409);
+                        price_menu.print();
 
+                        int* price = price_menu.search("Burger");
+                        if(price!=NULL)
+                            cout<<"Burger Price = "<<*price<<endl;
+                        else
+                            cout<<"Not found in the menu"<<endl;
+
+                        price_menu.erase("Biriyani");
+                        price_menu.print();
+
+                        //Easy access using [] operator
+                        //Insert
+                        price_menu["Dosa"]=60;
+                        //print
+                        cout<<"Price of Dosa = "<<price_menu["Dosa"]<<endl;
+                        //Update
+                        price_menu["Dosa"] += 10;
+                        //Search
+                        cout<<"Price of Dosa = "<<price_menu["Dosa"]<<endl;
                         break;
                     }
         case 198 :  {
+                        map<string,int> m;
+                        //1. Insert
+                        m.insert(make_pair("Mango",100));
+                        pair<string,int> p;
+                        p.first = "Apple";
+                        p.second = 120;
+                        m.insert(p);
+                        m["Banana"] = 20;
+                        //2. Search
+                        string fruit;
+                        cin>>fruit;
+                        //update the price
+                        m[fruit] += 22;
+                        auto it = m.find(fruit);
+                        if(it!=m.end())
+                            cout<<"price of "<<fruit<<" is"<<m[fruit]<<endl;
+                        else
+                            cout<<"fruit is not present "<<endl;
+                        //3. Erase
+                        m.erase(fruit);
+                        //another way to find a particular map
+                        // it stores unique keys only once
+                        if(m.count(fruit))
+                            cout<<"Price is "<<m[fruit]<<endl;
+                        else
+                            cout<<"Couldnt find "<<endl;
 
+                        m["Litchi"] = 60;
+                        m["Pineapple"] = 80;
+                        //Iterate over all the key value pairs
+                        for(auto it=m.begin();it!=m.end();it++)
+                            cout<<it->first<<" and "<<it->second<<endl;
+
+                        //for each loop
+                        for(auto p:m)
+                            cout<<p.first<<" : "<<p.second<<endl;
                         break;
                     }
         case 199 :  {
+                        unordered_map<StudentMap, int, HashFn> m; //HashFn class for comparing same as we did in priority queue
 
+                        StudentMap s1("Haseeb","Rahman","10");
+                        StudentMap s2("Kunal","Sharma","11");
+                        StudentMap s3("Haseeb","Rahman","12");
+                        StudentMap s4("Aman","Rao","12");
+                        StudentMap s5("Haseeb","Rahman","10");
+
+                        //Insert
+                        m[s1]=10;
+                        m[s2]=11;
+                        m[s3]=87;
+                        m[s4]=90;
+                        m[s5]=100;
+
+                        //Iterate
+                        for(auto x:m)
+                            cout<<x.first.fname<<" : "<<x.second<<endl;
+
+                        //Access
+                        cout<<endl<<"S3 marks = "<<m[s3]<<endl;
                         break;
                     }
         case 200 :      break;
