@@ -6,6 +6,7 @@
 #include<string>
 #include<algorithm>
 #include<set>
+#include<unordered_set>
 #include<list>
 #include<stack>
 #include<queue>
@@ -3745,6 +3746,105 @@ void verticalOrderPrint(BinaryTreeNode *root, int d, map<int,vector<int>> &m)
     return;
 }
 
+bool checkZeroSum(int a[], int n)
+{
+    unordered_set<int> s;
+    int pre=0;
+    for(int i=0;i<n;i++)
+    {
+        pre += a[i];
+        if(pre==0 or s.find(pre)!=s.end())
+            return true;
+        s.insert(pre);
+    }
+    return false;
+}
+
+int longestSubarrayZeroSum(int a[],int n)
+{
+    unordered_map<int,int> m;
+    int pre=0,curr_len=0,max_len=0;
+    for(int i=0;i<n;i++)
+    {
+        pre += a[i];
+        if(pre==0)
+        {
+            curr_len=i+1;
+            max_len=max(curr_len,max_len);
+        }
+        else if(m.find(pre)!=m.end())
+        {
+            curr_len=i-m[pre];
+            max_len=max(curr_len,max_len);
+        }
+        else
+            m[pre]=i;
+    }
+    return max_len;
+}
+
+int longestSubarrayKSum(int a[],int n, int k)
+{
+    unordered_map<int,int> m;
+    int pre=0,curr_len=0,max_len=0;
+    for(int i=0;i<n;i++)
+    {
+        pre += a[i];
+        if(pre==k)
+        {
+            curr_len=i+1;
+            max_len=max(curr_len,max_len);
+        }
+        else if(m.find(pre-k)!=m.end())
+        {
+            curr_len=i-m[pre-k];
+            max_len=max(curr_len,max_len);
+        }
+        else
+            m[pre]=i;
+    }
+    return max_len;
+}
+
+int largestConSubseq(int a[],int n)
+{
+    unordered_map<int,int> m; //number, streak length
+    for(int i=0;i<n;i++)
+    {
+        int no = a[i];
+        //New element whose left and right streak isn't present
+        if(m.count(no-1)==0 and m.count(no+1)==0)
+            m[no]=1;
+        //Both sides streaks are present
+        else if(m.count(no-1) and m.count(no+1))
+        {
+            int l1=m[no-1];
+            int l2=m[no+1];
+            int streak = 1+l1+l2;
+            m[no-l1]=streak;
+            m[no+l2]=streak;
+        }
+        //Right Expansion
+        else if(m.count(no-1) and !m.count(no+1))
+        {
+            int len=m[no-1];
+            m[no-len]=len+1;
+            m[no]=len+1;
+        }
+        //Left Expansion
+        else
+        {
+            int len=m[no+1];
+            m[no+len]=len+1;
+            m[no]=len+1;
+        }
+    }
+    int largest=0;
+    for(auto x:m)
+        largest=max(largest,x.second);
+    return largest;
+}
+
 int main()
 {
     int ch;
@@ -3984,11 +4084,11 @@ int main()
     cout<<"200. Unordered Map Phonebook"<<endl;
     cout<<"201. Vertical Order Print of a binary tree"<<endl;
     cout<<endl<<"******Challenges-Hashing/Hashing******"<<endl;
-    cout<<"202. "<<endl;
-    cout<<"203. "<<endl;
-    cout<<"204. "<<endl;
-    cout<<"205. "<<endl;
-    cout<<"206. "<<endl;
+    cout<<"202. Check subarray with sum zero"<<endl;
+    cout<<"203. Length of longest subarray with sum zero"<<endl;
+    cout<<"204. Length of longest subarray with sum K"<<endl;
+    cout<<"205. Longest Consecutive Subsequence using Unordered Map - O(n)"<<endl;
+    cout<<"206. Longest Consecutive Subsequence using Unordered Set - O(n)"<<endl;
     cout<<"207. "<<endl;
     cout<<"208. "<<endl;
     cout<<"209. "<<endl;
@@ -6695,19 +6795,26 @@ int main()
                         break;
                     }
         case 202 :  {
-
+                        int a[]={6,-1,2,1,-1};
+                        if(checkZeroSum(a,5))
+                            cout<<"Present!"<<endl;
+                        else
+                            cout<<"Absent!"<<endl;
                         break;
                     }
         case 203 :  {
-
+                        int a[]={0,-1,1,2,5,-5,-2};
+                        cout<<longestSubarrayZeroSum(a,7)<<endl;
                         break;
                     }
         case 204 :  {
-
+                        int a[]={1,-1,5,-2,3};
+                        cout<<longestSubarrayKSum(a,5,3)<<endl;
                         break;
                     }
         case 205 :  {
-
+                        int a[]={14,5,1,2,6,3,7,8,9,13,15,11,12,13,17};
+                        cout<<largestConSubseq(a,15)<<endl;
                         break;
                     }
         case 206 :  {
