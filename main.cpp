@@ -3845,6 +3845,105 @@ int largestConSubseq(int a[],int n)
     return largest;
 }
 
+int largestConSubseq2(int a[], int n)
+{
+    unordered_set<int> s;
+    for(int i=0;i<n;i++)
+        s.insert(a[i]); //O(1) time
+    int max_streak = 0;
+    for(int i=0;i<n;i++)
+    {
+        if(s.find(a[i]-1)==s.end())
+        {
+            int next_no = a[i]+1;
+            int streak_len=1;
+            while(s.find(next_no)!=s.end())
+            {
+                streak_len++;
+                next_no++;
+            }
+            max_streak=max(streak_len,max_streak);
+        }
+    }
+    return max_streak;
+}
+
+string findMinWindow(string window, string pattern)
+{
+    int sl=window.length();
+    int pl=pattern.length();
+
+    //Corner Case
+    if(pl>sl)
+        return "None";
+
+    //Freq Maps
+    int fs[256]={0};
+    int fp[256]={0};
+    for(int i=0;i<pl;i++)
+    {
+        char ch=pattern[i];
+        fp[ch]++;
+    }
+
+    //Sliding Window (Expansion + Contraction + Update the min window)
+    int c=0;
+    int strt=0; //left pointer to shrink the window
+    int strt_idx=-1;
+    int min_len = INT_MAX;
+    for(int i=0;i<sl;i++)
+    {
+        char ch=window[i];
+        fs[ch]++;
+
+        //maintain the count of characters matched
+        if(fp[ch]!=0 and fs[ch]<=fp[ch])
+            c++;
+
+        //start contracting from left
+        if(c==pl)
+        {
+            char temp=window[strt];
+
+            //loop to remove all unwanted characters
+            while(fp[temp]==0 or fs[temp]>fp[temp])
+            {
+                fs[temp]--;
+                strt++;
+                temp=window[strt];
+            }
+
+            //window size
+            int window_size = i-strt+1;
+            if(window_size<min_len)
+            {
+                min_len=window_size;
+                strt_idx=strt;
+            }
+        }
+    }
+    if(strt_idx==-1)
+        return "None";
+    string ans = window.substr(strt_idx,min_len);
+    return ans;
+}
+
+int rightAngledTriangles(int a[][2], int n)
+{
+    unordered_map<int,int> x;
+    unordered_map<int,int> y;
+    for(int i=0;i<n;i++)
+    {
+        x[a[i][0]]++;
+        y[a[i][1]]++;
+    }
+    int c=0;
+    for(int i=0;i<n;i++)
+        if(x[a[i][0]]>=1 && y[a[i][1]]>=1)
+            c += (x[a[i][0]]-1)*(y[a[i][1]]-1);
+    return c;
+}
+
 int main()
 {
     int ch;
@@ -4089,8 +4188,8 @@ int main()
     cout<<"204. Length of longest subarray with sum K"<<endl;
     cout<<"205. Longest Consecutive Subsequence using Unordered Map - O(n)"<<endl;
     cout<<"206. Longest Consecutive Subsequence using Unordered Set - O(n)"<<endl;
-    cout<<"207. "<<endl;
-    cout<<"208. "<<endl;
+    cout<<"207. Minimum Window Substring - Sliding Window"<<endl;
+    cout<<"208. Right Angled Triangles"<<endl;
     cout<<"209. "<<endl;
     cout<<"210. "<<endl;
     cout<<"211. "<<endl;
@@ -6818,15 +6917,19 @@ int main()
                         break;
                     }
         case 206 :  {
-
+                        int a[]={14,5,1,2,6,3,7,8,9,13,15,11,12,13,17};
+                        cout<<largestConSubseq2(a,15)<<endl;
                         break;
                     }
         case 207 :  {
-
+                        string s="hllloeaeo World";
+                        string p="eelo";
+                        cout<<findMinWindow(s,p)<<endl;
                         break;
                     }
         case 208 :  {
-
+                        int a[][2]={{ 1, 2 }, { 2, 1 }, { 2, 2 }, { 2, 3 }, { 3, 2 }};
+                        cout<<rightAngledTriangles(a,5)<<endl;
                         break;
                     }
         case 209 :  {
@@ -6834,6 +6937,46 @@ int main()
                         break;
                     }
         case 210 :  {
+
+                        break;
+                    }
+        case 211 :  {
+
+                        break;
+                    }
+        case 212 :  {
+
+                        break;
+                    }
+        case 213 :  {
+
+                        break;
+                    }
+        case 214 :  {
+
+                        break;
+                    }
+        case 215 :  {
+
+                        break;
+                    }
+        case 216 :  {
+
+                        break;
+                    }
+        case 217 :  {
+
+                        break;
+                    }
+        case 218 :  {
+
+                        break;
+                    }
+        case 219 :  {
+
+                        break;
+                    }
+        case 220 :  {
 
                         break;
                     }
