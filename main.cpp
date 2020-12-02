@@ -711,6 +711,62 @@ public:
     }
 };
 
+class TrieNode{
+    public:
+        char data;
+        unordered_map<char, TrieNode*> children;
+        bool terminal;
+
+     TrieNode(char d){
+            data = d;
+            terminal = false;
+        }
+};
+
+class Trie{
+
+    TrieNode* root;
+    int cnt;
+public:
+
+    Trie(){
+        root = new TrieNode('\0');
+        cnt = 0;
+    }
+
+    void insert(char *w)
+    {
+        TrieNode* temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch = w[i];
+            if(temp->children.count(ch))
+                temp = temp->children[ch];
+            else
+            {
+                TrieNode* n = new TrieNode(ch);
+                temp->children[ch] = n;
+                temp = n;
+            }
+        }
+        temp->terminal = true;
+    }
+
+    bool find(char *w)
+    {
+        TrieNode* temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch = w[i];
+            if(temp->children.count(ch)==0)
+                return false;
+            else
+                temp = temp->children[ch];
+        }
+        return temp->terminal;
+    }
+};
+
 void input_array(int a[], int n)
 {
     for(int i=0;i<n;i++)
@@ -4241,7 +4297,7 @@ int main()
     cout<<"208. Right Angled Triangles"<<endl;
     cout<<"209. Rectangle Counting"<<endl;
     cout<<endl<<"******Tries******"<<endl;
-    cout<<"210. "<<endl;
+    cout<<"210. Trie Insertion and Search"<<endl;
     cout<<"211. "<<endl;
     cout<<"211. "<<endl;
     cout<<"211. "<<endl;
@@ -7005,7 +7061,15 @@ int main()
                         break;
                     }
         case 210 :  {
-
+                        Trie t;
+                        char words[][100]={"a","hello","not","news","apple"};
+                        for(int i=0;i<5;i++)
+                            t.insert(words[i]);
+                        char m[]="not";
+                        if(t.find(m))
+                            cout<<"Present"<<endl;
+                        else
+                            cout<<"Absent"<<endl;
                         break;
                     }
         case 211 :  {
