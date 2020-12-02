@@ -687,6 +687,30 @@ public:
     }
 };
 
+class Point
+{
+public:
+    int x,y;
+    Point()
+    {
+    }
+    Point(int a,int b)
+    {
+        x=a;y=b;
+    }
+};
+
+class CompareRect
+{
+public:
+    bool operator()(Point p1, Point p2)
+    {
+        if(p1.x==p2.x)
+            return p1.y<p2.y;
+        return p1.x<p2.x;
+    }
+};
+
 void input_array(int a[], int n)
 {
     for(int i=0;i<n;i++)
@@ -3944,6 +3968,31 @@ int rightAngledTriangles(int a[][2], int n)
     return c;
 }
 
+int countRects(vector<Point> cord)
+{
+    int n=cord.size();
+    //insert all points in the set
+    set<Point, CompareRect> s;
+    for(int i=0;i<n;i++)
+        s.insert(cord[i]);
+    int ans=0;
+    for(auto it=s.begin();it!=prev(s.end());it++)
+    {
+        for(auto jt=next(it);jt!=s.end();jt++)
+        {
+            Point p1=*it;
+            Point p2=*jt;
+            if(p1.x==p2.x or p1.y==p2.y)
+                continue;
+            Point p3(p1.x,p2.y);
+            Point p4(p2.x,p1.y);
+            if(s.find(p3)!=s.end() and s.find(p4)!=s.end())
+                ans++;
+        }
+    }
+    return ans/2; // The p1 p2 repetition is already handled by the loop and this n/2 is because of the rectangle made when p1,p2 and p3,p4 are swapped
+}
+
 int main()
 {
     int ch;
@@ -4190,8 +4239,17 @@ int main()
     cout<<"206. Longest Consecutive Subsequence using Unordered Set - O(n)"<<endl;
     cout<<"207. Minimum Window Substring - Sliding Window"<<endl;
     cout<<"208. Right Angled Triangles"<<endl;
-    cout<<"209. "<<endl;
+    cout<<"209. Rectangle Counting"<<endl;
+    cout<<endl<<"******Tries******"<<endl;
     cout<<"210. "<<endl;
+    cout<<"211. "<<endl;
+    cout<<"211. "<<endl;
+    cout<<"211. "<<endl;
+    cout<<"211. "<<endl;
+    cout<<"211. "<<endl;
+    cout<<"211. "<<endl;
+    cout<<"211. "<<endl;
+    cout<<"211. "<<endl;
     cout<<"211. "<<endl;
     cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
@@ -6933,7 +6991,17 @@ int main()
                         break;
                     }
         case 209 :  {
-
+                        int m;
+                        cin>>m; // Input : 8 00 01 11 10 21 20 31 30
+                        vector<Point> cord;
+                        while(m--)
+                        {
+                            int x,y;
+                            cin>>x>>y;
+                            Point p(x,y);
+                            cord.push_back(p);
+                        }
+                        cout<<countRects(cord); // Output : 6
                         break;
                     }
         case 210 :  {
