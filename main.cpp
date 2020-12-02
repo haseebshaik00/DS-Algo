@@ -767,6 +767,180 @@ public:
     }
 };
 
+class TrieUniqueNodeUnique{
+    public:
+        char data;
+        unordered_map<char, TrieUniqueNodeUnique*> children;
+        bool terminal;
+        int occ;
+
+     TrieUniqueNodeUnique(char d){
+            data = d;
+            terminal = false;
+            occ=0;
+        }
+};
+
+class TrieUnique{
+
+    TrieUniqueNodeUnique* root;
+    int cnt;
+public:
+
+    TrieUnique(){
+        root = new TrieUniqueNodeUnique('\0');
+        cnt = 0;
+    }
+
+    void insert(char *w)
+    {
+        TrieUniqueNodeUnique* temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch = w[i];
+            if(temp->children.count(ch))
+            {
+                temp = temp->children[ch];
+                temp->occ++;
+            }
+            else
+            {
+                TrieUniqueNodeUnique* n = new TrieUniqueNodeUnique(ch);
+                n->occ++;
+                temp->children[ch] = n;
+                temp = n;
+            }
+        }
+        temp->terminal = true;
+    }
+
+    void printCount(char *w)
+    {
+        TrieUniqueNodeUnique* temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch = w[i];
+            if(temp->children.count(ch)==0)
+                return;
+            else
+            {
+                temp = temp->children[ch];
+                cout<<w[i]<<" "<<temp->occ<<endl;
+            }
+        }
+        cout<<endl;
+    }
+
+    void print(char *w)
+    {
+        string ans="";
+        TrieUniqueNodeUnique* temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            temp = temp->children[w[i]];
+            ans += w[i];
+            if(temp->occ==1)
+            {
+                cout<<ans<<endl;
+                return;
+            }
+        }
+        cout<<"-1"<<endl;
+    }
+};
+
+class TrieNodeXor
+{
+public:
+    TrieNodeXor *left; //for 0
+    TrieNodeXor *right; //for 1
+
+    TrieNodeXor()
+    {
+        left=NULL;
+        right=NULL;
+    }
+};
+
+class TrieXor
+{
+    TrieNodeXor *root;
+
+public:
+    TrieXor()
+    {
+        root = new TrieNodeXor();
+    }
+
+    //Insert
+    void insert(int n)
+    {
+        TrieNodeXor *temp = root;
+        for(int i=31 ; i>=0 ; i--)
+        {
+            int bit = (n>>i)&1;
+            if(bit==0)
+            {
+                if(temp->left==NULL)
+                    temp->left = new TrieNodeXor();
+                temp=temp->left;
+            }
+            else
+            {
+                if(temp->right==NULL)
+                    temp->right = new TrieNodeXor();
+                temp=temp->right;
+            }
+        }
+    }
+
+    //Xor helper function
+    int maxXorVal(int val)
+    {
+        TrieNodeXor *temp=root;
+        int current_ans = 0;
+        for(int j=31;j>=0;j--)
+        {
+            int bit = (val>>j)&1;
+            if(bit==0)
+            {
+                if(temp->right!=NULL)
+                {
+                    temp=temp->right;
+                    current_ans += (1<<j);
+                }
+                else
+                    temp=temp->left;
+            }
+            else
+            {
+                if(temp->left!=NULL)
+                {
+                    temp=temp->left;
+                    current_ans += (1<<j);
+                }
+                else
+                    temp=temp->right;
+            }
+        }
+        return current_ans;
+    }
+
+    //Max Xor Function
+    int maxXor(int a[], int n)
+    {
+        int max_xor=0;
+        for(int i=0;i<n;i++)
+        {
+            int val =a[i];
+            insert(val);
+            int curr_xor = maxXorVal(val);
+            max_xor  = max(max_xor,curr_xor);
+        }
+        return max_xor;
+    }
+};
+
 void input_array(int a[], int n)
 {
     for(int i=0;i<n;i++)
@@ -4298,15 +4472,16 @@ int main()
     cout<<"209. Rectangle Counting"<<endl;
     cout<<endl<<"******Tries******"<<endl;
     cout<<"210. Trie Insertion and Search"<<endl;
-    cout<<"211. "<<endl;
-    cout<<"211. "<<endl;
-    cout<<"211. "<<endl;
-    cout<<"211. "<<endl;
-    cout<<"211. "<<endl;
-    cout<<"211. "<<endl;
-    cout<<"211. "<<endl;
-    cout<<"211. "<<endl;
-    cout<<"211. "<<endl;
+    cout<<"211. Unique Prefix Array"<<endl;
+    cout<<"212. Max Xor Pair"<<endl;
+    cout<<"213. "<<endl;
+    cout<<"214. "<<endl;
+    cout<<"215. "<<endl;
+    cout<<"216. "<<endl;
+    cout<<"217. "<<endl;
+    cout<<"218. "<<endl;
+    cout<<"219. "<<endl;
+    cout<<"220. "<<endl;
     cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -7073,11 +7248,20 @@ int main()
                         break;
                     }
         case 211 :  {
-
+                        TrieUnique t;
+                        char words[][100]={"cobra", "zebraah", "dog", "zebra", "dove", "duck"};
+                        for(int i=0;i<6;i++)
+                            t.insert(words[i]);
+                        for(int i=0;i<6;i++)
+                            t.printCount(words[i]);
+                        for(int i=0;i<6;i++)
+                            t.print(words[i]);
                         break;
                     }
         case 212 :  {
-
+                        int a[]={3,10,5,25,2,8};
+                        TrieXor t;
+                        cout<<t.maxXor(a,6)<<endl;
                         break;
                     }
         case 213 :  {
@@ -7112,8 +7296,10 @@ int main()
 
                         break;
                     }
-        default: cout<<"Try Again";
+        default:    {
+                        cout<<"Try Again";
                         break;
+                    }
         }
     }while(ch!=200);
 	return 0;
