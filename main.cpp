@@ -4474,6 +4474,7 @@ int main()
     cout<<"210. Trie Insertion and Search"<<endl;
     cout<<"211. Unique Prefix Array"<<endl;
     cout<<"212. Max Xor Pair"<<endl;
+    cout<<endl<<"******Challenges - Hashing and Tries******"<<endl;
     cout<<"213. "<<endl;
     cout<<"214. "<<endl;
     cout<<"215. "<<endl;
