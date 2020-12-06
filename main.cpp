@@ -20,6 +20,7 @@ typedef pair<int, pair<int,int>> node;
 bool p[1000001]={false};
 char words[][10]={"zero","one","two","three","four","five","six","seven","eight","nine"};
 char keypad[][10]={"","","ABC","DEF","GHI","JKL","MNO","PQRS","TUV","WXYZ"};
+unordered_map<int,int> m215;
 ll coins[40];
 int ans=0;
 
@@ -4223,6 +4224,31 @@ int countRects(vector<Point> cord)
     return ans/2; // The p1 p2 repetition is already handled by the loop and this n/2 is because of the rectangle made when p1,p2 and p3,p4 are swapped
 }
 
+bool IsSorted(int arr[],int n)
+{
+    for(int i=0;i<n-1;i++){
+        if(arr[i]<arr[i+1]){
+            return false;
+        }
+    }
+    return true;
+}
+
+bool compe(int a,int b)
+{
+	return m215[a]<m215[b];
+}
+
+void hashFn215(int a[], int n, unordered_map<int,int> &m215, vector<int> &v)
+{
+	for(int i=0;i<n;i++)
+	{
+		if(m215.find(a[i])==m215.end())
+			v.push_back(a[i]);
+    	m215[a[i]]=i;
+	}
+}
+
 int main()
 {
     int ch;
@@ -4475,10 +4501,10 @@ int main()
     cout<<"211. Unique Prefix Array"<<endl;
     cout<<"212. Max Xor Pair"<<endl;
     cout<<endl<<"******Challenges - Hashing and Tries******"<<endl;
-    cout<<"213. "<<endl;
-    cout<<"214. "<<endl;
-    cout<<"215. "<<endl;
-    cout<<"216. "<<endl;
+    cout<<"213. Unlock"<<endl;
+    cout<<"214. Exist or Not"<<endl;
+    cout<<"215. Mike And HashTrick"<<endl;
+    cout<<"216. Subarrays with distinct elements"<<endl;
     cout<<"217. "<<endl;
     cout<<"218. "<<endl;
     cout<<"219. "<<endl;
@@ -7266,19 +7292,99 @@ int main()
                         break;
                     }
         case 213 :  {
-
+                        int N,n,k;
+                        cin>>n>>k;
+                        int a[n];N=n;
+                        for(int i=0;i<n;i++)
+                            cin>>a[i];
+                        unordered_map<int,int> m;
+                        for(int i=0;i<n;i++)
+                            m[a[i]]=i;
+                        while(k)
+                        {
+                            int best_pos=N-n;
+                            if(best_pos == m[n])
+                            {
+                                bool sorted = IsSorted(a,N);
+                                if(sorted){
+                                    break;
+                                }
+                                n--;
+                                continue;
+                            }
+                            else
+                            {
+                                int wrong_no = a[best_pos];
+                                int n_index = m[n];
+                                swap(a[n_index],a[best_pos]);
+                                m[wrong_no]=n_index;
+                                m[n]=best_pos;
+                                k--;
+                                n--;
+                            }
+                        }
+                        for(int i=0;i<N;i++)
+                            cout<<a[i]<<" ";
                         break;
                     }
         case 214 :  {
-
+                        int t;
+                        cin>>t;
+                        while(t--)
+                        {
+                            int n,d,q;
+                            cin>>n;
+                            unordered_map<int,bool> m;
+                            while(n--)
+                            {
+                                cin>>d;
+                                m[d]=true;
+                            }
+                            cin>>q;
+                            while(q--)
+                            {
+                                cin>>d;
+                                if(m[d])
+                                    cout<<"Yes"<<endl;
+                                else
+                                    cout<<"No"<<endl;
+                            }
+                            m.clear();
+                        }
                         break;
                     }
         case 215 :  {
+                        int n;
+                        cin>>n;
+                        int a[n];
+                        for(int i=0;i<n;i++)
+                            cin>>a[i];
 
+                        vector<int> v;
+                        hashFn215(a,n,m215,v);
+                        sort(v.begin(),v.end(),compe);
+                        for(auto x : v)
+                            cout<<x<<endl;
                         break;
                     }
         case 216 :  {
-
+                        int n,ans=0,j=0;
+                        cin>>n;
+                        int a[n];
+                        unordered_map<int,int> m;
+                        for(int i=0;i<n;i++)
+                            cin>>a[i];
+                        for(int i=0;i<n;i++)
+                        {
+                            while(j<n && m.find(a[j])==m.end())
+                            {
+                                m[a[j]]++;
+                                j++;
+                            }
+                            ans += (j-i)*(j-i+1)/2;
+                            m.erase(a[i]);
+                        }
+                        cout<<ans;
                         break;
                     }
         case 217 :  {
