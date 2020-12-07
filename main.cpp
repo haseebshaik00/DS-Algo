@@ -942,6 +942,80 @@ public:
     }
 };
 
+class TrieNodeDict{
+    public:
+        char ch;
+        map<char, TrieNodeDict *> m;
+        bool terminal;
+        TrieNodeDict(char c)
+        {
+            ch=c;
+            terminal=false;
+        }
+};
+
+class TrieDict
+{
+    TrieNodeDict *root;
+    public:
+
+    TrieDict()
+    {
+        root=new TrieNodeDict('\0');
+    }
+
+    void insert(char w[])
+    {
+        TrieNodeDict *temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch=w[i];
+            if(temp->m.count(ch))
+                temp = temp->m[ch];
+            else
+            {
+                TrieNodeDict* n = new TrieNodeDict(ch);
+                temp->m[ch] = n;
+                temp = n;
+            }
+        }
+        temp->terminal = true;
+    }
+
+    void print(TrieNodeDict *temp, string s, vector<string> &v)
+    {
+        if(temp->terminal)
+            v.push_back(s);
+        for(auto it:temp->m){
+            s.push_back(it.first);
+            print(it.second,s,v);
+            s.pop_back();
+        }
+
+    }
+
+    bool search(char w[], vector<string> &v)
+    {
+        TrieNodeDict* temp = root;
+        string s="";
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch = w[i];
+            if(temp->m.count(ch)==0){
+                insert(w);
+                return false;
+            }
+            else
+            {
+                s.push_back(ch);
+                temp = temp->m[ch];
+            }
+        }
+        print(temp, s, v);
+        return true;
+    }
+};
+
 void input_array(int a[], int n)
 {
     for(int i=0;i<n;i++)
@@ -4505,9 +4579,9 @@ int main()
     cout<<"214. Exist or Not"<<endl;
     cout<<"215. Mike And HashTrick"<<endl;
     cout<<"216. Subarrays with distinct elements"<<endl;
-    cout<<"217. "<<endl;
-    cout<<"218. "<<endl;
-    cout<<"219. "<<endl;
+    cout<<"217. Digital Dictionary"<<endl;
+    cout<<"218. Range Xor"<<endl;
+    cout<<"219. Trie Interview"<<endl;
     cout<<"220. "<<endl;
     cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
@@ -7388,11 +7462,146 @@ int main()
                         break;
                     }
         case 217 :  {
-
+                        TrieDict t;
+                        int n,q;
+                        cin>>n;
+                        char word[1000000];
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>word;
+                            t.insert(word);
+                        }
+                        cin>>q;
+                        char sword[1001];
+                        for(int i=0;i<q;i++)
+                        {
+                            cin>>sword;
+                            vector<string> v;
+                            if(!t.search(sword, v))
+                            {
+                                cout<<"No suggestions\n";
+                                continue;
+                            }
+                            sort(v.begin(),v.end());
+                            for(auto x:v)
+                                cout<<x<<endl;
+                            v.clear();
+                        }
                         break;
                     }
         case 218 :  {
+                        /*
+                        class trieNode {
 
+                        public:
+                            trieNode *left; /// represents 0
+                            trieNode *right; /// represent one
+                            vector<int> v;
+                        };
+
+                        void insert(int n, trieNode *head, int index) {
+
+                            trieNode *curr = head;
+                            for (int i = 31; i >= 0; i--) {
+
+                                int bit = (n >> i) & 1;
+                                if (bit == 0) {
+
+                                    if (curr->left == NULL) {
+                                        curr->left = new trieNode();
+                                    }
+                                    curr->v.push_back(index);
+                                    curr = curr->left;
+                                }
+                                /// bit is one ..
+                                else {
+
+                                    if (curr->right == NULL) {
+                                        curr->right = new trieNode();
+                                    }
+                                    curr->v.push_back(index);
+                                    curr = curr->right;
+                                }
+                            }
+                            curr->v.push_back(index);
+                        }
+
+                        bool binarysearchrange(vector<int>v, int left , int right) {
+                            int l = 0;
+                            int h = v.size() - 1;
+                            while (l <= h) {
+
+                                int m = (l + h) / 2;
+                                int val = v[m];
+                                if (val >= left && val <= right) {
+                                    return true;
+                                }
+                                else if (val < left) {
+                                    l = m + 1;
+                                }
+                                else if (val > right) {
+                                    h = m - 1;
+                                }
+
+                            }
+                            return false;
+                        }
+
+                        int findmaxorpair(trieNode *head, int el, int left, int right) {
+                            trieNode *curr = head;
+                            int value = el;
+                            int curr_xor = 0;
+                            for (int j = 31; j >= 0; j--) {
+
+                                int b = (value >> j) & 1;
+                                if (b == 0) {
+
+                                    if (curr->right != NULL && binarysearchrange(curr->right->v, left, right)) {
+                                        curr = curr->right;
+                                        curr_xor += (int)pow(2, j);
+                                    }
+                                    else {
+                                        curr = curr->left;
+                                    }
+                                }
+                                else {
+                                    if (curr->left != NULL && binarysearchrange(curr->left->v, left, right)) {
+                                        curr = curr->left;
+                                    }
+                                    else {
+                                        curr_xor += (int)pow(2, j); //Here
+                                        curr = curr->right;
+                                    }
+                                }
+                            }
+                            return curr_xor;
+                        }
+
+                        int main() {
+                            trieNode *myt = new trieNode();
+                            int t;
+                            cin >> t;
+                            int index = 0;
+                            while (t--) {
+
+                                int q;
+                                cin >> q;
+
+                                if (q == 0) {
+                                    int val;
+                                    cin >> val;
+                                    insert(val, myt, index);
+                                    index++;
+                                }
+                                else if (q == 1) {
+                                    int x, l, r;
+                                    cin >> l >> r >> x; //Here
+                                    cout << findmaxorpair(myt, x, l - 1, r - 1)<<endl;
+                                }
+                            }
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 219 :  {
