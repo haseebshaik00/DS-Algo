@@ -4574,7 +4574,7 @@ int main()
     cout<<"210. Trie Insertion and Search"<<endl;
     cout<<"211. Unique Prefix Array"<<endl;
     cout<<"212. Max Xor Pair"<<endl;
-    cout<<endl<<"****** Challenges - Hashing and Tries ******"<<endl;
+    cout<<endl<<"******Challenges - Hashing and Tries******"<<endl;
     cout<<"213. Unlock"<<endl;
     cout<<"214. Exist or Not"<<endl;
     cout<<"215. Mike And HashTrick"<<endl;
@@ -4582,6 +4582,7 @@ int main()
     cout<<"217. Digital Dictionary"<<endl;
     cout<<"218. Range Xor"<<endl;
     cout<<"219. Trie Interview"<<endl;
+    cout<<endl<<"******Greedy Algorithms******"<<endl;
     cout<<"220. "<<endl;
     cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
