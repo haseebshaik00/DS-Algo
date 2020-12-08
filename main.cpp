@@ -4323,6 +4323,23 @@ void hashFn215(int a[], int n, unordered_map<int,int> &m215, vector<int> &v)
 	}
 }
 
+int indianCoinGreedy(int a[], int n, int money)
+{
+    int ans=0;
+    while(money>0)
+    {
+        int idx = upper_bound(a,a+n,money)-1-a;
+        money -= a[idx];
+        ans++;
+    }
+    return ans;
+}
+
+bool compBusyMan(pair<int,int> p1, pair<int,int> p2)
+{
+    return p1.second<p2.second;
+}
+
 int main()
 {
     int ch;
@@ -4583,7 +4600,17 @@ int main()
     cout<<"218. Range Xor"<<endl;
     cout<<"219. Trie Interview"<<endl;
     cout<<endl<<"******Greedy Algorithms******"<<endl;
-    cout<<"220. "<<endl;
+    cout<<"220. Indian Coin Change"<<endl;
+    cout<<"221. Busy Man / Activity Selection Problem"<<endl;
+    cout<<"222. Connecting Wires"<<endl;
+    cout<<"223. Biased Standing"<<endl;
+    cout<<"224. "<<endl;
+    cout<<"225. "<<endl;
+    cout<<"226. "<<endl;
+    cout<<"227. "<<endl;
+    cout<<"228. "<<endl;
+    cout<<"229. "<<endl;
+    cout<<"230. "<<endl;
     cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -7697,6 +7724,124 @@ int main()
                         break;
                     }
         case 220 :  {
+                        int a[]={1,2,5,10,20};
+                        cout<<indianCoinGreedy(a,5,39)<<endl;
+                        break;
+                    }
+        case 221 :  {
+                        /*
+                        Input :
+                        6
+                        7 9
+                        0 10
+                        4 5
+                        8 9
+                        4 10
+                        5 7
+                        */
+                        int n,s,e;
+                        cin>>n;
+                        vector<pair<int,int>> v;
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>s>>e;
+                            v.push_back(make_pair(s,e));
+                        }
+                        sort(v.begin(),v.end(),compBusyMan);
+                        int c=1;
+                        int finish = v[0].second;
+                        for(int i=1;i<n;i++)
+                        {
+                            if(v[i].first>=finish)
+                            {
+                                c++;
+                                finish = v[i].second;
+                            }
+                        }
+                        cout<<c<<endl; // Output : 3
+                        break;
+                    }
+        case 222 :  {
+                        int n,d,ans=0;
+                        cin>>n;
+                        vector<int> white,black;
+                        for(int i=0;i<n/2;i++)
+                        {
+                            cin>>d;
+                            white.push_back(d);
+                        }
+                        for(int i=0;i<n/2;i++)
+                        {
+                            cin>>d;
+                            black.push_back(d);
+                        }
+                        sort(white.begin(),white.end());
+                        sort(black.begin(),black.end());
+                        for(int i=0;i<n/2;i++)
+                            ans += black[i]-white[i];
+                        cout<<ans<<endl;
+                        break;
+                    }
+        case 223 :  {
+                        /*
+                        Input :
+                        7
+                        a 1
+                        b 2
+                        c 2
+                        d 1
+                        e 5
+                        f 7
+                        g 7
+                        */
+                        int n,d,ans=0,badness=0;
+                        cin>>n;
+                        string s;
+                        int a[n+1]={0};
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>s>>d;
+                            a[d]++;
+                        }
+                        int avail_rank = 1;
+                        for(int i=1;i<=n;i++)
+                        {
+                            while(a[i])
+                            {
+                                badness = abs(avail_rank - i);
+                                ans += badness;
+                                a[i]--;
+                                avail_rank++;
+                            }
+                        }
+                        cout<<ans<<endl; // Output : 5
+                        break;
+                    }
+        case 224 :  {
+
+                        break;
+                    }
+        case 225 :  {
+
+                        break;
+                    }
+        case 226 :  {
+
+                        break;
+                    }
+        case 227 :  {
+
+                        break;
+                    }
+        case 228 :  {
+
+                        break;
+                    }
+        case 229 :  {
+
+                        break;
+                    }
+        case 230 :  {
 
                         break;
                     }
@@ -7705,6 +7850,6 @@ int main()
                         break;
                     }
         }
-    }while(ch!=200);
+    }while(ch!=400);
 	return 0;
 }
