@@ -4340,6 +4340,18 @@ bool compBusyMan(pair<int,int> p1, pair<int,int> p2)
     return p1.second<p2.second;
 }
 
+bool compExp(pair<int,int> p1, pair<int,int>p2)
+{
+    return p1.first>p2.first;
+}
+
+bool compKnapsackGreedy(pair<int,int> p1, pair<int,int> p2)
+{
+    float pa = p1.first/(p1.second*1.0);
+    float pb = p2.first/(p2.second*1.0);
+    return pa > pb ;
+}
+
 int main()
 {
     int ch;
@@ -4604,13 +4616,23 @@ int main()
     cout<<"221. Busy Man / Activity Selection Problem"<<endl;
     cout<<"222. Connecting Wires"<<endl;
     cout<<"223. Biased Standing"<<endl;
-    cout<<"224. "<<endl;
-    cout<<"225. "<<endl;
-    cout<<"226. "<<endl;
-    cout<<"227. "<<endl;
-    cout<<"228. "<<endl;
+    cout<<"224. Load Balancer"<<endl;
+    cout<<"225. Kingdom Defense"<<endl;
+    cout<<"226. Chopsticks"<<endl;
+    cout<<"227. Expedition"<<endl;
+    cout<<"228. Fractional Knapsack Greedy"<<endl;
     cout<<"229. "<<endl;
     cout<<"230. "<<endl;
+    cout<<"231. "<<endl;
+    cout<<"232. "<<endl;
+    cout<<"233. "<<endl;
+    cout<<"234. "<<endl;
+    cout<<"235. "<<endl;
+    cout<<"236. "<<endl;
+    cout<<"237. "<<endl;
+    cout<<"238. "<<endl;
+    cout<<"239. "<<endl;
+    cout<<"240. "<<endl;
     cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -7818,23 +7840,194 @@ int main()
                         break;
                     }
         case 224 :  {
-
+                        /* Input :
+                        4
+                        0 6 10 0
+                        */
+                        int n, max_load=0, load=0, diff=0;
+                        cin>>n;
+                        int a[n];
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>a[i];
+                            load += a[i];
+                        }
+                        if(load%n!=0)
+                        {
+                            cout<<"-1"<<endl;
+                            return 0;
+                        }
+                        load /= n;
+                        for(int i=0;i<n;i++)
+                        {
+                            diff += a[i]-load;
+                            int ans = max(diff,-diff);
+                            max_load = max(max_load,ans);
+                        }
+                        cout<<max_load; // Output : 4
                         break;
                     }
         case 225 :  {
-
+                        /* Input :
+                        15 8 3
+                        3 8
+                        11 2
+                        8 6
+                        */
+                        int w,h,n;
+                        cin>>w>>h>>n;
+                        int x[100],y[100];
+                        for(int i=0;i<n;i++)
+                            cin>>x[i]>>y[i];
+                        sort(x,x+n);sort(y,y+n);
+                        int dx = x[0]-1;
+                        int dy = y[0]-1;
+                        for(int i=1;i<n;i++)
+                        {
+                            dx = max(dx, x[i]-x[i-1]-1);
+                            dy = max(dy, y[i]-y[i-1]-1);
+                        }
+                        // corner case when the grid is ending
+                        dx = max(dx, w-x[n-1]);
+                        dy = max(dy, h-y[n-1]);
+                        cout<<dx*dy<<endl; // Output : 12
                         break;
                     }
         case 226 :  {
-
+                        int n,d,c=0;
+                        cin>>n>>d;
+                        int a[n];
+                        for(int i=0;i<n;i++)
+                            cin>>a[i];
+                        sort(a,a+n);
+                        int i=0;
+                        while(i<n-1)
+                        {
+                            if(a[i+1]-a[i]<=d)
+                            {
+                                i=i+2;
+                                c++;
+                            }
+                            else
+                                i++;
+                        }
+                        cout<<c;
                         break;
                     }
         case 227 :  {
+                        /* Input :
+                        1
+                        4
+                        4 4
+                        5 2
+                        11 5
+                        15 10
+                        25 10
+                        */
+                        int n,t,x,d,f,D,F,prev,flag=0,ans=0;
+                        cin>>t;
+                        while(t--)
+                        {
+                            vector<pair<int,int>> v;
+                            priority_queue<int> pq;
+                            cin>>n;
+                            for(int i=0;i<n;i++)
+                            {
+                                cin>>d>>f;
+                                v.push_back(make_pair(d,f)); // 4,4 5,2 11,5 15,10
+                            }
+                            cin>>D>>F;
+                            sort(v.begin(),v.end(),compExp); // 15,10 11,5 5,2 4,4
+                            for(int i=0;i<n;i++)
+                                v[i].first = D-v[i].first; // 10,10 14,5 20,2 21,4
 
+                            x=0; // current city
+                            prev=0; // the prev city we have visited
+
+                            while(x<n)
+                            {
+                                if(F >= (v[x].first-prev))
+                                {
+                                    F -= (v[x].first-prev);
+                                    pq.push(v[x].second);
+                                    prev = v[x].first;
+                                }
+                                else
+                                {
+                                    if(pq.empty())
+                                    {
+                                        flag=1;
+                                        break;
+                                    }
+                                    F += pq.top();
+                                    pq.pop();
+                                    ans++;
+                                    continue;
+                                }
+                                x++;
+                            }
+                            if(flag==1)
+                            {
+                                cout<<"-1"<<endl;
+                                continue;
+                            }
+                            D = D - v[n-1].first;
+                            if(F>=D)
+                            {
+                                cout<<ans<<endl;
+                                continue;
+                            }
+                            if(F<D)
+                            {
+                                if(pq.empty())
+                                {
+                                    flag=1;
+                                    break;
+                                }
+                                F += pq.top();
+                                pq.pop();
+                                ans++;
+                            }
+                            if(flag==1)
+                            {
+                                cout<<"-1"<<endl;
+                                continue;
+                            }
+                            cout<<ans<<endl; // Output : 2
+                        }
                         break;
                     }
         case 228 :  {
-
+                        /* Input :
+                        3 50
+                        60 10
+                        100 20
+                        120 30
+                        */
+                        int n,w,profit,weight;
+                        cin>>n>>w;
+                        vector<pair<int,int>> v;
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>profit>>weight;
+                            v.push_back(make_pair(profit,weight));
+                        }
+                        sort(v.begin(),v.end(),compKnapsackGreedy);
+                        int curr_weight=0, i=0;
+                        float total_profit=0.0;
+                        while(curr_weight + v[i].second <= w)
+                        {
+                            curr_weight += v[i].second;
+                            total_profit += v[i].first;
+                            i++;
+                        }
+                        if(curr_weight != w)
+                        {
+                            int remain = w-curr_weight;
+                            float fraction = remain/(v[i].second*1.0);
+                            total_profit += (v[i].first*fraction*1.0);
+                        }
+                        cout<<total_profit<<endl; // Output : 240
                         break;
                     }
         case 229 :  {
