@@ -4674,7 +4674,6 @@ int main()
     cout<<"210. Trie Insertion and Search"<<endl;
     cout<<"211. Unique Prefix Array"<<endl;
     cout<<"212. Max Xor Pair"<<endl;
-    cout<<endl<<"******Challenges - Hashing and Tries******"<<endl;
     cout<<"213. Unlock"<<endl;
     cout<<"214. Exist or Not"<<endl;
     cout<<"215. Mike And HashTrick"<<endl;
@@ -4684,7 +4683,7 @@ int main()
     cout<<"219. Trie Interview"<<endl;
     cout<<endl<<"******Greedy Algorithms******"<<endl;
     cout<<"220. Indian Coin Change"<<endl;
-    cout<<"221. Busy Man / Activity Selection Problem"<<endl;
+    cout<<"221. Busy Man / Activity Selection Problem / Job scheduling Problem"<<endl;
     cout<<"222. Connecting Wires"<<endl;
     cout<<"223. Biased Standing"<<endl;
     cout<<"224. Load Balancer"<<endl;
@@ -4693,8 +4692,9 @@ int main()
     cout<<"227. Expedition"<<endl;
     cout<<"228. Fractional Knapsack Greedy"<<endl;
     cout<<"229. Huffman Coding"<<endl;
-    cout<<"230. "<<endl;
-    cout<<"231. "<<endl;
+    cout<<endl<<"******Challenges - Greedy Algorithms******"<<endl;
+    cout<<"230. Deepak and his journey"<<endl;
+    cout<<"231. Dividing array"<<endl;
     cout<<"232. "<<endl;
     cout<<"233. "<<endl;
     cout<<"234. "<<endl;
@@ -8109,6 +8109,84 @@ int main()
                         break;
                     }
         case 230 :  {
+                        int t;
+                        cin>>t;
+                        while(t--)
+                        {
+                            long long int n;
+                            cin>>n;
+                            long long int c[n],l[n];
+                            for(long long int i=0;i<n;i++)
+                                cin>>c[i];
+                            for(long long int i=0;i<n;i++)
+                                cin>>l[i];
+                            long long int min_cost = c[0];
+                            long long int next_stop = l[0];
+                            long long int ans = min_cost*next_stop;
+                            for(long long int i=1;i<n;i++)
+                            {
+                                if(c[i]<min_cost)
+                                    min_cost = c[i];
+                                ans += min_cost * l[i];
+                            }
+                            cout<<ans<<endl;
+                        }
+                        break;
+                    }
+        case 231 :  {
+                        int t;
+                        cin>>t;
+                        while(t--)
+                        {
+                            long long int n;
+                            cin>>n;
+                            long long int a[n];
+                            for(long long int i=0;i<n;i++)
+                                cin>>a[i];
+                            sort(a,a+n);
+                            long long int min=0,max=0;
+                            for(int i=0;i<n/2;i++)
+                            {
+                                max += abs(a[i]-a[n-i-1]);
+                                min += abs(a[2*i]-a[2*i+1]);
+                            }
+                            cout<<min<<" "<<max<<endl;
+                        }
+                        break;
+                    }
+        case 232 :  {
+
+                        break;
+                    }
+        case 233 :  {
+
+                        break;
+                    }
+        case 234 :  {
+
+                        break;
+                    }
+        case 235 :  {
+
+                        break;
+                    }
+        case 236 :  {
+
+                        break;
+                    }
+        case 237 :  {
+
+                        break;
+                    }
+        case 238 :  {
+
+                        break;
+                    }
+        case 239 :  {
+
+                        break;
+                    }
+        case 240 :  {
 
                         break;
                     }
@@ -8117,6 +8195,7 @@ int main()
                         break;
                     }
         }
-    }while(ch!=400);
+    }
+    while(ch!=400);
 	return 0;
 }

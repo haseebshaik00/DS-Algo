@@ -1,3 +1,4 @@
+//#include<bits/stdc++.h> - includes every library
 #include<iostream>
 #include<cstring>
 #include<cmath>
@@ -5,18 +6,22 @@
 #include<string>
 #include<algorithm>
 #include<set>
+#include<unordered_set>
 #include<list>
 #include<stack>
 #include<queue>
 #include<deque>
+#include<map>
+#include<unordered_map>
 #define ll long long int
-//#include<bits/stdc++.h> - includes every library
-
+#define MAX_SIZE 100
 using namespace std;
+typedef pair<int, pair<int,int>> node;
 
 bool p[1000001]={false};
 char words[][10]={"zero","one","two","three","four","five","six","seven","eight","nine"};
 char keypad[][10]={"","","ABC","DEF","GHI","JKL","MNO","PQRS","TUV","WXYZ"};
+unordered_map<int,int> m215;
 ll coins[40];
 int ans=0;
 
@@ -339,6 +344,699 @@ class PairHeightBalance{
     public:
         int height;
         bool balance;
+};
+
+class PairMaxSum
+{
+public:
+    int branch_sum;
+    int max_sum;
+    PairMaxSum ()
+    {
+        branch_sum=0;
+        max_sum = 0;
+    }
+};
+
+class BSTLL
+{
+public:
+    BinaryTreeNode *head;
+    BinaryTreeNode *tail;
+};
+
+class Heap
+{
+    vector<int> v;
+    bool minheap;
+
+    bool compareHeap(int a, int b)
+    {
+        if(minheap)
+            return a<b;
+        else
+            return a>b;
+    }
+
+    void heapify(int idx)
+    {
+        int lc = 2*idx;
+        int rc = lc+1;
+        int min_idx = idx;
+        int last = v.size()-1;
+
+        if(lc<=last && compareHeap(v[lc],v[idx]))
+            min_idx = lc;
+        if(rc<=last && compareHeap(v[rc],v[min_idx]))
+            min_idx = rc;
+        if(min_idx!=idx)
+        {
+            swap(v[idx],v[min_idx]);
+            heapify(min_idx);
+        }
+    }
+
+public:
+
+    Heap(int default_size=10, bool type = true)
+    {
+        v.reserve(default_size);
+        v.push_back(-1);
+        minheap=type;
+    }
+
+    void push(int d)
+    {
+        v.push_back(d);
+        int idx=v.size()-1;
+        int parent = idx/2;
+        while(idx>1 && compareHeap(v[idx],v[parent]))
+        {
+            swap(v[idx],v[parent]);
+            idx=parent;
+            parent=parent/2;
+        }
+    }
+
+    int get()
+    {
+        return v[1];
+    }
+
+    bool isEmpty()
+    {
+        return v.size()==1;
+    }
+
+    void pop()
+    {
+        swap(v[1],v[v.size()-1]);
+        v.pop_back();
+        heapify(1);
+    }
+};
+
+class Person
+{
+public:
+    string name;
+    int age;
+    Person()
+    {
+    }
+    Person(string a,int b)
+    {
+        name=a;
+        age=b;
+    }
+};
+
+class Personcompare
+{
+public:
+    bool operator()(Person A, Person B)
+    {
+        return A.age>B.age;
+    }
+};
+
+class abc{
+    public:
+    int freq,num;
+    abc(int freq,int num)
+    {
+        this->freq=freq;
+        this->num=num;
+    }
+};
+class functor{
+    public:
+    bool operator()(abc x1,abc x2)
+    {
+        if(x1.freq==x2.freq)
+        return x1.num>x2.num;//When frequency of 2 elements is same, the smaller of the 2 elements will be at the top of the heap.
+        else
+        return x1.freq<x2.freq;//Max heap based on frequency count
+    }
+};
+
+class HashtableNode
+{
+public:
+    string key;
+    int val;
+    HashtableNode *next;
+
+    HashtableNode(string key, int val)
+    {
+        this->key = key;
+        this->val = val;
+        next = NULL;
+    }
+
+    ~HashtableNode()
+    {
+        if(next!=NULL)
+            delete next;
+    }
+};
+
+class Hashtable
+{
+    HashtableNode **table;
+    int current_size;
+    int table_size;
+
+    int hashFn(string key)
+    {
+        int idx=0,p=1;
+        for(int j=0;j<key.length();j++)
+        {
+            idx += (key[j]*p)%table_size;
+            idx %= table_size;
+            p = (p*27)%table_size;
+        }
+        return idx;
+    }
+
+    bool isPrime(int n)
+    {
+        if (n <= 1)
+            return false;
+        if (n <= 3)
+            return true;
+        if (n%2 == 0 || n%3 == 0)
+            return false;
+        for (int i=5; i*i<=n; i=i+6)
+        {
+            if (n%i == 0 || n%(i+2) == 0)
+                return false;
+        }
+        return true;
+    }
+
+    int nextPrime(int N)
+    {
+        if (N <= 1)
+            return 2;
+        int prime = N;
+        bool found = false;
+        while (!found) {
+            prime++;
+            if (isPrime(prime))
+                found = true;
+        }
+        return prime;
+    }
+
+    void rehash()
+    {
+        HashtableNode **oldTable = table;
+        int oldTable_size = table_size;
+        table_size = 2*table_size;
+        table_size = nextPrime(table_size);
+        table = new HashtableNode*[table_size];
+        for(int i=0;i<table_size;i++)
+            table[i]=NULL;
+        for(int i=0;i<oldTable_size;i++)
+        {
+            HashtableNode *temp = oldTable[i];
+            while(temp!=NULL)
+            {
+                insert(temp->key,temp->val);
+                temp=temp->next;
+            }
+            if(oldTable!=NULL)
+                delete oldTable[i];
+        }
+        delete []oldTable;
+    }
+
+public:
+    Hashtable(int ts=5)
+    {
+        table_size = ts;
+        current_size = 0;
+        table = new HashtableNode*[table_size];
+        for(int i=0;i<table_size;i++)
+            table[i]=NULL;
+    }
+
+    void print()
+    {
+        for(int i=0;i<table_size;i++)
+        {
+            HashtableNode *temp = table[i];
+            cout<<"Bucket "<<i<<" : ";
+            while(temp!=NULL)
+            {
+                cout<<"("<<temp->key<<"="<<temp->val<<")->";
+                temp=temp->next;
+            }
+            cout<<"NULL"<<endl;
+        }
+    }
+
+    void insert(string key, int val)
+    {
+        int idx = hashFn(key);
+        HashtableNode *n = new HashtableNode(key,val);
+        n->next = table[idx];
+        table[idx]=n;
+        current_size++;
+
+        //rehashing and load factor
+        float load_factor = current_size/(1.0 * table_size);
+        float threshold_value = 2.0;
+        if(load_factor > threshold_value) // then rehash
+            rehash();
+    }
+
+    int* search(string key)
+    {
+        int idx = hashFn(key);
+        HashtableNode *temp = table[idx];
+        while(temp!=NULL)
+        {
+            if(temp->key==key)
+                return &temp->val;
+            temp=temp->next;
+        }
+        return NULL; // for template class return NULL and make the return type of the function as T*
+    }
+
+    void erase(string key)
+    {
+        int idx = hashFn(key);
+        HashtableNode *temp = table[idx];
+        HashtableNode *prev = NULL;
+        while(temp!=NULL)
+        {
+            if(temp->key==key)
+            {
+                if(prev!=NULL)
+                    prev->next = temp->next;
+                else
+                    table[idx] = temp->next;
+                temp->next = NULL; // necessary otherwise the delete temp will delete the whole LL starting from this node
+                delete temp;
+                return;
+            }
+            prev = temp;
+            temp = temp->next;
+        }
+    }
+
+    int& operator[](string key)
+    {
+        int *f = search(key);
+        if(f==NULL)
+        {
+            int garbage;
+            insert(key,garbage);
+            f=search(key);
+        }
+        return *f;
+    }
+};
+
+class StudentMap
+{
+public:
+    string fname;
+    string lname;
+    string rollno;
+
+    StudentMap (string a, string b, string c)
+    {
+        fname=a;
+        lname=b;
+        rollno=c;
+    }
+
+    bool operator==(const StudentMap &s) const{
+        return rollno == s.rollno?true:false;
+    }
+};
+
+class HashFn
+{
+public:
+    size_t operator()(const StudentMap &s)const
+    //size_t is unsigned int data type used to represent size of some memory in bytes
+    {
+        return s.fname.length()+s.lname.length();
+    }
+};
+
+class Point
+{
+public:
+    int x,y;
+    Point()
+    {
+    }
+    Point(int a,int b)
+    {
+        x=a;y=b;
+    }
+};
+
+class CompareRect
+{
+public:
+    bool operator()(Point p1, Point p2)
+    {
+        if(p1.x==p2.x)
+            return p1.y<p2.y;
+        return p1.x<p2.x;
+    }
+};
+
+class TrieNode{
+    public:
+        char data;
+        unordered_map<char, TrieNode*> children;
+        bool terminal;
+
+     TrieNode(char d){
+            data = d;
+            terminal = false;
+        }
+};
+
+class Trie{
+
+    TrieNode* root;
+    int cnt;
+public:
+
+    Trie(){
+        root = new TrieNode('\0');
+        cnt = 0;
+    }
+
+    void insert(char *w)
+    {
+        TrieNode* temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch = w[i];
+            if(temp->children.count(ch))
+                temp = temp->children[ch];
+            else
+            {
+                TrieNode* n = new TrieNode(ch);
+                temp->children[ch] = n;
+                temp = n;
+            }
+        }
+        temp->terminal = true;
+    }
+
+    bool find(char *w)
+    {
+        TrieNode* temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch = w[i];
+            if(temp->children.count(ch)==0)
+                return false;
+            else
+                temp = temp->children[ch];
+        }
+        return temp->terminal;
+    }
+};
+
+class TrieUniqueNodeUnique{
+    public:
+        char data;
+        unordered_map<char, TrieUniqueNodeUnique*> children;
+        bool terminal;
+        int occ;
+
+     TrieUniqueNodeUnique(char d){
+            data = d;
+            terminal = false;
+            occ=0;
+        }
+};
+
+class TrieUnique{
+
+    TrieUniqueNodeUnique* root;
+    int cnt;
+public:
+
+    TrieUnique(){
+        root = new TrieUniqueNodeUnique('\0');
+        cnt = 0;
+    }
+
+    void insert(char *w)
+    {
+        TrieUniqueNodeUnique* temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch = w[i];
+            if(temp->children.count(ch))
+            {
+                temp = temp->children[ch];
+                temp->occ++;
+            }
+            else
+            {
+                TrieUniqueNodeUnique* n = new TrieUniqueNodeUnique(ch);
+                n->occ++;
+                temp->children[ch] = n;
+                temp = n;
+            }
+        }
+        temp->terminal = true;
+    }
+
+    void printCount(char *w)
+    {
+        TrieUniqueNodeUnique* temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch = w[i];
+            if(temp->children.count(ch)==0)
+                return;
+            else
+            {
+                temp = temp->children[ch];
+                cout<<w[i]<<" "<<temp->occ<<endl;
+            }
+        }
+        cout<<endl;
+    }
+
+    void print(char *w)
+    {
+        string ans="";
+        TrieUniqueNodeUnique* temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            temp = temp->children[w[i]];
+            ans += w[i];
+            if(temp->occ==1)
+            {
+                cout<<ans<<endl;
+                return;
+            }
+        }
+        cout<<"-1"<<endl;
+    }
+};
+
+class TrieNodeXor
+{
+public:
+    TrieNodeXor *left; //for 0
+    TrieNodeXor *right; //for 1
+
+    TrieNodeXor()
+    {
+        left=NULL;
+        right=NULL;
+    }
+};
+
+class TrieXor
+{
+    TrieNodeXor *root;
+
+public:
+    TrieXor()
+    {
+        root = new TrieNodeXor();
+    }
+
+    //Insert
+    void insert(int n)
+    {
+        TrieNodeXor *temp = root;
+        for(int i=31 ; i>=0 ; i--)
+        {
+            int bit = (n>>i)&1;
+            if(bit==0)
+            {
+                if(temp->left==NULL)
+                    temp->left = new TrieNodeXor();
+                temp=temp->left;
+            }
+            else
+            {
+                if(temp->right==NULL)
+                    temp->right = new TrieNodeXor();
+                temp=temp->right;
+            }
+        }
+    }
+
+    //Xor helper function
+    int maxXorVal(int val)
+    {
+        TrieNodeXor *temp=root;
+        int current_ans = 0;
+        for(int j=31;j>=0;j--)
+        {
+            int bit = (val>>j)&1;
+            if(bit==0)
+            {
+                if(temp->right!=NULL)
+                {
+                    temp=temp->right;
+                    current_ans += (1<<j);
+                }
+                else
+                    temp=temp->left;
+            }
+            else
+            {
+                if(temp->left!=NULL)
+                {
+                    temp=temp->left;
+                    current_ans += (1<<j);
+                }
+                else
+                    temp=temp->right;
+            }
+        }
+        return current_ans;
+    }
+
+    //Max Xor Function
+    int maxXor(int a[], int n)
+    {
+        int max_xor=0;
+        for(int i=0;i<n;i++)
+        {
+            int val =a[i];
+            insert(val);
+            int curr_xor = maxXorVal(val);
+            max_xor  = max(max_xor,curr_xor);
+        }
+        return max_xor;
+    }
+};
+
+class TrieNodeDict{
+    public:
+        char ch;
+        map<char, TrieNodeDict *> m;
+        bool terminal;
+        TrieNodeDict(char c)
+        {
+            ch=c;
+            terminal=false;
+        }
+};
+
+class TrieDict
+{
+    TrieNodeDict *root;
+    public:
+
+    TrieDict()
+    {
+        root=new TrieNodeDict('\0');
+    }
+
+    void insert(char w[])
+    {
+        TrieNodeDict *temp = root;
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch=w[i];
+            if(temp->m.count(ch))
+                temp = temp->m[ch];
+            else
+            {
+                TrieNodeDict* n = new TrieNodeDict(ch);
+                temp->m[ch] = n;
+                temp = n;
+            }
+        }
+        temp->terminal = true;
+    }
+
+    void print(TrieNodeDict *temp, string s, vector<string> &v)
+    {
+        if(temp->terminal)
+            v.push_back(s);
+        for(auto it:temp->m){
+            s.push_back(it.first);
+            print(it.second,s,v);
+            s.pop_back();
+        }
+
+    }
+
+    bool search(char w[], vector<string> &v)
+    {
+        TrieNodeDict* temp = root;
+        string s="";
+        for(int i=0;w[i]!='\0';i++)
+        {
+            char ch = w[i];
+            if(temp->m.count(ch)==0){
+                insert(w);
+                return false;
+            }
+            else
+            {
+                s.push_back(ch);
+                temp = temp->m[ch];
+            }
+        }
+        print(temp, s, v);
+        return true;
+    }
+};
+
+class HuffmanTreeNode {
+public:
+	char data;
+	int freq;
+	HuffmanTreeNode* left;
+	HuffmanTreeNode* right;
+	HuffmanTreeNode(char character,int frequency)
+	{
+		data = character;
+		freq = frequency;
+		left = right = NULL;
+	}
+};
+
+class CompareHuff {
+public:
+	bool operator()(HuffmanTreeNode* a, HuffmanTreeNode* b)
+	{
+		return a->freq > b->freq;
+	}
 };
 
 void input_array(int a[], int n)
@@ -2420,6 +3118,16 @@ BinaryTreeNode* preorderBuild()
     return root;
 }
 
+BinaryTreeNode * levelorderBuild(BinaryTreeNode *root,int a[],int i,int n)
+{
+    if(i>n)
+        return NULL;
+    root = new BinaryTreeNode(a[i]);
+    root->left = levelorderBuild(root->left,a,2*i+1,n);
+    root->right = levelorderBuild(root->right,a,2*i+2,n);
+    return root;
+}
+
 void preorderPrint(BinaryTreeNode *root)
 {
     if(root==NULL)
@@ -2460,7 +3168,7 @@ void printKthlevel(BinaryTreeNode *root, int k)
 {
     if(root==NULL)
         return;
-    if(k==1)
+    if(k==0)
     {
         cout<<root->data<<" ";
         return;
@@ -2474,7 +3182,7 @@ void levelorderPrint(BinaryTreeNode *root)
 {
     int height = BinaryTreeHeight(root);
     cout<<"Level Order : ";
-    for(int i=1;i<=height;i++)
+    for(int i=0;i<height;i++)
         printKthlevel(root, i);
     cout<<endl;
 }
@@ -2604,11 +3312,1122 @@ BinaryTreeNode *buildbbtreeFromArray(int a[],int s,int e)
     return root;
 }
 
+BinaryTreeNode * treeFromPreIn(int in[],int pre[],int s,int e)
+{
+    static int i = 0;   // static cz when the recursion comes back the variable will backtrack and we don't want that
+    if(s>e)
+        return NULL;
+    BinaryTreeNode *root  = new BinaryTreeNode(pre[i]);
+    int index = -1;
+    for(int j=s;j<=e;j++)
+    {
+        if(in[j]==pre[i])
+        {
+            index=j;
+            break;
+        }
+    }
+    i++;
+    root->left  = treeFromPreIn(in,pre,s,index-1);
+    root->right = treeFromPreIn(in,pre,index+1,e);
+    return root;
+}
+
+BinaryTreeNode * treeFromPostIn(int in[],int post[],int s,int e)
+{
+    static int i = 7;   // static cz when the recursion comes back the variable will backtrack and we don't want that
+    if(s>e)
+        return NULL;
+    BinaryTreeNode *root  = new BinaryTreeNode(post[i]);
+    int index = -1;
+    for(int j=s;j<=e;j++)
+    {
+        if(in[j]==post[i])
+        {
+            index=j;
+            break;
+        }
+    }
+    i--;
+    root->right = treeFromPostIn(in,post,index+1,e);
+    root->left = treeFromPostIn(in,post,s,index-1);
+    return root;
+}
+
+int search(int a[], int s, int e, int value)
+{
+    for (int i = s; i <= e; i++)
+        if (a[i] == value)
+            return i;
+    return -1;
+}
+
+int *extrackKeys(int in[], int level[], int m, int n)
+{
+    int *newlevel = new int[m+5];//increased size to avoid 0 size array .
+    int j = 0;
+    for (int i = 0; i < n; i++)
+        if (search(in, 0, m-1, level[i]) != -1)
+            {
+                newlevel[j] = level[i];
+                j++;
+            }
+    return newlevel;
+}
+
+BinaryTreeNode *treeFromLevelIn(int in[], int level[], int s, int e,int n)
+{
+    if(s>e || n<=0)
+        return NULL;
+    BinaryTreeNode *root = new BinaryTreeNode(level[0]);
+    if (s == e)
+        return root;
+    int i = search(in, s, e, root->data);
+    int *llevel  = extrackKeys(in, level, i, n);
+    int *rlevel  = extrackKeys(in + i + 1, level, e-i, n);//here u were usinf n-i-1
+    root->left = treeFromLevelIn(in, llevel, s, i-1, i-s);
+    root->right = treeFromLevelIn(in, rlevel, i+1, e, e-i);
+    return root;
+}
+
+BinaryTreeNode * treeFromPrePost(int pre[],int post[],int s,int e)
+{
+    static int i=0;
+    if(s>e)
+        return NULL;
+    BinaryTreeNode *root  = new BinaryTreeNode(pre[i]);
+    i++;
+    int index = -1;
+    for(int j=s;j<=e;j++)
+    {
+        if(post[j]==pre[i])
+        {
+            index=j;
+            break;
+        }
+    }
+    if(index!=-1)
+    {
+        root->left = treeFromPrePost(pre,post,s,index);
+        root->right = treeFromPrePost(pre,post,index+1,e);
+    }
+    return root;
+}
+
+BinaryTreeNode * treeFromPrePreM(int pre[],int prem[],int s,int e)
+{
+    static int i=0;
+    if(s>e)
+        return NULL;
+    BinaryTreeNode *root = new BinaryTreeNode(pre[i]);
+    i++;
+    int index=-1;
+    for (int j=s; j<=e;j++)
+    {
+        if (pre[i] == prem[j])
+        {
+            index=j;
+            break;
+        }
+    }
+    if(index!=-1)
+    {
+        root->left = treeFromPrePreM(pre,prem,index,e);
+        root->right = treeFromPrePreM(pre,prem,s+1,index-1);
+    }
+    return root;
+}
+
+void mirror(BinaryTreeNode *root)
+{
+    if(root==NULL)
+        return;
+    swap(root->left,root->right);
+    mirror(root->left);
+    mirror(root->right);
+}
+
+void rightView(BinaryTreeNode *root, int level, int &maxlevel)
+{
+    if(root==NULL)
+        return;
+    if(level>maxlevel)
+    {
+        maxlevel=level;
+        cout<<root->data<<" ";
+    }
+    rightView(root->right,level+1,maxlevel);
+    rightView(root->left,level+1,maxlevel);
+}
+
+int printAtDistK(BinaryTreeNode *root, BinaryTreeNode *target, int k)
+{
+    if(root==NULL)
+        return -1;
+    if(root==target)
+    {
+        printKthlevel(target,k);
+        return 0;
+    }
+    int DL = printAtDistK(root->left,target,k);
+    if(DL!=-1)
+    {
+        if(DL+1==k)
+            cout<<root->data<<" ";
+        else
+            printKthlevel(root->right,k-2-DL);
+        return 1+DL;
+    }
+    int DR = printAtDistK(root->right,target,k);
+    if(DR!=-1)
+    {
+        if(DR+1==k)
+            cout<<root->data<<" ";
+        else
+            printKthlevel(root->left,k-2-DR);
+        return 1+DR;
+    }
+    return -1;
+}
+
+BinaryTreeNode * lca(BinaryTreeNode *root, int a, int b)
+{
+    if(root==NULL)
+        return NULL;
+    if(root->data==a || root->data==b)
+        return root;
+    BinaryTreeNode *left = lca(root->left,a,b);
+    BinaryTreeNode *right = lca(root->right,a,b);
+    if(left!=NULL && right!=NULL)
+        return root;
+    if(left!=NULL)
+        return left;
+    return right;
+}
+
+PairMaxSum maxSumPath(BinaryTreeNode *root)
+{
+    PairMaxSum p;
+    if(root==NULL)
+        return p;
+    PairMaxSum left = maxSumPath(root->left);
+    PairMaxSum right = maxSumPath(root->right);
+    int op1 = root->data;
+    int op2 = left.branch_sum + root->data;
+    int op3 = right.branch_sum + root->data;
+    int op4 = left.branch_sum + right.branch_sum + root->data;
+
+    int current_ans_through_root = max(op1,max(op2,max(op3,op4)));
+
+    p.branch_sum = max(left.branch_sum,max(right.branch_sum,0))+root->data;
+    p.max_sum = max(left.max_sum,max(right.max_sum,current_ans_through_root));
+    return p;
+}
+
+int nodeLength(BinaryTreeNode *root, int key, int level)
+{
+    if(root==NULL)
+        return -1;
+    if(root->data==key)
+        return level;
+    int left = nodeLength(root->left,key,level+1);
+    if(left!=-1)
+        return left;
+    return nodeLength(root->right,key,level+1);
+}
+
+int findDistance(BinaryTreeNode *root, int a, int b)
+{
+    BinaryTreeNode *la = lca(root,a,b);
+    int l1 = nodeLength(la,a,0);
+    int l2 = nodeLength(la,b,0);
+    return l1+l2;
+}
+
+int prec(char c)
+{
+    if(c == '^')
+    return 3;
+    else if(c == '*' || c == '/')
+    return 2;
+    else if(c == '+' || c == '-')
+    return 1;
+    else
+    return -1;
+}
+
+void infixtopostfix(string c)
+{
+    stack<char> s;
+    int n=c.length();
+    string a;
+    for(int i=0;i<n;i++)
+    {
+        if(c[i]>='a' && c[i]<='z' || c[i]>='A' && c[i]<='Z')
+            a+=c[i];
+        else if(c[i]=='(')
+            s.push(c[i]);
+        else if(c[i]==')')
+        {
+            while(!s.empty() && s.top()!='(')
+            {
+                char b=s.top();
+                s.pop();
+                a+= b;
+            }
+            if(s.top()=='(')
+                s.pop();
+        }
+        else
+        {
+            while(!s.empty() && prec(c[i])<=prec(s.top()))
+            {
+                char b=s.top();
+                s.pop();
+                a+= b;
+            }
+            s.push(c[i]);
+        }
+    }
+    while(!s.empty())
+    {
+        char b=s.top();
+        s.pop();
+        a+= b;
+    }
+    cout<<a<<endl;
+}
+
+bool isOperand(char c)
+{
+    return !(!isalpha(c) && !isdigit(c));
+}
+
+bool isOperator(char c)
+{
+    if(c=='+' || c=='-' || c=='*' || c=='/' || c=='^')
+        return true;
+    else
+        return false;
+}
+
+void prefixtoinfix(string c)
+{
+    stack<string> s;
+    int l=c.length();
+    for(int i=l-1;i>=0;i--)
+    {
+        if(isOperator(c[i]))
+        {
+            string a=s.top();s.pop();
+            string b=s.top();s.pop();
+            s.push("("+a+c[i]+b+")");
+        }
+        else
+            s.push(string(1,c[i]));
+    }
+    cout<<s.top();
+}
+
+void prefixtopostfix(string c)
+{
+    stack<string> s;
+    int l=c.length();
+    for(int i=l-1;i>=0;i--)
+    {
+        if(isOperator(c[i]))
+        {
+            string a=s.top();s.pop();
+            string b=s.top();s.pop();
+            s.push(a+b+c[i]);
+        }
+        else
+            s.push(string(1,c[i]));
+    }
+    cout<<s.top();
+}
+
+void postfixtoprefix(string c)
+{
+    stack<string> s;
+    int l=c.length();
+    for(int i=0;i<l;i++)
+    {
+        if(isOperator(c[i]))
+        {
+            string a=s.top();s.pop();
+            string b=s.top();s.pop();
+            s.push(c[i]+b+a);
+        }
+        else
+            s.push(string(1,c[i]));
+    }
+    string ans = "";
+    while (!s.empty()) {
+        ans += s.top();
+        s.pop();
+    }
+    cout<<ans<<endl;
+}
+
+void postfixtoinfix(string c)
+{
+    stack<string> s;
+    int l=c.length();
+    for(int i=0;i<l;i++)
+    {
+        if(isOperator(c[i]))
+        {
+            string a=s.top();s.pop();
+            string b=s.top();s.pop();
+            s.push("("+b+c[i]+a+")");
+        }
+        else
+            s.push(string(1,c[i]));
+    }
+    cout<<s.top()<<endl;
+}
+
+string infixtopostfix2(string c)
+{
+    stack<char> s;
+    int n=c.length();
+    string a;
+    for(int i=0;i<n;i++)
+    {
+        if(c[i]>='a' && c[i]<='z' || c[i]>='A' && c[i]<='Z')
+            a+=c[i];
+        else if(c[i]=='(')
+            s.push(c[i]);
+        else if(c[i]==')')
+        {
+            while(!s.empty() && s.top()!='(')
+            {
+                char b=s.top();
+                s.pop();
+                a+= b;
+            }
+            if(s.top()=='(')
+                s.pop();
+        }
+        else
+        {
+            while(!s.empty() && prec(c[i])<=prec(s.top()))
+            {
+                char b=s.top();
+                s.pop();
+                a+= b;
+            }
+            s.push(c[i]);
+        }
+    }
+    while(!s.empty())
+    {
+        char b=s.top();
+        s.pop();
+        a+= b;
+    }
+    return a;
+}
+
+void infixtoprefix(string c)
+{
+    int l=c.length();
+    reverse(c.begin(),c.end());
+    for(int i=0;i<l;i++)
+    {
+        if(c[i]==')')
+            c[i]='(';
+        else if(c[i]=='(')
+            c[i]=')';
+    }
+    string d=infixtopostfix2(c);
+    reverse(d.begin(),d.end());
+    cout<<d<<endl;
+}
+
+BinaryTreeNode *BSTinsertNode(BinaryTreeNode *bstroot, int d)
+{
+    if(bstroot==NULL)
+        return new BinaryTreeNode(d);
+    if(d<=bstroot->data)
+        bstroot->left=BSTinsertNode(bstroot->left,d);
+    else
+        bstroot->right=BSTinsertNode(bstroot->right,d);
+    return bstroot;
+}
+
+BinaryTreeNode *BSTbuild()
+{
+    int d;
+    cin>>d;
+    BinaryTreeNode *bstroot = NULL;
+    while(d!=-1)
+    {
+        bstroot = BSTinsertNode(bstroot, d);
+        cin>>d;
+    }
+    return bstroot;
+}
+
+bool BSTSearch(BinaryTreeNode *bstroot, int d)
+{
+    if(bstroot==NULL)
+        return false;
+    if(bstroot->data==d)
+        return true;
+    if(d<=bstroot->data)
+        return BSTSearch(bstroot->left,d);
+    else
+        return BSTSearch(bstroot->right,d);
+}
+
+//https://ide.codingblocks.com/s/23088
+BinaryTreeNode *BSTdelete(BinaryTreeNode *bstroot, int d)
+{
+    if(bstroot==NULL)
+        return NULL;
+    if(d<bstroot->data)
+        bstroot->left = BSTdelete(bstroot->left,d);
+    else if(d==bstroot->data)
+    {
+        if(bstroot->left==NULL && bstroot->right==NULL)
+        {
+            delete bstroot;
+            return NULL;
+        }
+        else if(bstroot->left!=NULL && bstroot->right==NULL)
+        {
+            BinaryTreeNode *temp = bstroot->left;
+            delete bstroot;
+            return temp;
+        }
+        else if(bstroot->left==NULL && bstroot->right!=NULL)
+        {
+            BinaryTreeNode *temp = bstroot->left;
+            delete bstroot;
+            return temp;
+        }
+        else
+        {
+            BinaryTreeNode *temp = bstroot->right;
+            while(temp->left!=NULL)
+                temp=temp->left;
+            bstroot->data = temp->data;
+            bstroot->right = BSTdelete(bstroot->right,temp->data);
+            return bstroot;
+        }
+    }
+    else
+        bstroot->right = BSTdelete(bstroot->right,d);
+    return bstroot;
+}
+
+bool isBST(BinaryTreeNode *bstroot, int minV=INT_MIN, int maxV=INT_MAX)
+{
+    if(bstroot==NULL)
+        return true;
+    if(bstroot->data>minV && bstroot->data<maxV && isBST(bstroot->left, minV, bstroot->data) && isBST(bstroot->right, bstroot->data, maxV))
+        return true;
+    return false;
+}
+
+BSTLL flatten(BinaryTreeNode *bstroot)
+{
+    BSTLL l;
+    if(bstroot==NULL)
+    {
+        l.head=NULL;
+        l.tail=NULL;
+        return l;
+    }
+    // Leaf Node
+    if(bstroot->left==NULL && bstroot->right==NULL)
+    {
+        l.head=bstroot;
+        l.tail=bstroot;
+        return l;
+    }
+    // Left is Not NULL
+    if(bstroot->left!=NULL && bstroot->right==NULL)
+    {
+        BSTLL leftLL = flatten(bstroot->left);
+        leftLL.tail->right = bstroot;
+        l.head = leftLL.head;
+        l.tail=bstroot;
+        return l;
+    }
+    //Right is Not NULL
+    if(bstroot->left==NULL && bstroot->right!=NULL)
+    {
+        BSTLL rightLL = flatten(bstroot->right);
+        bstroot->right = rightLL.head;
+        l.head = bstroot;
+        l.tail = rightLL.tail;
+        return l;
+    }
+    //Both Sides are not NULL
+    BSTLL leftLL = flatten(bstroot->left);
+    BSTLL rightLL = flatten(bstroot->right);
+    leftLL.tail->right = bstroot;
+    bstroot->right = rightLL.head;
+    l.head = leftLL.head;
+    l.tail = rightLL.tail;
+    return l;
+}
+
+BinaryTreeNode *arraytoBST(BinaryTreeNode *bstroot, int a[], int s, int e, int n)
+{
+    if(s>e)
+        return NULL;
+    int mid = (s+e)/2;
+    bstroot = new BinaryTreeNode(a[mid]);
+    bstroot->left = arraytoBST(bstroot->left, a, s, mid-1, n);
+    bstroot->right = arraytoBST(bstroot->right, a, mid+1, e, n);
+    return bstroot;
+}
+
+int catalanNo(int n)
+{
+    return recFact(2*n)/(pow(recFact(n),2)*(n+1));
+}
+
+void helper(BinaryTreeNode *rt,map<int,pair<int,int>>&hashmap,int level,int hd){
+	if(rt==NULL)return;
+	if(hashmap.find(hd)==hashmap.end())
+		hashmap.insert({hd,{rt->data,level}});
+	else{
+		pair<int ,int >p=hashmap[hd];
+		if(level>=p.second)
+			hashmap[hd]={rt->data,level};
+	}
+	helper(rt->left,hashmap,level+1,hd-1);
+	helper(rt->right,hashmap,level+1,hd+1);
+}
+
+void TreeBottomView(BinaryTreeNode *rt){
+	map<int,pair<int,int>>hashmap;
+	helper(rt,hashmap,0,0);
+	for(auto it:hashmap)
+		cout<<it.second.first<<" ";
+}
+
+void buildHeap(vector<int> &v)
+{
+    for(int i=2;i<v.size();i++)
+    {
+        int idx=i;
+        int parent=i/2;
+        while(idx>1 && v[idx]>v[parent])
+        {
+            swap(v[idx],v[parent]);
+            idx=parent;
+            parent/=2;
+        }
+    }
+}
+
+void heapify(vector<int> &v, int idx)
+{
+    int lc = 2*idx;
+    int rc = lc+1;
+    int min_idx = idx;
+    int last = v.size()-1;
+
+    if(lc<=last && v[lc]>v[idx])// maxheap
+        min_idx = lc;
+    if(rc<=last && v[rc]>v[min_idx])
+        min_idx = rc;
+    if(min_idx!=idx)
+    {
+        swap(v[idx],v[min_idx]);
+        heapify(v,min_idx);
+    }
+}
+
+void buildHeapFast(vector<int> &v)
+{
+    for(int i=(v.size()-1)/2;i>=1;i--)
+        heapify(v,i);
+}
+
+void heapifyHeapSort(vector<int> &v, int idx, int n)
+{
+    int lc = 2*idx;
+    int rc = lc+1;
+    int min_idx = idx;
+    int last = n-1;
+
+    if(lc<=last && v[lc]>v[idx])// maxheap
+        min_idx = lc;
+    if(rc<=last && v[rc]>v[min_idx])
+        min_idx = rc;
+    if(min_idx!=idx)
+    {
+        swap(v[idx],v[min_idx]);
+        heapifyHeapSort(v,min_idx,n);
+    }
+}
+
+void heapSort(vector<int> &v)
+{
+    buildHeapFast(v);
+    int n=v.size();
+    while(n>1)
+    {
+        swap(v[1],v[n-1]);
+        n--;
+        heapifyHeapSort(v,1,n);
+    }
+}
+
+int joinRopes(int r[], int n)
+{
+    priority_queue<int, vector<int>, greater<int>> pq(r,r+n);
+    int cost=0;
+    while(pq.size()>1)
+    {
+        int A=pq.top(); pq.pop();
+        int B=pq.top(); pq.pop();
+        cost += (A+B);
+        pq.push(A+B);
+    }
+    return cost;
+}
+
+vector<int> mergeKsortedArrays(vector<vector<int>> v)
+{
+    vector<int> res;
+    priority_queue<node, vector<node>, greater<node>> pq;
+    for(int i=0;i<v.size();i++)
+        pq.push({v[i][0],{i,0}});
+    while(!pq.empty())
+    {
+        node p = pq.top();
+        pq.pop();
+        int element = p.first;
+        int x=p.second.first;
+        int y=p.second.second;
+        res.push_back(element);
+        if(y+1<v[x].size())
+            pq.push({v[x][y+1],{x,y+1}});
+    }
+    return res;
+}
+
+int kthSmallest(int a[4][4],int n, int k)
+{
+    priority_queue<node, vector<node>, greater<node>> pq;
+    int b[n][n]={0};
+    for(int i=0;i<n;i++)
+    {
+        pq.push({a[0][i],{0,i}});
+        b[0][i]=-1;
+    }
+    node ans;
+    while(k--)
+    {
+        ans =pq.top();
+        pq.pop();
+        int element = ans.first;
+        int i = ans.second.first;
+        int j = ans.second.second;
+        if(b[i+1][j]!=-1 && i+1<n)
+        {
+            pq.push({a[i+1][j],{i+1,j}});
+            b[i+1][j]=-1;
+        }
+        if(b[i][j+1]!=-1 && j+1<n)
+        {
+            pq.push({a[i][j+1],{i,j+1}});
+            b[i][j+1]=-1;
+        }
+    }
+    return pq.top().first;
+}
+
+int kthSmallestOptimised(int a[4][4],int n, int k)
+{
+    priority_queue<node, vector<node>, greater<node>> pq;
+    for(int i=0;i<n;i++)
+        pq.push({a[0][i],{0,i}});
+    node ans;
+    while(k--)
+    {
+        ans=pq.top();
+        pq.pop();
+        int element = ans.first;
+        int i = ans.second.first;
+        int j = ans.second.second;
+        if(i+1<n)
+            pq.push({a[i+1][j],{i+1,j}});
+    }
+    return pq.top().first;
+}
+
+void kTop(int a[], int n, int k)
+{
+    vector<int> top(k + 1);
+    unordered_map<int, int> freq;
+    for (int m = 0; m < n; m++) {
+    freq[a[m]]++;
+    top[k] = a[m];
+    auto it = find(top.begin(), top.end() - 1, a[m]);
+    for (int i = distance(top.begin(), it) - 1; i >= 0; --i)
+    {
+        if (freq[top[i]] < freq[top[i + 1]])
+            swap(top[i], top[i + 1]);
+        else if ((freq[top[i]] == freq[top[i + 1]]) && (top[i] > top[i + 1]))
+            swap(top[i], top[i + 1]);
+        else
+            break;
+    }
+    for (int i = 0; i < k && top[i] != 0; ++i)
+        cout<<top[i]<<" ";
+    }
+    cout<<endl;
+}
+
+void verticalOrderPrint(BinaryTreeNode *root, int d, map<int,vector<int>> &m)
+{
+    if(root==NULL)
+        return;
+    m[d].push_back(root->data);
+    verticalOrderPrint(root->left,d-1,m);
+    verticalOrderPrint(root->right,d+1,m);
+    return;
+}
+
+bool checkZeroSum(int a[], int n)
+{
+    unordered_set<int> s;
+    int pre=0;
+    for(int i=0;i<n;i++)
+    {
+        pre += a[i];
+        if(pre==0 or s.find(pre)!=s.end())
+            return true;
+        s.insert(pre);
+    }
+    return false;
+}
+
+int longestSubarrayZeroSum(int a[],int n)
+{
+    unordered_map<int,int> m;
+    int pre=0,curr_len=0,max_len=0;
+    for(int i=0;i<n;i++)
+    {
+        pre += a[i];
+        if(pre==0)
+        {
+            curr_len=i+1;
+            max_len=max(curr_len,max_len);
+        }
+        else if(m.find(pre)!=m.end())
+        {
+            curr_len=i-m[pre];
+            max_len=max(curr_len,max_len);
+        }
+        else
+            m[pre]=i;
+    }
+    return max_len;
+}
+
+int longestSubarrayKSum(int a[],int n, int k)
+{
+    unordered_map<int,int> m;
+    int pre=0,curr_len=0,max_len=0;
+    for(int i=0;i<n;i++)
+    {
+        pre += a[i];
+        if(pre==k)
+        {
+            curr_len=i+1;
+            max_len=max(curr_len,max_len);
+        }
+        else if(m.find(pre-k)!=m.end())
+        {
+            curr_len=i-m[pre-k];
+            max_len=max(curr_len,max_len);
+        }
+        else
+            m[pre]=i;
+    }
+    return max_len;
+}
+
+int largestConSubseq(int a[],int n)
+{
+    unordered_map<int,int> m; //number, streak length
+    for(int i=0;i<n;i++)
+    {
+        int no = a[i];
+        //New element whose left and right streak isn't present
+        if(m.count(no-1)==0 and m.count(no+1)==0)
+            m[no]=1;
+        //Both sides streaks are present
+        else if(m.count(no-1) and m.count(no+1))
+        {
+            int l1=m[no-1];
+            int l2=m[no+1];
+            int streak = 1+l1+l2;
+            m[no-l1]=streak;
+            m[no+l2]=streak;
+        }
+        //Right Expansion
+        else if(m.count(no-1) and !m.count(no+1))
+        {
+            int len=m[no-1];
+            m[no-len]=len+1;
+            m[no]=len+1;
+        }
+        //Left Expansion
+        else
+        {
+            int len=m[no+1];
+            m[no+len]=len+1;
+            m[no]=len+1;
+        }
+    }
+    int largest=0;
+    for(auto x:m)
+        largest=max(largest,x.second);
+    return largest;
+}
+
+int largestConSubseq2(int a[], int n)
+{
+    unordered_set<int> s;
+    for(int i=0;i<n;i++)
+        s.insert(a[i]); //O(1) time
+    int max_streak = 0;
+    for(int i=0;i<n;i++)
+    {
+        if(s.find(a[i]-1)==s.end())
+        {
+            int next_no = a[i]+1;
+            int streak_len=1;
+            while(s.find(next_no)!=s.end())
+            {
+                streak_len++;
+                next_no++;
+            }
+            max_streak=max(streak_len,max_streak);
+        }
+    }
+    return max_streak;
+}
+
+string findMinWindow(string window, string pattern)
+{
+    int sl=window.length();
+    int pl=pattern.length();
+
+    //Corner Case
+    if(pl>sl)
+        return "None";
+
+    //Freq Maps
+    int fs[256]={0};
+    int fp[256]={0};
+    for(int i=0;i<pl;i++)
+    {
+        char ch=pattern[i];
+        fp[ch]++;
+    }
+
+    //Sliding Window (Expansion + Contraction + Update the min window)
+    int c=0;
+    int strt=0; //left pointer to shrink the window
+    int strt_idx=-1;
+    int min_len = INT_MAX;
+    for(int i=0;i<sl;i++)
+    {
+        char ch=window[i];
+        fs[ch]++;
+
+        //maintain the count of characters matched
+        if(fp[ch]!=0 and fs[ch]<=fp[ch])
+            c++;
+
+        //start contracting from left
+        if(c==pl)
+        {
+            char temp=window[strt];
+
+            //loop to remove all unwanted characters
+            while(fp[temp]==0 or fs[temp]>fp[temp])
+            {
+                fs[temp]--;
+                strt++;
+                temp=window[strt];
+            }
+
+            //window size
+            int window_size = i-strt+1;
+            if(window_size<min_len)
+            {
+                min_len=window_size;
+                strt_idx=strt;
+            }
+        }
+    }
+    if(strt_idx==-1)
+        return "None";
+    string ans = window.substr(strt_idx,min_len);
+    return ans;
+}
+
+int rightAngledTriangles(int a[][2], int n)
+{
+    unordered_map<int,int> x;
+    unordered_map<int,int> y;
+    for(int i=0;i<n;i++)
+    {
+        x[a[i][0]]++;
+        y[a[i][1]]++;
+    }
+    int c=0;
+    for(int i=0;i<n;i++)
+        if(x[a[i][0]]>=1 && y[a[i][1]]>=1)
+            c += (x[a[i][0]]-1)*(y[a[i][1]]-1);
+    return c;
+}
+
+int countRects(vector<Point> cord)
+{
+    int n=cord.size();
+    //insert all points in the set
+    set<Point, CompareRect> s;
+    for(int i=0;i<n;i++)
+        s.insert(cord[i]);
+    int ans=0;
+    for(auto it=s.begin();it!=prev(s.end());it++)
+    {
+        for(auto jt=next(it);jt!=s.end();jt++)
+        {
+            Point p1=*it;
+            Point p2=*jt;
+            if(p1.x==p2.x or p1.y==p2.y)
+                continue;
+            Point p3(p1.x,p2.y);
+            Point p4(p2.x,p1.y);
+            if(s.find(p3)!=s.end() and s.find(p4)!=s.end())
+                ans++;
+        }
+    }
+    return ans/2; // The p1 p2 repetition is already handled by the loop and this n/2 is because of the rectangle made when p1,p2 and p3,p4 are swapped
+}
+
+bool IsSorted(int arr[],int n)
+{
+    for(int i=0;i<n-1;i++){
+        if(arr[i]<arr[i+1]){
+            return false;
+        }
+    }
+    return true;
+}
+
+bool compe(int a,int b)
+{
+	return m215[a]<m215[b];
+}
+
+void hashFn215(int a[], int n, unordered_map<int,int> &m215, vector<int> &v)
+{
+	for(int i=0;i<n;i++)
+	{
+		if(m215.find(a[i])==m215.end())
+			v.push_back(a[i]);
+    	m215[a[i]]=i;
+	}
+}
+
+int indianCoinGreedy(int a[], int n, int money)
+{
+    int ans=0;
+    while(money>0)
+    {
+        int idx = upper_bound(a,a+n,money)-1-a;
+        money -= a[idx];
+        ans++;
+    }
+    return ans;
+}
+
+bool compBusyMan(pair<int,int> p1, pair<int,int> p2)
+{
+    return p1.second<p2.second;
+}
+
+bool compExp(pair<int,int> p1, pair<int,int>p2)
+{
+    return p1.first>p2.first;
+}
+
+bool compKnapsackGreedy(pair<int,int> p1, pair<int,int> p2)
+{
+    float pa = p1.first/(p1.second*1.0);
+    float pb = p2.first/(p2.second*1.0);
+    return pa > pb ;
+}
+
+HuffmanTreeNode* generateTree(priority_queue<HuffmanTreeNode*,vector<HuffmanTreeNode*>,CompareHuff> pq)
+{
+	while (pq.size() != 1)
+    {
+		HuffmanTreeNode* left = pq.top();
+		pq.pop();
+		HuffmanTreeNode* right = pq.top();
+		pq.pop();
+		HuffmanTreeNode* node = new HuffmanTreeNode('$', left->freq + right->freq);
+		node->left = left;
+		node->right = right;
+		pq.push(node);
+	}
+	return pq.top();
+}
+
+void printCodes(HuffmanTreeNode* root, int arr[], int top)
+{
+	if (root->left)
+    {
+		arr[top] = 0;
+		printCodes(root->left, arr, top + 1);
+	}
+	if (root->right)
+    {
+		arr[top] = 1;
+		printCodes(root->right, arr, top + 1);
+	}
+	if (!root->left && !root->right) {
+		cout << root->data << " ";
+		for (int i = 0; i < top; i++)
+			cout << arr[i];
+		cout << endl;
+	}
+}
+
+void HuffmanCodes(char data[], int freq[], int size)
+{
+	priority_queue<HuffmanTreeNode*, vector<HuffmanTreeNode*>, CompareHuff> pq;
+	for (int i = 0; i < size; i++) {
+		HuffmanTreeNode* newNode = new HuffmanTreeNode(data[i], freq[i]);
+		pq.push(newNode);
+	}
+	HuffmanTreeNode* root = generateTree(pq);
+	int arr[MAX_SIZE], top = 0;
+	printCodes(root, arr, top);
+}
+
 int main()
 {
     int ch;
     do{
-    cout<<endl<<"*****MENU*****"<<endl;
+    cout<<endl<<"******MENU******"<<endl;
     cout<<endl<<"*****Arrays*****"<<endl;
     cout<<"1. Linear Search"<<endl;
     cout<<"2. Binary Search"<<endl;
@@ -2790,11 +4609,103 @@ int main()
     cout<<"154. Height Balanced Tree"<<endl;
     cout<<"155. Build Balanced Binary Tree from Array"<<endl;
     cout<<"156. Array from Preorder and Inorder"<<endl;
-    cout<<"157. Array from Preorder and Inorder"<<endl;
-    cout<<"158. "<<endl;
-    cout<<"159. "<<endl;
-    cout<<"160. "<<endl;
-    cout<<"200. Exit"<<endl;
+    cout<<"157. Mirror the binary tree"<<endl;
+    cout<<"158. Right View"<<endl;
+    cout<<"159. Print all the nodes at given distance K"<<endl;
+    cout<<"160. Lowest Common Ancestor(LCA)"<<endl;
+    cout<<"161. Maximum sum Path from any node to node"<<endl;
+    cout<<"162. Shortest distance between any 2 nodes"<<endl;
+    cout<<endl<<"******Some extra ques of Binary Tree******"<<endl;
+    cout<<"163. Level Order Build and Print"<<endl;
+    cout<<"164. Binary Tree from Preorder and Inorder"<<endl;
+    cout<<"165. Binary Tree from Postorder and Inorder"<<endl;
+    cout<<"166. Binary Tree from Levelorder and Inorder"<<endl;
+    cout<<"167. Full Binary Tree from Preorder and Postorder"<<endl;
+    cout<<"168. Full Binary Tree from Preorder and Preorder of it's mirror tree"<<endl;
+    cout<<endl<<"******Stack Conversions (Infix, Postfix and Prefix)******"<<endl;
+    cout<<"169. Infix to Postfix Conversion"<<endl;
+    cout<<"170. Prefix to Infix Conversion"<<endl;
+    cout<<"171. Prefix to Postfix Conversion"<<endl;
+    cout<<"172. Postfix to Prefix Conversion"<<endl;
+    cout<<"173. Postfix to Infix Conversion"<<endl;
+    cout<<"174. Infix to Prefix Conversion"<<endl;
+    cout<<endl<<"******Binary Search Trees******"<<endl;
+    cout<<"175. Insertion and Build"<<endl;
+    cout<<"176. Searching"<<endl;
+    cout<<"177. Deletion"<<endl;
+    cout<<"178. Check the tree BST or not"<<endl;
+    cout<<"179. Flatten the BST"<<endl;
+    cout<<"180. Balanced tree from a sorted array"<<endl;
+    cout<<"181. Catalan Number"<<endl;
+    cout<<endl<<"******Challenges - Binary Trees******"<<endl;
+    cout<<"182. Bottom View"<<endl;
+    cout<<endl<<"******Heaps******"<<endl;
+    cout<<"183. Insertion and Deletion min/max Element"<<endl;
+    cout<<"184. Converting Array/Vector into Heap(Inplace) - O(n logn)"<<endl;
+    cout<<"185. Converting Array/Vector into Heap(Inplace) - O(n)"<<endl;
+    cout<<"186. Heap Sort (Inplace)"<<endl;
+    cout<<"187. Priority Queue STL"<<endl;
+    cout<<"188. Priority Queue for Custom Classes"<<endl;
+    cout<<"189. Join the Ropes"<<endl;
+    cout<<"190. Running median of a integer stream"<<endl;
+    cout<<"191. Merge k sorted Arrays"<<endl;
+    cout<<"192. Kth Smallest Element in a sorted row and column Matrix"<<endl;
+    cout<<"193. Kth Smallest Element in a sorted row and column Matrix Optimised"<<endl;
+    cout<<endl<<"******Challenges - Heaps******"<<endl;
+    cout<<"194. Hotel Visit"<<endl;
+    cout<<"195. Top k most frequent number in a stream using Heap"<<endl;
+    cout<<"196. Top k most frequent number in a stream using Hashmap"<<endl;
+    cout<<endl<<"******Hashing/Hashing******"<<endl;
+    cout<<"197. Hash Implementation"<<endl;
+    cout<<"198. Map STL"<<endl;
+    cout<<"199. Unordered Map STL Custom class"<<endl;
+    cout<<"200. Unordered Map Phonebook"<<endl;
+    cout<<"201. Vertical Order Print of a binary tree"<<endl;
+    cout<<endl<<"******Challenges-Hashing/Hashing******"<<endl;
+    cout<<"202. Check subarray with sum zero"<<endl;
+    cout<<"203. Length of longest subarray with sum zero"<<endl;
+    cout<<"204. Length of longest subarray with sum K"<<endl;
+    cout<<"205. Longest Consecutive Subsequence using Unordered Map - O(n)"<<endl;
+    cout<<"206. Longest Consecutive Subsequence using Unordered Set - O(n)"<<endl;
+    cout<<"207. Minimum Window Substring - Sliding Window"<<endl;
+    cout<<"208. Right Angled Triangles"<<endl;
+    cout<<"209. Rectangle Counting"<<endl;
+    cout<<endl<<"******Tries******"<<endl;
+    cout<<"210. Trie Insertion and Search"<<endl;
+    cout<<"211. Unique Prefix Array"<<endl;
+    cout<<"212. Max Xor Pair"<<endl;
+    c
+    cout<<"213. Unlock"<<endl;
+    cout<<"214. Exist or Not"<<endl;
+    cout<<"215. Mike And HashTrick"<<endl;
+    cout<<"216. Subarrays with distinct elements"<<endl;
+    cout<<"217. Digital Dictionary"<<endl;
+    cout<<"218. Range Xor"<<endl;
+    cout<<"219. Trie Interview"<<endl;
+    cout<<endl<<"******Greedy Algorithms******"<<endl;
+    cout<<"220. Indian Coin Change"<<endl;
+    cout<<"221. Busy Man / Activity Selection Problem"<<endl;
+    cout<<"222. Connecting Wires"<<endl;
+    cout<<"223. Biased Standing"<<endl;
+    cout<<"224. Load Balancer"<<endl;
+    cout<<"225. Kingdom Defense"<<endl;
+    cout<<"226. Chopsticks"<<endl;
+    cout<<"227. Expedition"<<endl;
+    cout<<"228. Fractional Knapsack Greedy"<<endl;
+    cout<<"229. Huffman Coding"<<endl;
+    cout<<endl<<"******Challenges - Greedy Algorithms******"<<endl;
+    cout<<"230. "<<endl;
+    cout<<"231. "<<endl;
+    cout<<"232. "<<endl;
+    cout<<"233. "<<endl;
+    cout<<"234. "<<endl;
+    cout<<"235. "<<endl;
+    cout<<"236. "<<endl;
+    cout<<"237. "<<endl;
+    cout<<"238. "<<endl;
+    cout<<"239. "<<endl;
+    cout<<"240. "<<endl;
+    cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
 
@@ -4926,7 +6837,7 @@ int main()
                         break;
                     }
         case 145 :  {
-                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1
+                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1 or 8 10 1 -1 -1 6 9 -1 -1 7 -1 -1 3 -1 14 13 -1 -1 -1
                         cout<<endl<<"Preorder : ";
                         preorderPrint(root);    // Output : 3 4 6 5 1
                         cout<<endl<<"Postorder : ";
@@ -5001,29 +6912,1213 @@ int main()
                         break;
                     }
         case 156 :  {
-
+                        int in[] = {3,2,8,4,1,6,7,5};
+                        int pre[] = {1,2,3,4,8,5,6,7};
+                        BinaryTreeNode *root = treeFromPreIn(in,pre,0,7);
+                        bfs2(root);
                         break;
                     }
         case 157 :  {
-
+                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1
+                        bfs2(root);
+                        mirror(root);
+                        cout<<"After Mirroring : "<<endl;
+                        bfs2(root);
                         break;
                     }
         case 158 :  {
-
+                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1
+                        int maxlevel=-1;
+                        cout<<"Right View : ";
+                        rightView(root,0,maxlevel);
+                        cout<<endl;
                         break;
                     }
         case 159 :  {
-
+                        BinaryTreeNode* root = preorderBuild(); //Input : 8 10 1 -1 -1 6 9 -1 -1 7 -1 -1 3 -1 14 13 -1 -1 -1
+                        cout<<"Kth dist nodes : ";
+                        BinaryTreeNode * target = root->left;
+                        printAtDistK(root,target,2);
                         break;
                     }
         case 160 :  {
+                        BinaryTreeNode* root = preorderBuild(); //Input : 8 10 1 -1 -1 6 9 -1 -1 7 -1 -1 3 -1 14 13 -1 -1 -1
+                        cout<<"LCA : "<<lca(root,1,9)->data<<endl;
+                        break;
+                    }
+        case 161 :  {
+                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1
+                        cout<<"Max Sum Path : "<<maxSumPath(root).max_sum<<endl;
+                        break;
+                    }
+         case 162 : {
+                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1
+                        cout<<"Shortest Distance : "<<findDistance(root,6,1)<<endl;
+                        break;
+                    }
+         case 163 : {
+                        int a[] = {10,20,30,40,50,60,70,80,90};
+                        BinaryTreeNode *root;
+                        BinaryTreeNode *root1 = levelorderBuild(root,a,0,8);
+                        bfs2(root1);
+                        break;
+                    }
+         case 164 : {
+                        int in[] = {3,2,8,4,1,6,7,5};
+                        int pre[] = {1,2,3,4,8,5,6,7};
+                        BinaryTreeNode *root = treeFromPreIn(in,pre,0,7);
+                        bfs2(root);
+                        break;
+                    }
+         case 165 : {
+                        int in[]   = {4, 8, 2, 5, 1, 6, 3, 7};
+                        int post[] = {8, 4, 5, 2, 6, 7, 3, 1};
+                        BinaryTreeNode *root = treeFromPostIn(in,post,0,7);
+                        bfs2(root);
+                        break;
+                    }
+         case 166 : {
+                        int ino[]    = {4, 8, 10, 12, 14, 20, 22};
+                        int level[] = {20, 8, 22, 4, 12, 10, 14};
+                        BinaryTreeNode *root = treeFromLevelIn(ino,level,0,6,7);
+                        bfs2(root);
+                        break;
+                    }
+         case 167 : {
+                        int pre[] = {1, 2, 4, 8, 9, 5, 3, 6, 7};
+                        int post[] = {8, 9, 4, 5, 2, 6, 7, 3, 1};
+                        BinaryTreeNode *root = treeFromPrePost(pre,post,0,8);
+                        bfs2(root);
+                        break;
+                    }
+         case 168 : {
+                        int pre[] = {1, 2, 4, 5, 3, 6, 7};
+                        int prem[] =  {1 ,3 ,7 ,6 ,2 ,5 ,4};
+                        BinaryTreeNode *root = treeFromPrePreM(pre,prem,0,6);
+                        bfs2(root);
+                        break;
+                    }
+         case 169 : {
+                        string a="a+b*(c^d-e)^(f+g*h)-i";
+                        infixtopostfix(a);
+                        break;
+                    }
+         case 170 : {
+                        string s="*-a/bc-/akl";
+                        prefixtoinfix(s);
+                        break;
+                    }
+        case 171 :  {
+                        string s="*-a/bc-/akl";
+                        prefixtopostfix(s);
+                        break;
+                    }
+        case 172 :  {
+                        string s="abc/-ak/l-*";
+                        postfixtoprefix(s);
+                        break;
+                    }
+        case 173 :  {
+                        string s="ab*c+";
+                        postfixtoinfix(s);
+                        break;
+                    }
+        case 174 :  {
+                        string s="(a-b/c)*(a/k-l)";
+                        infixtoprefix(s);
+                        break;
+                    }
+        case 175 :  {
+                        BinaryTreeNode *bstroot = BSTbuild(); // Input : 5 3 7 1 6 8 -1
+                        bfs2(bstroot);
+                        break;
+                    }
+        case 176 :  {
+                        BinaryTreeNode *bstroot = BSTbuild(); // Input : 5 3 7 1 6 8 -1
+                        if(BSTSearch(bstroot,8))
+                            cout<<"Present"<<endl;
+                        else
+                            cout<<"Absent"<<endl;
+                        break;
+                    }
+        case 177 :  {
+                        BinaryTreeNode *bstroot = BSTbuild(); // Input : 5 3 7 1 6 8 -1
+                        bstroot=BSTdelete(bstroot, 5);
+                        bfs(bstroot);
+                        break;
+                    }
+        case 178 :  {
+                        BinaryTreeNode *bstroot = BSTbuild(); // Input : 5 3 7 1 6 8 -1
+                        if(isBST(bstroot))
+                            cout<<"BST"<<endl;
+                        else
+                            cout<<"Not a BST"<<endl;
+                        break;
+                    }
+        case 179 :  {
+                        BinaryTreeNode *bstroot = BSTbuild(); // Input : 5 3 7 1 6 8 -1
+                        BSTLL l = flatten(bstroot);
+                        BinaryTreeNode *temp = l.head;
+                        while(temp)
+                        {
+                            cout<<temp->data<<"->";
+                            temp=temp->right;
+                        }
+                        break;
+                    }
+        case 180 :  {
+                        int a[] = {1,2,3,4,5,6,7};
+                        BinaryTreeNode *bstroot1;
+                        bstroot1 = arraytoBST(bstroot1, a, 0, 6, 7);
+                        bfs(bstroot1);
+                        break;
+                    }
+        case 181 :  {
+                        cout<<"No. of BSTs possible = "<<catalanNo(3);
+                        break;
+                    }
+        case 182 :  {
+                        int a[] = {10,20,30,40,50,60,70,80,90};
+                        BinaryTreeNode *root;
+                        BinaryTreeNode *root1 = levelorderBuild(root,a,0,8);
+                        TreeBottomView(root1);
+                        break;
+                    }
+        case 183 :  {
+                        Heap h;
+                        for(int i=0;i<10;i++)
+                            h.push(i);
+                        while(!h.isEmpty())
+                        {
+                            cout<<h.get()<<" ";
+                            h.pop();
+                        }
+                        break;
+                    }
+        case 184 :  {
+                        vector<int> v{-1,10,20,5,6,1,8,9,4};
+                        buildHeap(v);
+                        for(auto x:v)
+                            cout<<x<<" ";
+                        break;
+                    }
+        case 185 :  {
+                        vector<int> v{-1,10,20,5,6,1,8,9,4};
+                        buildHeapFast(v);
+                        for(auto x:v)
+                            cout<<x<<" ";
+                        break;
+                    }
+        case 186 :  {
+                        vector<int> v{-1,10,20,5,6,1,8,9,4};
+                        heapSort(v);
+                        for(auto x:v)
+                            cout<<x<<" ";
+                        break;
+                    }
+        case 187 :  {
+                        priority_queue<int> pmax; //by default maxHeap
+                        priority_queue<int, vector<int>, greater<int>> p; //for minimum
+                        int n;
+                        cin>>n;
+                        for(int i=0;i<n;i++)
+                        {
+                            int d;
+                            cin>>d;
+                            p.push(d);
+                        }
+                        while(!p.empty())
+                        {
+                            cout<<p.top()<<" ";
+                            p.pop();
+                        }
+                        break;
+                    }
+        case 188 :  {
+                        priority_queue<Person, vector<Person>, Personcompare> pq;
+                        Person p("A",12);
+                        pq.push(p);
+                        Person p1("B",99);
+                        pq.push(p1);
+                        Person p2("C",0);
+                        pq.push(p2);
+                        Person p3("D",9);
+                        pq.push(p3);
+                        Person p4("E",48);
+                        pq.push(p4);
+                        for(int i=0;i<3;i++)
+                        {
+                            Person p = pq.top();
+                            cout<<p.name<<" "<<p.age<<endl;
+                            pq.pop();
+                        }
+                        break;
+                    }
+        case 189 :  {
+                        int r[]={4,3,2,6};
+                        cout<<joinRopes(r,4)<<endl;
+                        break;
+                    }
+        case 190 :  {
 
                         break;
                     }
-        case 200 :      break;
-        default: cout<<"Try Again";
-                    break;
+        case 191 :  {
+                        vector<vector<int>> v{{2,5,7,8},{2,7,8,9,9},{9,9,9,10},{10,27,344,443}};
+                        vector<int> res = mergeKsortedArrays(v);
+                        for(auto x:res)
+                            cout<<x<<" ";
+                        break;
+                    }
+        case 192 :  {
+                        //11 16 21 25 26 30 31 33 34 36 38 40 41 46 49 50
+                        int mat[4][4]= {{11, 21, 31, 41},{16, 26, 36, 46},{25, 30, 38, 49},{33, 34, 40, 50}};
+                        cout<<kthSmallest(mat,4,12);
+                        break;
+                    }
+        case 193 :  {
+                        //11 16 21 25 26 30 31 33 34 36 38 40 41 46 49 50
+                        int mat[4][4]= {{11, 21, 31, 41},{16, 26, 36, 46},{25, 30, 38, 49},{33, 34, 40, 50}};
+                        cout<<kthSmallestOptimised(mat,4,12);
+                        break;
+                    }
+        case 194 :  {
+                        ll n,k,d;
+                        cin>>n>>k;
+                        priority_queue<ll> pq;
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>d;
+                            if(d==1)
+                            {
+                                ll a,b;
+                                cin>>a>>b;
+                                ll c=pow(a,2)+pow(b,2);
+                                if(i>=k)
+                                {
+                                    if(pq.top()>c)
+                                    {
+                                        pq.pop();
+                                        pq.push(c);
+                                    }
+                                }
+                                else
+                                    pq.push(c);
+                            }
+                            else
+                                cout<<pq.top()<<endl;
+                        }
+                        break;
+                    }
+        case 195 :  {
+                        //Input :
+                        //1
+                        //5 2
+                        //5 1 3 5 2
+                        //Output :
+                        //5
+                        //1 5
+                        //1 3
+                        //5 1
+                        //5 1
+                        int t;int n,k;
+                        cin>>t;
+                        int *arr;
+                        while(t--)
+                        {
+                         priority_queue<abc,vector<abc>,functor>pq;
+                         //Preparing a priority queue of abc type(ie. based on the number and on the frequency)
+                         cin>>n>>k;
+                         arr=new int[n];int nn;
+                         int count[100]={0};
+                         //To maintain frequency count of each number
+                         for(int i=0;i<n;i++)
+                            cin>>arr[i];
+                         for(int i=0;i<n;i++)
+                         {
+                             count[arr[i]]++;
+                             nn=k;
+                             for(int j=0;j<=i;j++)
+                             {
+                                abc y(count[arr[j]],arr[j]);
+                                pq.push(y);//Pushing an object of class abc(containg the number and its frequency) to the heap
+                             }
+                             while(!pq.empty()&&nn--)
+                             {
+                                 abc yy=pq.top();
+                                 cout<<yy.num<<" ";//brignging
+                                 int l1=yy.freq;
+                                 while(l1--)//Emptying the heap
+                                    pq.pop();
+                             }
+                             while(!pq.empty())
+                                pq.pop();
+                         }
+                         cout<<endl;
+                        }
+                        break;
+                    }
+        case 196 :  {
+                        int k = 4;
+                        int arr[] = { 5, 2, 1, 3, 2 };
+                        int n = sizeof(arr) / sizeof(arr[0]);
+                        kTop(arr, n, k);
+                        break;
+                    }
+        case 197 :  {
+                        Hashtable price_menu;
+                        price_menu.insert("Burger", 125);
+                        price_menu.insert("Pizza", 151);
+                        price_menu.insert("Water", 10);
+                        price_menu.insert("Hot Water", 12);
+                        price_menu.insert("Chicken Tikka", 203);
+                        price_menu.insert("Biriyani", 357);
+                        price_menu.insert("Mandi", 409);
+                        price_menu.print();
+
+                        int* price = price_menu.search("Burger");
+                        if(price!=NULL)
+                            cout<<"Burger Price = "<<*price<<endl;
+                        else
+                            cout<<"Not found in the menu"<<endl;
+
+                        price_menu.erase("Biriyani");
+                        price_menu.print();
+
+                        //Easy access using [] operator
+                        //Insert
+                        price_menu["Dosa"]=60;
+                        //print
+                        cout<<"Price of Dosa = "<<price_menu["Dosa"]<<endl;
+                        //Update
+                        price_menu["Dosa"] += 10;
+                        //Search
+                        cout<<"Price of Dosa = "<<price_menu["Dosa"]<<endl;
+                        break;
+                    }
+        case 198 :  {
+                        map<string,int> m;
+                        //1. Insert
+                        m.insert(make_pair("Mango",100));
+                        pair<string,int> p;
+                        p.first = "Apple";
+                        p.second = 120;
+                        m.insert(p);
+                        m["Banana"] = 20;
+                        //2. Search
+                        string fruit;
+                        cin>>fruit;
+                        //update the price
+                        m[fruit] += 22;
+                        auto it = m.find(fruit);
+                        if(it!=m.end())
+                            cout<<"price of "<<fruit<<" is"<<m[fruit]<<endl;
+                        else
+                            cout<<"fruit is not present "<<endl;
+                        //3. Erase
+                        m.erase(fruit);
+                        //another way to find a particular map
+                        // it stores unique keys only once
+                        if(m.count(fruit))
+                            cout<<"Price is "<<m[fruit]<<endl;
+                        else
+                            cout<<"Couldnt find "<<endl;
+
+                        m["Litchi"] = 60;
+                        m["Pineapple"] = 80;
+                        //Iterate over all the key value pairs
+                        for(auto it=m.begin();it!=m.end();it++)
+                            cout<<it->first<<" and "<<it->second<<endl;
+
+                        //for each loop
+                        for(auto p:m)
+                            cout<<p.first<<" : "<<p.second<<endl;
+                        break;
+                    }
+        case 199 :  {
+                        unordered_map<StudentMap, int, HashFn> m; //HashFn class for comparing same as we did in priority queue
+
+                        StudentMap s1("Haseeb","Rahman","10");
+                        StudentMap s2("Kunal","Sharma","11");
+                        StudentMap s3("Haseeb","Rahman","12");
+                        StudentMap s4("Aman","Rao","12");
+                        StudentMap s5("Haseeb","Rahman","10");
+
+                        //Insert
+                        m[s1]=10;
+                        m[s2]=11;
+                        m[s3]=87;
+                        m[s4]=90;
+                        m[s5]=100;
+
+                        //Iterate
+                        for(auto x:m)
+                            cout<<x.first.fname<<" : "<<x.second<<endl;
+
+                        //Access
+                        cout<<endl<<"S3 marks = "<<m[s3]<<endl;
+                        break;
+                    }
+        case 200 :  {
+                        unordered_map<string, vector<string>> phonebook;
+                        phonebook["haseeb"].push_back("100");
+                        phonebook["haseeb"].push_back("200");
+                        phonebook["haseeb"].push_back("300");
+                        phonebook["haseeb"].push_back("400");
+                        phonebook["aman"].push_back("500");
+                        phonebook["aman"].push_back("600");
+                        phonebook["aman"].push_back("700");
+                        phonebook["aman"].push_back("800");
+
+                        //Iterate
+                        for(auto p:phonebook)
+                        {
+                            cout<<"Name = "<<p.first<<" -> ";
+                            for(string s:p.second)
+                                cout<<s<<",";
+                            cout<<endl;
+                        }
+
+                        //Search and Print
+                        string name;
+                        cin>>name;
+                        if(phonebook.count(name)==0)
+                            cout<<"Absent!";
+                        else
+                        {
+                            for(auto s:phonebook[name])
+                                cout<<s<<",";
+                        }
+                        break;
+                    }
+        case 201 :  {
+                        BinaryTreeNode* root = preorderBuild(); //Input : 3 4 -1 6 -1 -1 5 1 -1 -1 -1 or 8 10 1 -1 -1 6 9 -1 -1 7 -1 -1 3 -1 14 13 -1 -1 -1
+                        map<int, vector<int>> m;
+                        int d=0;
+                        verticalOrderPrint(root,d,m);
+                        for(auto x:m)
+                        {
+                            cout<<x.first<<"->";
+                            for(auto y:x.second)
+                                cout<<y<<",";
+                            cout<<endl;
+                        }
+                        break;
+                    }
+        case 202 :  {
+                        int a[]={6,-1,2,1,-1};
+                        if(checkZeroSum(a,5))
+                            cout<<"Present!"<<endl;
+                        else
+                            cout<<"Absent!"<<endl;
+                        break;
+                    }
+        case 203 :  {
+                        int a[]={0,-1,1,2,5,-5,-2};
+                        cout<<longestSubarrayZeroSum(a,7)<<endl;
+                        break;
+                    }
+        case 204 :  {
+                        int a[]={1,-1,5,-2,3};
+                        cout<<longestSubarrayKSum(a,5,3)<<endl;
+                        break;
+                    }
+        case 205 :  {
+                        int a[]={14,5,1,2,6,3,7,8,9,13,15,11,12,13,17};
+                        cout<<largestConSubseq(a,15)<<endl;
+                        break;
+                    }
+        case 206 :  {
+                        int a[]={14,5,1,2,6,3,7,8,9,13,15,11,12,13,17};
+                        cout<<largestConSubseq2(a,15)<<endl;
+                        break;
+                    }
+        case 207 :  {
+                        string s="hllloeaeo World";
+                        string p="eelo";
+                        cout<<findMinWindow(s,p)<<endl;
+                        break;
+                    }
+        case 208 :  {
+                        int a[][2]={{ 1, 2 }, { 2, 1 }, { 2, 2 }, { 2, 3 }, { 3, 2 }};
+                        cout<<rightAngledTriangles(a,5)<<endl;
+                        break;
+                    }
+        case 209 :  {
+                        int m;
+                        cin>>m; // Input : 8 00 01 11 10 21 20 31 30
+                        vector<Point> cord;
+                        while(m--)
+                        {
+                            int x,y;
+                            cin>>x>>y;
+                            Point p(x,y);
+                            cord.push_back(p);
+                        }
+                        cout<<countRects(cord); // Output : 6
+                        break;
+                    }
+        case 210 :  {
+                        Trie t;
+                        char words[][100]={"a","hello","not","news","apple"};
+                        for(int i=0;i<5;i++)
+                            t.insert(words[i]);
+                        char m[]="not";
+                        if(t.find(m))
+                            cout<<"Present"<<endl;
+                        else
+                            cout<<"Absent"<<endl;
+                        break;
+                    }
+        case 211 :  {
+                        TrieUnique t;
+                        char words[][100]={"cobra", "zebraah", "dog", "zebra", "dove", "duck"};
+                        for(int i=0;i<6;i++)
+                            t.insert(words[i]);
+                        for(int i=0;i<6;i++)
+                            t.printCount(words[i]);
+                        for(int i=0;i<6;i++)
+                            t.print(words[i]);
+                        break;
+                    }
+        case 212 :  {
+                        int a[]={3,10,5,25,2,8};
+                        TrieXor t;
+                        cout<<t.maxXor(a,6)<<endl;
+                        break;
+                    }
+        case 213 :  {
+                        int N,n,k;
+                        cin>>n>>k;
+                        int a[n];N=n;
+                        for(int i=0;i<n;i++)
+                            cin>>a[i];
+                        unordered_map<int,int> m;
+                        for(int i=0;i<n;i++)
+                            m[a[i]]=i;
+                        while(k)
+                        {
+                            int best_pos=N-n;
+                            if(best_pos == m[n])
+                            {
+                                bool sorted = IsSorted(a,N);
+                                if(sorted){
+                                    break;
+                                }
+                                n--;
+                                continue;
+                            }
+                            else
+                            {
+                                int wrong_no = a[best_pos];
+                                int n_index = m[n];
+                                swap(a[n_index],a[best_pos]);
+                                m[wrong_no]=n_index;
+                                m[n]=best_pos;
+                                k--;
+                                n--;
+                            }
+                        }
+                        for(int i=0;i<N;i++)
+                            cout<<a[i]<<" ";
+                        break;
+                    }
+        case 214 :  {
+                        int t;
+                        cin>>t;
+                        while(t--)
+                        {
+                            int n,d,q;
+                            cin>>n;
+                            unordered_map<int,bool> m;
+                            while(n--)
+                            {
+                                cin>>d;
+                                m[d]=true;
+                            }
+                            cin>>q;
+                            while(q--)
+                            {
+                                cin>>d;
+                                if(m[d])
+                                    cout<<"Yes"<<endl;
+                                else
+                                    cout<<"No"<<endl;
+                            }
+                            m.clear();
+                        }
+                        break;
+                    }
+        case 215 :  {
+                        int n;
+                        cin>>n;
+                        int a[n];
+                        for(int i=0;i<n;i++)
+                            cin>>a[i];
+
+                        vector<int> v;
+                        hashFn215(a,n,m215,v);
+                        sort(v.begin(),v.end(),compe);
+                        for(auto x : v)
+                            cout<<x<<endl;
+                        break;
+                    }
+        case 216 :  {
+                        int n,ans=0,j=0;
+                        cin>>n;
+                        int a[n];
+                        unordered_map<int,int> m;
+                        for(int i=0;i<n;i++)
+                            cin>>a[i];
+                        for(int i=0;i<n;i++)
+                        {
+                            while(j<n && m.find(a[j])==m.end())
+                            {
+                                m[a[j]]++;
+                                j++;
+                            }
+                            ans += (j-i)*(j-i+1)/2;
+                            m.erase(a[i]);
+                        }
+                        cout<<ans;
+                        break;
+                    }
+        case 217 :  {
+                        TrieDict t;
+                        int n,q;
+                        cin>>n;
+                        char word[1000000];
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>word;
+                            t.insert(word);
+                        }
+                        cin>>q;
+                        char sword[1001];
+                        for(int i=0;i<q;i++)
+                        {
+                            cin>>sword;
+                            vector<string> v;
+                            if(!t.search(sword, v))
+                            {
+                                cout<<"No suggestions\n";
+                                continue;
+                            }
+                            sort(v.begin(),v.end());
+                            for(auto x:v)
+                                cout<<x<<endl;
+                            v.clear();
+                        }
+                        break;
+                    }
+        case 218 :  {
+                        /*
+                        class trieNode {
+
+                        public:
+                            trieNode *left; /// represents 0
+                            trieNode *right; /// represent one
+                            vector<int> v;
+                        };
+
+                        void insert(int n, trieNode *head, int index) {
+
+                            trieNode *curr = head;
+                            for (int i = 31; i >= 0; i--) {
+
+                                int bit = (n >> i) & 1;
+                                if (bit == 0) {
+
+                                    if (curr->left == NULL) {
+                                        curr->left = new trieNode();
+                                    }
+                                    curr->v.push_back(index);
+                                    curr = curr->left;
+                                }
+                                /// bit is one ..
+                                else {
+
+                                    if (curr->right == NULL) {
+                                        curr->right = new trieNode();
+                                    }
+                                    curr->v.push_back(index);
+                                    curr = curr->right;
+                                }
+                            }
+                            curr->v.push_back(index);
+                        }
+
+                        bool binarysearchrange(vector<int>v, int left , int right) {
+                            int l = 0;
+                            int h = v.size() - 1;
+                            while (l <= h) {
+
+                                int m = (l + h) / 2;
+                                int val = v[m];
+                                if (val >= left && val <= right) {
+                                    return true;
+                                }
+                                else if (val < left) {
+                                    l = m + 1;
+                                }
+                                else if (val > right) {
+                                    h = m - 1;
+                                }
+
+                            }
+                            return false;
+                        }
+
+                        int findmaxorpair(trieNode *head, int el, int left, int right) {
+                            trieNode *curr = head;
+                            int value = el;
+                            int curr_xor = 0;
+                            for (int j = 31; j >= 0; j--) {
+
+                                int b = (value >> j) & 1;
+                                if (b == 0) {
+
+                                    if (curr->right != NULL && binarysearchrange(curr->right->v, left, right)) {
+                                        curr = curr->right;
+                                        curr_xor += (int)pow(2, j);
+                                    }
+                                    else {
+                                        curr = curr->left;
+                                    }
+                                }
+                                else {
+                                    if (curr->left != NULL && binarysearchrange(curr->left->v, left, right)) {
+                                        curr = curr->left;
+                                    }
+                                    else {
+                                        curr_xor += (int)pow(2, j); //Here
+                                        curr = curr->right;
+                                    }
+                                }
+                            }
+                            return curr_xor;
+                        }
+
+                        int main() {
+                            trieNode *myt = new trieNode();
+                            int t;
+                            cin >> t;
+                            int index = 0;
+                            while (t--) {
+
+                                int q;
+                                cin >> q;
+
+                                if (q == 0) {
+                                    int val;
+                                    cin >> val;
+                                    insert(val, myt, index);
+                                    index++;
+                                }
+                                else if (q == 1) {
+                                    int x, l, r;
+                                    cin >> l >> r >> x; //Here
+                                    cout << findmaxorpair(myt, x, l - 1, r - 1)<<endl;
+                                }
+                            }
+                            return 0;
+                        }
+                        */
+                        break;
+                    }
+        case 219 :  {
+                        /*
+                        #include <bits/stdc++.h>
+                        using namespace std ;
+
+                        class node {
+                        public :
+                            node *left ;
+                            node *right ;
+                            node(){
+                                left = right = NULL ;
+                            }
+                        };
+
+                        class Trie {
+                            node *root ;
+                        public :
+                            Trie(){
+                                root = new node() ;
+                            }
+                            void insert(int n){
+                                node *temp = root ;
+                                for(int i=31 ;i>=0;i--){
+                                    int bit = (n >> i) & 1;
+                                    if(bit == 0){
+                                        if(temp->left == NULL)
+                                            temp->left = new node() ;
+                                        temp = temp->left ;
+                                    }
+                                    else {
+                                        if(temp->right == NULL)
+                                            temp->right = new node() ;
+                                        temp = temp->right ;
+                                    }
+                                }
+                            }
+                            int findMaxXorPair(int value){
+                                node *temp = root ;
+                                int currentXor = 0 ;
+                                for(int j=31 ;j>=0 ; j--){
+                                    int bit = (value >> j) & 1;
+                                    if(bit == 0){
+                                        if(temp->right != NULL){
+                                            temp = temp->right ;
+                                            currentXor += (1<<j);
+                                        }
+                                        else
+                                            temp = temp->left ;
+                                    }
+                                    else {
+                                        if(temp->left != NULL){
+                                            temp = temp->left ;
+                                            currentXor += (1<<j);
+                                        }
+                                        else
+                                            temp = temp->right ;
+                                    }
+                                }
+                                return currentXor ;
+                            }
+                        };
+
+                        int main() {
+                            int n ;
+                            cin >> n;
+                            int result = 0, arr[n], lbest[100000], rbest[100000], left_value = 0,right_value = 0;
+
+                            Trie tl;
+                            tl.insert(0);
+                            for(int i=0;i<n;i++){
+                                cin >> arr[i] ;
+                                left_value ^= arr[i];
+                                lbest[i] = max( (i == 0)? 0 : lbest[i-1] , tl.findMaxXorPair(left_value));
+                                tl.insert(left_value);
+                            }
+
+                            Trie tr ;
+                            tr.insert(0);
+                            for(int i=n-1;i>=0;i--){
+                                right_value ^= arr[i];
+                                rbest[i] = max((i == n - 1) ? 0 : rbest[i + 1],tr.findMaxXorPair(right_value));
+                                tr.insert(right_value);
+                                int val = rbest[i] + (i == 0 ? 0 : lbest[i - 1]);
+                                result = max(result,val);
+                            }
+                            cout << result ;
+                            return 0 ;
+                        }
+                        */
+                        break;
+                    }
+        case 220 :  {
+                        int a[]={1,2,5,10,20};
+                        cout<<indianCoinGreedy(a,5,39)<<endl;
+                        break;
+                    }
+        case 221 :  {
+                        /*
+                        Input :
+                        6
+                        7 9
+                        0 10
+                        4 5
+                        8 9
+                        4 10
+                        5 7
+                        */
+                        int n,s,e;
+                        cin>>n;
+                        vector<pair<int,int>> v;
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>s>>e;
+                            v.push_back(make_pair(s,e));
+                        }
+                        sort(v.begin(),v.end(),compBusyMan);
+                        int c=1;
+                        int finish = v[0].second;
+                        for(int i=1;i<n;i++)
+                        {
+                            if(v[i].first>=finish)
+                            {
+                                c++;
+                                finish = v[i].second;
+                            }
+                        }
+                        cout<<c<<endl; // Output : 3
+                        break;
+                    }
+        case 222 :  {
+                        int n,d,ans=0;
+                        cin>>n;
+                        vector<int> white,black;
+                        for(int i=0;i<n/2;i++)
+                        {
+                            cin>>d;
+                            white.push_back(d);
+                        }
+                        for(int i=0;i<n/2;i++)
+                        {
+                            cin>>d;
+                            black.push_back(d);
+                        }
+                        sort(white.begin(),white.end());
+                        sort(black.begin(),black.end());
+                        for(int i=0;i<n/2;i++)
+                            ans += black[i]-white[i];
+                        cout<<ans<<endl;
+                        break;
+                    }
+        case 223 :  {
+                        /*
+                        Input :
+                        7
+                        a 1
+                        b 2
+                        c 2
+                        d 1
+                        e 5
+                        f 7
+                        g 7
+                        */
+                        int n,d,ans=0,badness=0;
+                        cin>>n;
+                        string s;
+                        int a[n+1]={0};
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>s>>d;
+                            a[d]++;
+                        }
+                        int avail_rank = 1;
+                        for(int i=1;i<=n;i++)
+                        {
+                            while(a[i])
+                            {
+                                badness = abs(avail_rank - i);
+                                ans += badness;
+                                a[i]--;
+                                avail_rank++;
+                            }
+                        }
+                        cout<<ans<<endl; // Output : 5
+                        break;
+                    }
+        case 224 :  {
+                        /* Input :
+                        4
+                        0 6 10 0
+                        */
+                        int n, max_load=0, load=0, diff=0;
+                        cin>>n;
+                        int a[n];
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>a[i];
+                            load += a[i];
+                        }
+                        if(load%n!=0)
+                        {
+                            cout<<"-1"<<endl;
+                            return 0;
+                        }
+                        load /= n;
+                        for(int i=0;i<n;i++)
+                        {
+                            diff += a[i]-load;
+                            int ans = max(diff,-diff);
+                            max_load = max(max_load,ans);
+                        }
+                        cout<<max_load; // Output : 4
+                        break;
+                    }
+        case 225 :  {
+                        /* Input :
+                        15 8 3
+                        3 8
+                        11 2
+                        8 6
+                        */
+                        int w,h,n;
+                        cin>>w>>h>>n;
+                        int x[100],y[100];
+                        for(int i=0;i<n;i++)
+                            cin>>x[i]>>y[i];
+                        sort(x,x+n);sort(y,y+n);
+                        int dx = x[0]-1;
+                        int dy = y[0]-1;
+                        for(int i=1;i<n;i++)
+                        {
+                            dx = max(dx, x[i]-x[i-1]-1);
+                            dy = max(dy, y[i]-y[i-1]-1);
+                        }
+                        // corner case when the grid is ending
+                        dx = max(dx, w-x[n-1]);
+                        dy = max(dy, h-y[n-1]);
+                        cout<<dx*dy<<endl; // Output : 12
+                        break;
+                    }
+        case 226 :  {
+                        int n,d,c=0;
+                        cin>>n>>d;
+                        int a[n];
+                        for(int i=0;i<n;i++)
+                            cin>>a[i];
+                        sort(a,a+n);
+                        int i=0;
+                        while(i<n-1)
+                        {
+                            if(a[i+1]-a[i]<=d)
+                            {
+                                i=i+2;
+                                c++;
+                            }
+                            else
+                                i++;
+                        }
+                        cout<<c;
+                        break;
+                    }
+        case 227 :  {
+                        /* Input :
+                        1
+                        4
+                        4 4
+                        5 2
+                        11 5
+                        15 10
+                        25 10
+                        */
+                        int n,t,x,d,f,D,F,prev,flag=0,ans=0;
+                        cin>>t;
+                        while(t--)
+                        {
+                            vector<pair<int,int>> v;
+                            priority_queue<int> pq;
+                            cin>>n;
+                            for(int i=0;i<n;i++)
+                            {
+                                cin>>d>>f;
+                                v.push_back(make_pair(d,f)); // 4,4 5,2 11,5 15,10
+                            }
+                            cin>>D>>F;
+                            sort(v.begin(),v.end(),compExp); // 15,10 11,5 5,2 4,4
+                            for(int i=0;i<n;i++)
+                                v[i].first = D-v[i].first; // 10,10 14,5 20,2 21,4
+
+                            x=0; // current city
+                            prev=0; // the prev city we have visited
+
+                            while(x<n)
+                            {
+                                if(F >= (v[x].first-prev))
+                                {
+                                    F -= (v[x].first-prev);
+                                    pq.push(v[x].second);
+                                    prev = v[x].first;
+                                }
+                                else
+                                {
+                                    if(pq.empty())
+                                    {
+                                        flag=1;
+                                        break;
+                                    }
+                                    F += pq.top();
+                                    pq.pop();
+                                    ans++;
+                                    continue;
+                                }
+                                x++;
+                            }
+                            if(flag==1)
+                            {
+                                cout<<"-1"<<endl;
+                                continue;
+                            }
+                            D = D - v[n-1].first;
+                            if(F>=D)
+                            {
+                                cout<<ans<<endl;
+                                continue;
+                            }
+                            if(F<D)
+                            {
+                                if(pq.empty())
+                                {
+                                    flag=1;
+                                    break;
+                                }
+                                F += pq.top();
+                                pq.pop();
+                                ans++;
+                            }
+                            if(flag==1)
+                            {
+                                cout<<"-1"<<endl;
+                                continue;
+                            }
+                            cout<<ans<<endl; // Output : 2
+                        }
+                        break;
+                    }
+        case 228 :  {
+                        /* Input :
+                        3 50
+                        60 10
+                        100 20
+                        120 30
+                        */
+                        int n,w,profit,weight;
+                        cin>>n>>w;
+                        vector<pair<int,int>> v;
+                        for(int i=0;i<n;i++)
+                        {
+                            cin>>profit>>weight;
+                            v.push_back(make_pair(profit,weight));
+                        }
+                        sort(v.begin(),v.end(),compKnapsackGreedy);
+                        int curr_weight=0, i=0;
+                        float total_profit=0.0;
+                        while(curr_weight + v[i].second <= w)
+                        {
+                            curr_weight += v[i].second;
+                            total_profit += v[i].first;
+                            i++;
+                        }
+                        if(curr_weight != w)
+                        {
+                            int remain = w-curr_weight;
+                            float fraction = remain/(v[i].second*1.0);
+                            total_profit += (v[i].first*fraction*1.0);
+                        }
+                        cout<<total_profit<<endl; // Output : 240
+                        break;
+                    }
+        case 229 :  {
+                        char data[] = { 'a', 'b', 'c', 'd', 'e', 'f' };
+                        int freq[] = { 5, 9, 12, 13, 16, 45 };
+                        int size = sizeof(data) / sizeof(data[0]);
+                        HuffmanCodes(data, freq, size);
+                        break;
+                    }
+        case 230 :  {
+
+                        break;
+                    }
+
+        default:    {
+                        cout<<"Try Again";
+                        break;
+                    }
         }
-    }while(ch!=200);
+    }while(ch!=400);
 	return 0;
 }
