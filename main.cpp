@@ -4423,6 +4423,82 @@ void HuffmanCodes(char data[], int freq[], int size)
 	printCodes(root, arr, top);
 }
 
+int fibrec(int n)
+{
+    if(n==0 || n==1)
+        return n;
+    return fibrec(n-1) + fibrec(n-2);
+}
+
+int fibTopDown(int n, int dp[])
+{
+    if(n==0 || n==1)
+        return n;
+    //Lookup
+    if(dp[n]!=0)
+        return dp[n];
+    int ans = fibTopDown(n-1, dp) + fibTopDown(n-2, dp);
+    return dp[n]=ans;
+}
+
+int fibBottomUp(int n)
+{
+    int dp[100]={0};
+    dp[1]=1;
+    for(int i=2;i<=n;i++)
+        dp[i]=dp[i-1]+dp[i-2];
+    return dp[n];
+}
+
+int fibBottomUpOpt(int n)
+{
+    if(n==0 || n==1)
+        return n;
+    int a=0,b=1,c;
+    for(int i=2;i<=n;i++)
+    {
+        c=a+b;
+        a=b;
+        b=c;
+    }
+    return c;
+}
+
+int minStepsTopDown(int n, int dp[])
+{
+    if(n==1)
+        return 0;
+    if(dp[n]!=0)
+        return dp[n];
+    int op1,op2,op3;
+    op1=op2=op3=INT_MAX;
+    if(n%3==0)
+        op3 = minStepsTopDown(n/3, dp);
+    if(n%2==0)
+        op2 = minStepsTopDown(n/2, dp);
+    op1 = minStepsTopDown(n-1, dp);
+    return min(op1,min(op2,op3)) + 1;
+}
+
+int minStepsBottomUp(int n)
+{
+    if(n==1)
+        return 0;
+    int dp[100]={0};
+    for(int i=2;i<=n;i++)
+    {
+        int op1,op2,op3;
+        op1=op2=op3=INT_MAX;
+        op1 = dp[i-1];
+        if(i%2==0)
+            op2=dp[i/2];
+        if(i%3==0)
+            op3=dp[i/3];
+        dp[i] = min(op1,min(op2,op3)) + 1;
+    }
+    return dp[n];
+}
+
 int main()
 {
     int ch;
@@ -4695,12 +4771,13 @@ int main()
     cout<<endl<<"******Challenges - Greedy Algorithms******"<<endl;
     cout<<"230. Deepak and his journey"<<endl;
     cout<<"231. Dividing array"<<endl;
-    cout<<"232. "<<endl;
-    cout<<"233. "<<endl;
-    cout<<"234. "<<endl;
-    cout<<"235. "<<endl;
-    cout<<"236. "<<endl;
-    cout<<"237. "<<endl;
+    cout<<endl<<"******Dynamic Programming******"<<endl;
+    cout<<"232. Fibonacci Recursion"<<endl;
+    cout<<"233. Fibonacci Top Bottom"<<endl;
+    cout<<"234. Fibonacci Bottom Up"<<endl;
+    cout<<"235. Fibonacci Bottom Up with Space Optimisation"<<endl;
+    cout<<"236. Min Steps to One Top Down"<<endl;
+    cout<<"237. Min Steps to One Bottom Up"<<endl;
     cout<<"238. "<<endl;
     cout<<"239. "<<endl;
     cout<<"240. "<<endl;
@@ -8155,27 +8232,29 @@ int main()
                         break;
                     }
         case 232 :  {
-
+                        cout<<fibrec(5)<<endl;
                         break;
                     }
         case 233 :  {
-
+                        int dp[100]={0};
+                        cout<<fibTopDown(6,dp)<<endl;
                         break;
                     }
         case 234 :  {
-
+                        cout<<fibBottomUp(7)<<endl;
                         break;
                     }
         case 235 :  {
-
+                        cout<<fibBottomUpOpt(12)<<endl;
                         break;
                     }
         case 236 :  {
-
+                        int dp[100]={0};
+                        cout<<minStepsTopDown(10,dp);
                         break;
                     }
         case 237 :  {
-
+                        cout<<minStepsBottomUp(10);
                         break;
                     }
         case 238 :  {
