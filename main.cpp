@@ -4477,7 +4477,7 @@ int minStepsTopDown(int n, int dp[])
     if(n%2==0)
         op2 = minStepsTopDown(n/2, dp);
     op1 = minStepsTopDown(n-1, dp);
-    return min(op1,min(op2,op3)) + 1;
+    return dp[n] = min(op1,min(op2,op3)) + 1;
 }
 
 int minStepsBottomUp(int n)
@@ -4497,6 +4497,87 @@ int minStepsBottomUp(int n)
         dp[i] = min(op1,min(op2,op3)) + 1;
     }
     return dp[n];
+}
+
+int minCoinsTopDown(int n, int coins[], int t, int dp[])
+{
+    if(n==0)
+        return 0;
+    if(dp[n]!=0)
+        return dp[n];
+    int ans=INT_MAX;
+    for(int i=0;i<t;i++)
+    {
+        if(n-coins[i]>=0)
+        {
+            int sub_prob = minCoinsTopDown(n-coins[i],coins,t,dp);
+            ans = min(ans, sub_prob+1);
+        }
+    }
+    return dp[n]=ans;
+}
+
+int minCoinsBottomUp(int n, int coins[], int t)
+{
+    if(n==0)
+        return 0;
+    int dp[100]={0};
+
+    for(int i=1;i<=n;i++)
+    {
+        int sub_prob = INT_MAX;
+        int ans=INT_MAX;
+        for(int j=0;j<t;j++)
+        {
+            if(i-coins[j]>=0)
+            {
+                sub_prob = dp[i-coins[j]];
+                ans = min(ans,sub_prob+1);
+                dp[i]=ans;
+            }
+        }
+    }
+    return dp[n];
+}
+
+int winesProbTopDown(int a[], int i, int j, int y, int dp[][100])
+{
+    if(i>j)
+        return 0;
+    if(dp[i][j]!=0)
+        return dp[i][j];
+    return dp[i][j] = max(a[i]*y+winesProbTopDown(a,i+1,j,y+1,dp), a[j]*y+winesProbTopDown(a,i,j-1,y+1,dp));
+}
+
+int winesProbBottomUp(int a[],int n)
+{
+    int dp[100][100]={0};
+    for(int i = n-1;i>=0;i--)
+    {
+        for(int j = 0;j<n;j++)
+        {
+            if(i > j)
+                dp[i][j] = 0;
+            else
+                dp[i][j] = max((n - (j - i)) * a[i] + dp[i+1][j], (n - (j - i)) * a[j] + dp[i][j-1]);
+        }
+    }
+    return dp[0][n-1];
+}
+
+int maxSubarraySumDp(int a[],int n)
+{
+    int dp[100]={0};
+    dp[0] = (a[0]>0)?a[0]:0;
+    int overall_max = 0;
+    for(int i=1;i<n;i++)
+    {
+        dp[i] = a[i] + dp[i-1];
+        if(dp[i]<0)
+            dp[i] = 0;
+        overall_max = max(dp[i],overall_max);
+    }
+    return overall_max;
 }
 
 int main()
@@ -4778,9 +4859,29 @@ int main()
     cout<<"235. Fibonacci Bottom Up with Space Optimisation"<<endl;
     cout<<"236. Min Steps to One Top Down"<<endl;
     cout<<"237. Min Steps to One Bottom Up"<<endl;
-    cout<<"238. "<<endl;
-    cout<<"239. "<<endl;
-    cout<<"240. "<<endl;
+    cout<<"238. Minimum Coin Change Top Down"<<endl;
+    cout<<"239. Minimum Coin Change Bottom Up"<<endl;
+    cout<<"240. Wines Problem Top Down"<<endl;
+    cout<<"241. Wines Problem Bottom Up"<<endl;
+    cout<<"242. Maximum Subarray Sum"<<endl;
+    cout<<"243. Ladders Top Down"<<endl;
+    cout<<"244. Ladders Bottom Up"<<endl;
+    cout<<"245. "<<endl;
+    cout<<"246. "<<endl;
+    cout<<"247. "<<endl;
+    cout<<"248. "<<endl;
+    cout<<"249. "<<endl;
+    cout<<"250. "<<endl;
+    cout<<"251. "<<endl;
+    cout<<"252. "<<endl;
+    cout<<"253. "<<endl;
+    cout<<"254. "<<endl;
+    cout<<"255. "<<endl;
+    cout<<"256. "<<endl;
+    cout<<"257. "<<endl;
+    cout<<"258. "<<endl;
+    cout<<"259. "<<endl;
+    cout<<"260. "<<endl;
     cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -8258,14 +8359,103 @@ int main()
                         break;
                     }
         case 238 :  {
-
+                        int coins[] = {1,7,10};
+                        int dp[100]={0};
+                        int T=3; // different types of coins
+                        cout<<minCoinsTopDown(15,coins,T,dp);
                         break;
                     }
         case 239 :  {
-
+                        int coins[] = {1,3,5};
+                        int T=3; // different types of coins
+                        cout<<minCoinsBottomUp(8,coins,T);
                         break;
                     }
         case 240 :  {
+                        int p[]={2,3,5,1,4};
+                        int dp[100][100]={0};
+                        cout<<winesProbTopDown(p,0,4,1,dp);
+                        break;
+                    }
+        case 241 :  {
+                        int a[]={2,3,5,1,4};
+                        cout<<winesProbBottomUp(a,5);
+                        break;
+                    }
+        case 242 :  {
+                        int a[]={-3,2,5,-1,6,3,-2,7,-5,2};
+                        cout<<maxSubarraySumDp(a,10);
+                        break;
+                    }
+        case 243 :  {
+
+                        break;
+                    }
+        case 244 :  {
+
+                        break;
+                    }
+        case 245 :  {
+
+                        break;
+                    }
+        case 246 :  {
+
+                        break;
+                    }
+        case 247 :  {
+
+                        break;
+                    }
+        case 248 :  {
+
+                        break;
+                    }
+        case 249 :  {
+
+                        break;
+                    }
+        case 250 :  {
+
+                        break;
+                    }
+        case 251 :  {
+
+                        break;
+                    }
+        case 252 :  {
+
+                        break;
+                    }
+        case 253 :  {
+
+                        break;
+                    }
+        case 254 :  {
+
+                        break;
+                    }
+        case 255 :  {
+
+                        break;
+                    }
+        case 256 :  {
+
+                        break;
+                    }
+        case 257 :  {
+
+                        break;
+                    }
+        case 258 :  {
+
+                        break;
+                    }
+        case 259 :  {
+
+                        break;
+                    }
+        case 260 :  {
 
                         break;
                     }
@@ -8275,6 +8465,6 @@ int main()
                     }
         }
     }
-    while(ch!=400);
+    while(0);
 	return 0;
 }
