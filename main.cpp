@@ -4621,6 +4621,20 @@ int laddersBottomUpOpt(int n, int k)
     return dp[n];
 }
 
+int rodCutting(int prices[], int n)
+{
+    if(n<=0)
+        return 0;
+    int ans = INT_MIN;
+    for(int i=0;i<n;i++)
+    {
+        int cut = i+1;
+        int current_ans = prices[i] + rodCutting(prices, n-cut);
+        ans =max(ans, current_ans);
+    }
+    return ans;
+}
+
 int main()
 {
     int ch;
@@ -4908,8 +4922,8 @@ int main()
     cout<<"243. Ladders Top Down"<<endl;
     cout<<"244. Ladders Bottom Up"<<endl;
     cout<<"245. Ladders Optimised Approach"<<endl;
-    cout<<"246. "<<endl;
-    cout<<"247. "<<endl;
+    cout<<"246. Rod Cutting Problem"<<endl;
+    cout<<"247. Rod Cutting Problem Bottom Up"<<endl;
     cout<<"248. "<<endl;
     cout<<"249. "<<endl;
     cout<<"250. "<<endl;
@@ -8445,7 +8459,8 @@ int main()
                         break;
                     }
         case 246 :  {
-
+                        int prices[] = {1,5,8,9,10,17,17,20};
+                        cout<<rodCutting(prices,8);
                         break;
                     }
         case 247 :  {
