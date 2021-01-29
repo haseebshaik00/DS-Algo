@@ -4668,6 +4668,75 @@ int rodCuttingBottomUp(int prices[], int n)
     return dp[n];
 }
 
+int lcs(string s1, string s2, int i, int j)
+{
+    if(i==s1.length() or j==s2.length())
+        return 0;
+    if(s1[i]==s2[j])
+        return 1 + lcs(s1,s2,i+1,j+1);
+    int op1 = lcs(s1,s2,i+1,j);
+    int op2 = lcs(s1,s2,i,j+1);
+    return max(op1,op2);
+}
+
+int lcsTopDown(string s1, string s2, int i, int j, vector<vector<int>> &dp)
+{
+    if(i==s1.length() or j==s2.length())
+        return 0;
+    if(dp[i][j]!=-1)
+        return dp[i][j];
+    if(s1[i]==s2[j])
+        return dp[i][j] = 1 + lcsTopDown(s1,s2,i+1,j+1,dp);
+    int op1 = lcsTopDown(s1,s2,i+1,j,dp);
+    int op2 = lcsTopDown(s1,s2,i,j+1,dp);
+    return dp[i][j] = max(op1,op2); //final ans is stored at dp[0][0]
+}
+
+int lcsBottomUp(string s1,string s2)
+{
+    int n=s1.length(),m=s2.length();
+    int dp[n+1][m+1]={-1};
+    for(int i=0;i<=n;i++)
+    {
+        for(int j=0;j<=m;j++)
+        {
+            if(i==0 || j==0)
+                dp[i][j]=0;
+            else if(s1[i-1]==s2[j-1])
+                dp[i][j] = dp[i-1][j-1]+1;
+            else
+                dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
+        }
+    }
+    for(int i=0;i<=n;i++)
+    {
+        for(int j=0;j<=m;j++)
+            cout<<dp[i][j];
+        cout<<endl;
+    }
+    return dp[n][m];
+}
+
+int lisDP(int a[],int n)
+{
+    int dp[n]={0};
+    dp[0]=1;
+    for(int i=1;i<n;i++)
+    {
+        int cmax=INT_MIN;
+        for(int j=0;j<i;j++)
+        {
+            if(a[j]<a[i])
+                cmax = max(cmax,dp[j]);
+        }
+        dp[i] = cmax+1;
+    }
+    int ans = INT_MIN;
+    for(int i=0;i<n;i++)
+        ans = max(ans,dp[i]);
+    return ans;
+}
+
 int main()
 {
     int ch;
@@ -4958,10 +5027,10 @@ int main()
     cout<<"246. Rod Cutting Problem"<<endl;
     cout<<"247. Rod Cutting Problem Top Down"<<endl;
     cout<<"248. Rod Cutting Problem Bottom Up"<<endl;
-    cout<<"249. "<<endl;
-    cout<<"250. "<<endl;
-    cout<<"251. "<<endl;
-    cout<<"252. "<<endl;
+    cout<<"249. Longest Common Subsequence"<<endl;
+    cout<<"250. Longest Common Subsequence Top Down"<<endl;
+    cout<<"251. Longest Common Subsequence Bottom Up"<<endl;
+    cout<<"252. Longest Increasing Subsequence DP-O(n^2)"<<endl;
     cout<<"253. "<<endl;
     cout<<"254. "<<endl;
     cout<<"255. "<<endl;
@@ -8508,19 +8577,35 @@ int main()
                         break;
                     }
         case 249 :  {
-
+                        string s1 = "ABCD";
+                        string s2 = "ABEDG";
+                        cout<<lcs(s1,s2,0,0);
                         break;
                     }
         case 250 :  {
-
+                        string s1 = "ABCD";
+                        string s2 = "ABEDG";
+                        int n1=s1.length(), n2=s2.length();
+                        vector<vector<int>> dp(n1+1, vector<int>(n2+1,-1)); //n1+1 and n2+1 to see the visited cells
+                        cout<<lcsTopDown(s1,s2,0,0,dp);
+                        cout<<endl;
+                        for(int i=0;i<n1+1;i++)
+                        {
+                            for(int j=0;j<n2+1;j++)
+                                cout<<dp[i][j]<<" ";
+                            cout<<endl;
+                        }
                         break;
                     }
         case 251 :  {
-
+                        string s1 = "ABCD";
+                        string s2 = "ABEDG";
+                        cout<<lcsBottomUp(s1,s2);
                         break;
                     }
         case 252 :  {
-
+                        int a[] = {1,5,2,3,4,9,6,10};
+                        cout<<lisDP(a,8);
                         break;
                     }
         case 253 :  {
