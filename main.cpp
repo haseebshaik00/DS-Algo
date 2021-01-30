@@ -5030,10 +5030,10 @@ int main()
     cout<<"249. Longest Common Subsequence"<<endl;
     cout<<"250. Longest Common Subsequence Top Down"<<endl;
     cout<<"251. Longest Common Subsequence Bottom Up"<<endl;
-    cout<<"252. Longest Increasing Subsequence DP-O(n^2)"<<endl;
-    cout<<"253. "<<endl;
-    cout<<"254. "<<endl;
-    cout<<"255. "<<endl;
+    cout<<"252. Longest Increasing Subsequence DP:O(n^2)"<<endl;
+    cout<<"253. Longest Increasing Subsequence DP-2:O(n^2)"<<endl;
+    cout<<"254. Longest Increasing Subsequence DP-3 with binary search:O(nlogn)"<<endl;
+    cout<<"255. Longest Increasing Subsequence DP-3 with segment trees:O(nlogn)"<<endl;
     cout<<"256. "<<endl;
     cout<<"257. "<<endl;
     cout<<"258. "<<endl;
