@@ -4737,6 +4737,50 @@ int lisDP(int a[],int n)
     return ans;
 }
 
+int lis2(int a[],int n)
+{
+    int dp[n+1];
+    for(int i=0;i<=n;i++)
+        dp[i]=INT_MAX;
+    dp[0] = INT_MIN;
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            if(dp[j]<a[i] && a[i]<dp[j+1])
+                dp[j+1]=a[i];
+        }
+    }
+    int lis=0;
+    for(int i=1;i<=n;i++)
+    {
+        if(dp[i]!=INT_MAX)
+            lis=i;
+    }
+    return lis;
+}
+
+int lis3(int a[],int n)
+{
+    int dp[n+1];
+    for(int i=0;i<=n;i++)
+        dp[i]=INT_MAX;
+    dp[0] = INT_MIN;
+    for(int i=0;i<n;i++)
+    {
+        int j = upper_bound(dp,dp+n+1,a[i])-dp;
+        if(dp[j-1]<a[i] && a[i]<dp[j])
+            dp[j]=a[i];
+    }
+    int lis=0;
+    for(int i=1;i<=n;i++)
+    {
+        if(dp[i]!=INT_MAX)
+            lis=i;
+    }
+    return lis;
+}
+
 int main()
 {
     int ch;
@@ -5033,7 +5077,7 @@ int main()
     cout<<"252. Longest Increasing Subsequence DP:O(n^2)"<<endl;
     cout<<"253. Longest Increasing Subsequence DP-2:O(n^2)"<<endl;
     cout<<"254. Longest Increasing Subsequence DP-3 with binary search:O(nlogn)"<<endl;
-    cout<<"255. Longest Increasing Subsequence DP-3 with segment trees:O(nlogn)"<<endl;
+    cout<<"255. "<<endl;
     cout<<"256. "<<endl;
     cout<<"257. "<<endl;
     cout<<"258. "<<endl;
@@ -8609,11 +8653,13 @@ int main()
                         break;
                     }
         case 253 :  {
-
+                        int a[] = {1,5,2,3,4,9,6,10};
+                        cout<<lis2(a,8);
                         break;
                     }
         case 254 :  {
-
+                        int a[] = {1,5,2,3,4,9,6,10};
+                        cout<<lis3(a,8);
                         break;
                     }
         case 255 :  {
