@@ -4781,6 +4781,39 @@ int lis3(int a[],int n)
     return lis;
 }
 
+int MatrixChainOrder(int a[], int n)
+{
+    n=n-1;
+    int dp[n][n];
+    memset(dp,0,sizeof(dp));
+    for(int i=1;i<n;i++) // i loop is for number of diagonals to be calculated
+    {
+        int r=0,c=i;
+        while(c<n)
+        {
+            int val =INT_MAX;
+            for(int pivot=r;pivot<c;pivot++)
+                val = min(val, dp[r][pivot] + dp[pivot+1][c] + a[r]*a[pivot+1]*a[c+1]);
+            dp[r][c] = val;
+            r++;c++;
+        }
+    }
+    return dp[0][n-1];
+}
+
+int cellMitosis(int n, int x, int y, int z)
+{
+    int dp[n+1]={0};
+    for(int i=2;i<=n;i++)
+    {
+        if(i%2==0)
+            dp[i]=min(dp[i/2]+x,dp[i-1]+y);
+        else
+            dp[i]=min(dp[i-1]+y,dp[(i+1)/2]+x+z);
+    }
+    return dp[n];
+}
+
 int main()
 {
     int ch;
@@ -5077,8 +5110,8 @@ int main()
     cout<<"252. Longest Increasing Subsequence DP:O(n^2)"<<endl;
     cout<<"253. Longest Increasing Subsequence DP-2:O(n^2)"<<endl;
     cout<<"254. Longest Increasing Subsequence DP-3 with binary search:O(nlogn)"<<endl;
-    cout<<"255. "<<endl;
-    cout<<"256. "<<endl;
+    cout<<"255. Matrix Multiplication"<<endl;
+    cout<<"256. Cell Mitosis"<<endl;
     cout<<"257. "<<endl;
     cout<<"258. "<<endl;
     cout<<"259. "<<endl;
@@ -8663,11 +8696,14 @@ int main()
                         break;
                     }
         case 255 :  {
-
+                        int a[] = {4,2,3,1,3};
+                        cout<< MatrixChainOrder(a,5);
                         break;
                     }
         case 256 :  {
-
+                        int n,x,y,z;
+                        cin>>n>>x>>y>>z;// 5 2 1 3
+                        cout<<cellMitosis(n,x,y,z);// 4
                         break;
                     }
         case 257 :  {
