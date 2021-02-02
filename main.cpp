@@ -4814,6 +4814,29 @@ int cellMitosis(int n, int x, int y, int z)
     return dp[n];
 }
 
+int csumMixtures(int s, int e, int a[])
+{
+    int ans=0;
+    for(int i=s;i<=e;i++)
+    {
+        ans += a[i];
+        ans %= 100;
+    }
+    return ans;
+}
+
+int solveMixtures(int i, int j, int a[], int dp[][100])
+{
+    if(i>=j)
+        return 0;
+    if(dp[i][j]!=-1)
+        return dp[i][j];
+    dp[i][j]=INT_MAX;
+    for(int k=i;k<=j;k++)
+        dp[i][j] = min(dp[i][j], solveMixtures(i,k,a,dp)+solveMixtures(k+1,j,a,dp)+csumMixtures(i,k,a)*csumMixtures(k+1,j,a));
+    return dp[i][j];
+}
+
 int main()
 {
     int ch;
@@ -5112,7 +5135,7 @@ int main()
     cout<<"254. Longest Increasing Subsequence DP-3 with binary search:O(nlogn)"<<endl;
     cout<<"255. Matrix Multiplication"<<endl;
     cout<<"256. Cell Mitosis"<<endl;
-    cout<<"257. "<<endl;
+    cout<<"257. Mixtures SPOJ"<<endl;
     cout<<"258. "<<endl;
     cout<<"259. "<<endl;
     cout<<"260. "<<endl;
@@ -8707,7 +8730,22 @@ int main()
                         break;
                     }
         case 257 :  {
-
+                        int a[100], dp[100][100];
+                        int n;
+                        while((scanf("%d",&n)!=EOF))
+                        {
+                            for(int i=0;i<n;i++)
+                                cin>>a[i];
+                            for(int i=0;i<=n;i++)
+                            {
+                                for(int j=0;j<=n;j++)
+                                    dp[i][j]=-1;
+                            }
+                            cout<<solveMixtures(0,n-1,a,dp)<<endl;
+                        }
+                        // 2
+                        // 18 19
+                        // Output : 342
                         break;
                     }
         case 258 :  {
