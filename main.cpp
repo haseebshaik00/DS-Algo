@@ -4837,6 +4837,83 @@ int solveMixtures(int i, int j, int a[], int dp[][100])
     return dp[i][j];
 }
 
+int friendsPairing(int n)
+{
+    int dp[n+1];
+    for(int i=0;i<=n;i++)
+    {
+        if(i<=2)
+            dp[i]=i;
+        else
+            dp[i] = dp[i-1] + (i-1) * dp[i-2];
+    }
+    return dp[n];
+}
+
+int optimalGameDP(int i, int j, int coins[], int dp[100][100])
+{
+    if(i>j)
+        return dp[i][j]=0;
+    if(dp[i][j]!=-1)
+        return dp[i][j];
+    int pickFirst = coins[i] + min( optimalGameDP(i+2,j,coins,dp) , optimalGameDP(i+1,j-1,coins,dp) ) ;
+    int pickLast = coins[j] + min( optimalGameDP(i,j-2,coins,dp) , optimalGameDP(i+1,j-1,coins,dp) ) ;
+    return dp[i][j] = max(pickFirst,pickLast);
+}
+
+int minCostPath(int r,int c, int a[][100])
+{
+    int dp[r][c];
+    for(int i=0;i<r;i++)
+    {
+        for(int j=0;j<c;j++)
+        {
+            if(i==0 && j==0)
+                dp[i][j] = a[i][j];
+            else if(i==0)
+                dp[i][j] = dp[0][j-1] + a[0][j];
+            else if(j==0)
+                dp[i][j] = dp[i-1][0] + a[i][0];
+            else
+                dp[i][j] = min(dp[i-1][j],dp[i][j-1]) + a[i][j];
+        }
+    }
+    return dp[r-1][c-1];
+}
+
+int robotDP(int m,int n, int dp[][100])
+{
+    if(dp[0][0]==-1)
+        return 0;
+    for(int k=0;k<n;k++)
+    {
+        if(dp[0][k]==-1)
+            break;
+        dp[0][k]=1;
+    }
+    for(int k=0;k<m;k++)
+    {
+        if(dp[k][0]==-1)
+            break;
+        dp[k][0]=1;
+    }
+    for(int i=1;i<m;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            if(dp[i][j]==-1)
+                continue;
+            if(dp[i][j-1]!=-1)
+                dp[i][j] = dp[i][j-1];
+            if(dp[i-1][j]!=-1)
+                dp[i][j] += dp[i-1][j];
+        }
+    }
+    if(dp[m-1][n-1]==-1)
+        return 0;
+    return dp[m-1][n-1];
+}
+
 int main()
 {
     int ch;
@@ -5136,9 +5213,18 @@ int main()
     cout<<"255. Matrix Multiplication"<<endl;
     cout<<"256. Cell Mitosis"<<endl;
     cout<<"257. Mixtures SPOJ"<<endl;
-    cout<<"258. "<<endl;
-    cout<<"259. "<<endl;
-    cout<<"260. "<<endl;
+    cout<<"258. Friends Pairing"<<endl;
+    cout<<"259. Optimal Game Strategy DP"<<endl;
+    cout<<"260. Minimum Cost Path DP"<<endl;
+    cout<<"261. Robots DP"<<endl;
+    cout<<"262. "<<endl;
+    cout<<"263. "<<endl;
+    cout<<"264. "<<endl;
+    cout<<"265. "<<endl;
+    cout<<"266. "<<endl;
+    cout<<"267. "<<endl;
+    cout<<"268. "<<endl;
+    cout<<"269. "<<endl;
     cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -8749,14 +8835,120 @@ int main()
                         break;
                     }
         case 258 :  {
-
+                        int n=4;
+                        cout<<friendsPairing(n);
                         break;
                     }
         case 259 :  {
-
+                        int n;
+                        cin >> n;
+                        int coins[n];
+                        for(int i=0;i<n;i++)
+                            cin>>coins[i];
+                        int dp[100][100];
+                        memset(dp,-1,sizeof(dp));
+                        cout<<optimalGameDP(0,n-1,coins,dp);
                         break;
                     }
         case 260 :  {
+                        int r,c;
+                        cin>>r>>c;
+                        int a[100][100];
+                        for(int i=0;i<r;i++)
+                        {
+                            for(int j=0;j<c;j++)
+                                cin>>a[i][j];
+                        }
+                        cout<<minCostPath(r,c,a);
+                        break;
+                    }
+        case 261 :  {
+                        int dp[100][100];
+                        memset(dp,0,sizeof(dp));
+                        int m,n,p;
+                        cin>>m>>n>>p;
+                        for(int i=0;i<p;i++)
+                        {
+                            int x,y;
+                            cin>>x>>y;
+                            dp[x-1][y-1]={-1};
+                        }
+                        cout<<robotDP(m,n,dp);
+                        break;
+                    }
+        case 262 :  {
+
+                        break;
+                    }
+        case 263 :  {
+
+                        break;
+                    }
+        case 264 :  {
+
+                        break;
+                    }
+        case 265 :  {
+
+                        break;
+                    }
+        case 266 :  {
+
+                        break;
+                    }
+        case 267 :  {
+
+                        break;
+                    }
+        case 268 :  {
+
+                        break;
+                    }
+        case 269 :  {
+
+                        break;
+                    }
+        case 270 :  {
+
+                        break;
+                    }
+        case 271 :  {
+
+                        break;
+                    }
+        case 272 :  {
+
+                        break;
+                    }
+        case 273 :  {
+
+                        break;
+                    }
+        case 274 :  {
+
+                        break;
+                    }
+        case 275 :  {
+
+                        break;
+                    }
+        case 276 :  {
+
+                        break;
+                    }
+        case 277 :  {
+
+                        break;
+                    }
+        case 278 :  {
+
+                        break;
+                    }
+        case 279 :  {
+
+                        break;
+                    }
+        case 280 :  {
 
                         break;
                     }
