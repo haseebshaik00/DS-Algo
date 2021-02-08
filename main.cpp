@@ -15,6 +15,7 @@
 #include<unordered_map>
 #define ll long long int
 #define MAX_SIZE 100
+#define MM 5
 using namespace std;
 typedef pair<int, pair<int,int>> node;
 
@@ -2096,8 +2097,8 @@ int profit(int n, int c, int w[],int p[])
 {
     if(n==0||c==0)
         return 0;
-    int inc,exc,ans;
-    inc=exc=ans=0;
+    int inc,exc;
+    inc=exc=0;
     if(w[n-1]<=c)
         inc=p[n-1]+profit(n-1,c-w[n-1],w,p);
     exc=profit(n-1,c,w,p);
@@ -4914,6 +4915,115 @@ int robotDP(int m,int n, int dp[][100])
     return dp[m-1][n-1];
 }
 
+int func(int idx, int cur, int a[], int dp[MM][3], int n, int x)
+{
+    if (idx == n)
+        return 0;
+
+    if (dp[idx][cur] != -1)
+        return dp[idx][cur];
+
+    int ans = 0;
+    if (cur == 0) {
+        ans = max(ans, a[idx] + func(idx + 1, 0, a, dp, n, x));
+        ans = max(ans, x * a[idx] + func(idx + 1, 1, a, dp, n, x));
+    }
+    else if (cur == 1) {
+        ans = max(ans, x * a[idx] + func(idx + 1, 1, a, dp, n, x));
+        ans = max(ans, a[idx] + func(idx + 1, 2, a, dp, n, x));
+    }
+    else
+        ans = max(ans, a[idx] + func(idx + 1, 2, a, dp, n, x));
+    return dp[idx][cur] = ans;
+}
+
+int getMaximumSum(int a[], int n, int x)
+{
+    int dp[n][3];
+    memset(dp, -1, sizeof dp);
+    int maxi = 0;
+    for (int i = 0; i < n; i++)
+       maxi = max(maxi, func(i, 0, a, dp, n, x));
+    return maxi;
+}
+
+long long int binaryString(long long int n)
+{
+	long long int dp[n+1][2];
+	dp[0][0]=dp[0][1]=0;
+	dp[1][0]=dp[1][1]=1;
+	for(long long int i=2;i<=n;i++)
+	{
+		dp[i][0]=dp[i-1][0]+dp[i-1][1];
+		dp[i][1]=dp[i-1][0];
+	}
+	return dp[n][0]+dp[n][1];
+}
+
+void multiply(int F[2][2], int M[2][2])
+{
+	int x = F[0][0] * M[0][0] + F[0][1] * M[1][0];
+	int y = F[0][0] * M[0][1] + F[0][1] * M[1][1];
+	int z = F[1][0] * M[0][0] + F[1][1] * M[1][0];
+	int w = F[1][0] * M[0][1] + F[1][1] * M[1][1];
+	F[0][0] = x;
+	F[0][1] = y;
+	F[1][0] = z;
+	F[1][1] = w;
+}
+
+void power(int F[2][2], int n)
+{
+	if(n == 0 || n == 1)
+	    return;
+	int M[2][2] = {{1, 1},{1, 0}};
+	power(F, n / 2);
+	multiply(F, F);
+	if (n % 2 != 0)
+		multiply(F, M);
+}
+
+int fibMatrixExp(int n)
+{
+	int F[2][2] = {{1, 1},{1, 0}};
+	if (n == 0)
+		return 0;
+	power(F, n - 1);
+	return F[0][0];
+}
+
+int knapsackTopDownDP(int s,int w[],int p[],int dp[11][11],int i)
+{
+	if(i<0)
+		return 0;
+	if(dp[i][s]!=-1)
+		return dp[i][s];
+	int inc=0;int exc=0;
+	if(w[i]<=s)
+		inc = p[i] + knapsackTopDownDP(s-w[i],w,p,dp,i-1);
+	exc  = knapsackTopDownDP(s,w,p,dp,i-1);
+	return dp[i][s] = max(inc,exc);
+}
+
+int knapsackBottomUpDP(int s, int n, int w[],int p[])
+{
+	int dp[n+1][s+1];
+    memset(dp,-1,sizeof(dp));
+    for(int i=0;i<=n;i++)
+    {
+        for(int j=0;j<=s;j++)
+        {
+            if(i==0 || j==0)
+                dp[i][j]=0;
+            else if(w[i-1]<=s)
+                dp[i][j] = max(p[i-1]+dp[i-1][j-w[i-1]] , dp[i-1][j]);
+            else
+                dp[i][j] = dp[i-1][j];
+        }
+    }
+    return dp[n][s];
+}
+
 int main()
 {
     int ch;
@@ -5217,18 +5327,18 @@ int main()
     cout<<"259. Optimal Game Strategy DP"<<endl;
     cout<<"260. Minimum Cost Path DP"<<endl;
     cout<<"261. Robots DP"<<endl;
-    cout<<"262. "<<endl;
-    cout<<"263. "<<endl;
-    cout<<"264. "<<endl;
-    cout<<"265. "<<endl;
-    cout<<"266. "<<endl;
+    cout<<endl<<"******Challenges - Dynamic Programming******"<<endl;
+    cout<<"262. Maximize the subarray sum after multiplying all elements of any subarray with X"<<endl;
+    cout<<"263. Count no. of Binary Strings"<<endl;
+    cout<<"264. Fibonacci Matrix Exponentiation"<<endl;
+    cout<<"265. 0-1 Knapsack Top Down DP"<<endl;
+    cout<<"266. 0-1 Knapsack Bottom Up DP"<<endl;
     cout<<"267. "<<endl;
     cout<<"268. "<<endl;
     cout<<"269. "<<endl;
     cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
-
     switch(ch)
         {
         case 1 :    {
@@ -8875,25 +8985,52 @@ int main()
                         }
                         cout<<robotDP(m,n,dp);
                         break;
+                        // Input : 4 3 2
+                        //3 3
+                        //3 1
+                        //Output : 2
                     }
         case 262 :  {
-
+                        int a[] = { -3, 8, -2, 1, -6 };
+                        int n = sizeof(a) / sizeof(a[0]);
+                        int x = -1;
+                        cout << getMaximumSum(a, n, x);
                         break;
                     }
         case 263 :  {
-
+                        long long int n;
+                        cin>>n;
+                        cout<<binaryString(n)<<endl;
                         break;
                     }
         case 264 :  {
-
+                        int n;
+                        cin>>n;
+                        cout<<fibMatrixExp(n)<<endl;
                         break;
                     }
         case 265 :  {
-
+                        int n,s;
+                        cin>>n>>s;
+                        int w[n],p[n];
+                        for(int i=0;i<n;i++)
+                            cin>>w[i];
+                        for(int i=0;i<n;i++)
+                            cin>>p[i];
+                        int dp[11][11]; //dp[n][s+1]
+                        memset(dp,-1,sizeof(dp));
+                        cout<<knapsackTopDownDP(s,w,p,dp,n-1);
                         break;
                     }
         case 266 :  {
-
+                        int n,s;
+                        cin>>n>>s;
+                        int w[n],p[n];
+                        for(int i=0;i<n;i++)
+                            cin>>w[i];
+                        for(int i=0;i<n;i++)
+                            cin>>p[i];
+                        cout<<knapsackBottomUpDP(s,n,w,p);
                         break;
                     }
         case 267 :  {
