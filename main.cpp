@@ -5024,6 +5024,21 @@ int knapsackBottomUpDP(int s, int n, int w[],int p[])
     return dp[n][s];
 }
 
+ll zeronKnapsack(ll s[],ll p[], ll n, ll c)
+{
+	ll dp[c+1];
+	memset(dp,0,sizeof(dp));
+	for(ll i=0;i<=c;i++)
+	{
+		for(ll j=0;j<n;j++)
+		{
+			if(s[j]<=i)
+				dp[i] = max(dp[i],dp[i-s[j]] + p[j]);
+		}
+	}
+	return dp[c];
+}
+
 int main()
 {
     int ch;
@@ -5333,7 +5348,7 @@ int main()
     cout<<"264. Fibonacci Matrix Exponentiation"<<endl;
     cout<<"265. 0-1 Knapsack Top Down DP"<<endl;
     cout<<"266. 0-1 Knapsack Bottom Up DP"<<endl;
-    cout<<"267. "<<endl;
+    cout<<"267. 0-N Knapsack Bottom Up - O(w*n)"<<endl;
     cout<<"268. "<<endl;
     cout<<"269. "<<endl;
     cout<<"400. Exit"<<endl;
@@ -9034,7 +9049,14 @@ int main()
                         break;
                     }
         case 267 :  {
-
+                        ll n,c;
+                        cin>>n>>c;
+                        ll s[n],p[n];
+                        for(ll i=0;i<n;i++)
+                            cin>>s[i];
+                        for(ll i=0;i<n;i++)
+                            cin>>p[i];
+                        cout<<zeronKnapsack(s,p,n,c);
                         break;
                     }
         case 268 :  {
