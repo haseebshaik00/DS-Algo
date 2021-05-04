@@ -1283,15 +1283,12 @@ int maxSum(int a[],int n)
 {
 	int totalSum=0;
 	int max1=kadenceAlgo(a,n);
-
 	for(int i=0;i<n;i++)
 	{
 		totalSum += a[i];
 		a[i] = -a[i];
 	}
-
 	int max2=totalSum+kadenceAlgo(a,n);
-
 	return max(max1,max2);
 }
 
@@ -5039,6 +5036,59 @@ ll zeronKnapsack(ll s[],ll p[], ll n, ll c)
 	return dp[c];
 }
 
+int lcs3(string s1, string s2, string s3)
+{
+	int n1=s1.length(),n2=s2.length(),n3=s3.length();
+	int dp[n1+1][n2+1][n3+1];
+	memset(dp,0,sizeof(dp));
+	for(int i=1;i<=n1;i++)
+	{
+		for(int j=1;j<=n2;j++)
+		{
+			for(int k=1;k<=n3;k++)
+			{
+			   if(s1[i-1]==s2[j-1] && s2[j-1]==s3[k-1])
+					dp[i][j][k] = 1 + dp[i-1][j-1][k-1];
+				else
+					dp[i][j][k] = max(dp[i-1][j][k], max(dp[i][j-1][k], dp[i][j][k-1]));
+			}
+		}
+	}
+	return dp[n1][n2][n3];
+}
+
+void removeDuplicateUnsorted(char c[], int n)
+{
+    map<char,int> m;
+    vector<char> v;
+    for(int i=0;i<strlen(c);i++)
+        m.insert({c[i],1});
+    for(int i=0;i<strlen(c);i++)
+    {
+        if(m[c[i]] == 1)
+        {
+            v.push_back(c[i]);
+            m[c[i]] = -1;
+        }
+    }
+    for(auto it=v.begin(); it!=v.end(); it++)
+        cout<<*it<<" ";
+}
+
+void removeDuplicateSorted(char c[], int n)
+{
+    int i=0,j=1;
+    while(c[j]!='\0')
+    {
+        if(c[i] == c[j])
+            j++;
+        else
+            c[++i]=c[j];
+    }
+    c[++i]='\0';
+    cout<<c<<endl;
+}
+
 int main()
 {
     int ch;
@@ -5349,8 +5399,25 @@ int main()
     cout<<"265. 0-1 Knapsack Top Down DP"<<endl;
     cout<<"266. 0-1 Knapsack Bottom Up DP"<<endl;
     cout<<"267. 0-N Knapsack Bottom Up - O(w*n)"<<endl;
-    cout<<"268. "<<endl;
+    cout<<"268. LCS of 3 strings"<<endl;
     cout<<"269. "<<endl;
+    cout<<"270. "<<endl;
+    cout<<"271. "<<endl;
+    cout<<"272. "<<endl;
+    cout<<"273. "<<endl;
+    cout<<"274. "<<endl;
+    cout<<"275. "<<endl;
+    cout<<"276. "<<endl;
+    cout<<"277. "<<endl;
+    cout<<"278. "<<endl;
+    cout<<"279. "<<endl;
+    cout<<"280. "<<endl;
+    cout<<"281. "<<endl;
+    cout<<"281. Graph Adjacency List Implementation"<<endl;
+    cout<<endl<<"******Extras******"<<endl;
+    cout<<"301. Target Sum Triplets"<<endl;
+    cout<<"302. Remove Duplicate from unsorted array"<<endl;
+    cout<<"302. Remove Duplicate from Sorted array"<<endl;
     cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -9060,7 +9127,9 @@ int main()
                         break;
                     }
         case 268 :  {
-
+                        string s1,s2,s3;
+                        cin>>s1>>s2>>s3;
+                        cout<<lcs3(s1,s2,s3);
                         break;
                     }
         case 269 :  {
@@ -9109,6 +9178,48 @@ int main()
                     }
         case 280 :  {
 
+                        break;
+                    }
+        case 301 :  {
+                        int n;
+                        cin >> n;
+                        int a[n];
+                        for(int i=0;i<n;i++){
+                            cin >> a[i];
+                        }
+                        int k;
+                        cin >> k;
+                        sort(a,a+n);
+                        for(int i=0;i<n-2;i++)
+                        {
+                            int j=i+1,l=n-1;
+                            while(j<l){
+                                if(a[i]+a[j]+a[l]==k){
+                                    cout << a[i]<<", "<<a[j]<<" and "<<a[l]<<endl;
+                                    j++;
+                                    l--;
+                                }
+                                if(a[i]+a[j]+a[l]<k){
+                                    j++;
+                                }
+                                if(a[i]+a[j]+a[l]>k){
+                                    l--;
+                                }
+
+                            }
+                        }
+                        break;
+                    }
+        case 302 :  {
+                        char c[100];
+                        cin.getline(c,100);
+                        removeDuplicateUnsorted(c,100);
+                        break;
+                    }
+        case 303 :  {
+                        char c[100];
+                        cin.getline(c,100);
+                        removeDuplicateSorted(c,100);
                         break;
                     }
         default:    {
