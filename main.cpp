@@ -3381,7 +3381,7 @@ BinaryTreeNode *treeFromLevelIn(int in[], int level[], int s, int e,int n)
         return root;
     int i = search(in, s, e, root->data);
     int *llevel  = extrackKeys(in, level, i, n);
-    int *rlevel  = extrackKeys(in + i + 1, level, e-i, n);//here u were usinf n-i-1
+    int *rlevel  = extrackKeys(in + i + 1, level, n-1, n);//here u were usinf n-i-1 // e-i can also be used
     root->left = treeFromLevelIn(in, llevel, s, i-1, i-s);
     root->right = treeFromLevelIn(in, rlevel, i+1, e, e-i);
     return root;
@@ -5399,24 +5399,25 @@ int main()
     cout<<"266. 0-1 Knapsack Bottom Up DP"<<endl;
     cout<<"267. 0-N Knapsack Bottom Up - O(w*n)"<<endl;
     cout<<"268. LCS of 3 strings"<<endl;
-    cout<<"269. "<<endl;
-    cout<<"270. "<<endl;
-    cout<<"271. "<<endl;
-    cout<<"272. "<<endl;
-    cout<<"273. "<<endl;
-    cout<<"274. "<<endl;
-    cout<<"275. "<<endl;
-    cout<<"276. "<<endl;
-    cout<<"277. "<<endl;
-    cout<<"278. "<<endl;
-    cout<<"279. "<<endl;
-    cout<<"280. "<<endl;
-    cout<<"281. "<<endl;
-    cout<<"281. Graph Adjacency List Implementation"<<endl;
+    cout<<"269. Longest Palindromic Subsequence"<<endl;
+    cout<<endl<<"******Graphs******"<<endl;
+    cout<<"270. Graph Adjacency List Implementation"<<endl;
+    cout<<"271. Adjacency list implementation for generic data"<<endl;
+    cout<<"272. BFS"<<endl;
+    cout<<"273. Single source shortest path using BFS"<<endl;
+    cout<<"274. Snake and Ladders"<<endl;
+    cout<<"275. DFS"<<endl;
+    cout<<"276. Connected components using DFS"<<endl;
+    cout<<"277. DAG Topological Sort using DFS"<<endl;
+    cout<<"278. Topological Sort using BFS"<<endl;
+    cout<<"279. Undirected Graph is tree or not"<<endl;
+    cout<<"280. Cycle Detection in Directed graph using DFS"<<endl;
+    cout<<"281. Cycle Detection in Undirected graph using DFS"<<endl;
+    cout<<"282. Djikstra's Algorithm"<<endl;
     cout<<endl<<"******Extras******"<<endl;
-    cout<<"301. Target Sum Triplets"<<endl;
-    cout<<"302. Remove Duplicate from unsorted array"<<endl;
-    cout<<"302. Remove Duplicate from Sorted array"<<endl;
+    cout<<"283. Target Sum Triplets"<<endl;
+    cout<<"284. Remove Duplicate from unsorted array"<<endl;
+    cout<<"285. Remove Duplicate from Sorted array"<<endl;
     cout<<"400. Exit"<<endl;
     cout<<endl<<"Enter your choice : ";
     cin>>ch;
@@ -9132,54 +9133,803 @@ int main()
                         break;
                     }
         case 269 :  {
+                        /*
+                        #include<stdio.h>
+                        #include<string.h>
+                        int max (int x, int y) { return (x > y)? x : y; }
 
+                        int lps(char *str)
+                        {
+                        int n = strlen(str);
+                        int i, j, cl;
+                        int L[n][n];
+
+                        for (i = 0; i < n; i++)
+                            L[i][i] = 1;
+                            for (cl=2; cl<=n; cl++)
+                            {
+                                for (i=0; i<n-cl+1; i++)
+                                {
+                                    j = i+cl-1;
+                                    if (str[i] == str[j] && cl == 2)
+                                    L[i][j] = 2;
+                                    else if (str[i] == str[j])
+                                    L[i][j] = L[i+1][j-1] + 2;
+                                    else
+                                    L[i][j] = max(L[i][j-1], L[i+1][j]);
+                                }
+                            }
+
+                            return L[0][n-1];
+                        }
+                        int main()
+                        {
+                            char seq[] = "GEEKS FOR GEEKS";
+                            int n = strlen(seq);
+                            printf ("The length of the LPS is %d", lps(seq));
+                            getchar();
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 270 :  {
+                        /*
+                        class Graph
+                        {
+                            int v;
+                            list<int> *l;
 
+                            public:
+                            Graph(int v)
+                            {
+                                this->v = v;
+                                l = new list<int>[v];
+                            }
+
+                            void addEdge(int x, int y)
+                            {
+                                l[x].push_back(y);
+                                l[y].push_back(x);
+                            }
+
+                            void printGraph()
+                            {
+                                for(int i=0;i<v;i++)
+                                {
+                                    cout<<i<<" -> ";
+                                    for(auto y:l[i])
+                                        cout<<y<<",";
+                                    cout<<endl;
+                                }
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g(4);
+                            g.addEdge(0,1);
+                            g.addEdge(0,2);
+                            g.addEdge(2,3);
+                            g.addEdge(1,2);
+                            g.printGraph();
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 271 :  {
+                        /*
+                        class Graph
+                        {
+                            map<string,list<pair<string,int>>> l;
 
+                            public:
+                            void addEdge(string a, string b, bool bidr, int n)
+                            {
+                                l[a].push_back(make_pair(b,n));
+                                if(bidr)
+                                    l[b].push_back(make_pair(a,n));
+                            }
+
+                            void print()
+                            {
+                                for(auto p:l)
+                                {
+                                    cout<<p.first<<"--->";
+                                    list<pair<string,int>> nbrs = p.second;
+                                    for(auto nbr : nbrs)
+                                        cout<<nbr.first<< " " <<nbr.second<<";";
+                                    cout<<endl;
+                                }
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g;
+                            g.addEdge("A","B",true,20);
+                            g.addEdge("B","D",true,20);
+                            g.addEdge("A","C",true,20);
+                            g.addEdge("C","D",true,20);
+                            g.addEdge("A","D",true,20);
+                            g.print();
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 272 :  {
+                        /*
+                        class Graph
+                        {
+                            map<int,list<int>> l;
 
+                            public:
+                            void addEdge(int x,int y)
+                            {
+                                l[x].push_back(y);
+                                l[y].push_back(x);
+                            }
+
+                            void bfs(int src)
+                            {
+                                map<int, bool> visited;
+                                queue<int> q;
+                                q.push(src);
+                                visited[src]=true;
+                                while(!q.empty())
+                                {
+                                    int temp = q.front();
+                                    q.pop();
+                                    cout<<temp<<" ";
+                                    for(int x : l[temp])
+                                    {
+                                        if(!visited[x])
+                                        {
+                                            q.push(x);
+                                            visited[x]=true;
+                                        }
+                                    }
+                                }
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g;
+                            g.addEdge(0,1);
+                            g.addEdge(0,3);
+                            g.addEdge(1,2);
+                            g.addEdge(2,3);
+                            g.addEdge(3,4);
+                            g.addEdge(4,5);
+                            g.bfs(0);
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 273 :  {
+                        /*
+                        class Graph
+                        {
+                            map<int,list<int>> l;
 
+                            public:
+                            void addEdge(int x,int y)
+                            {
+                                l[x].push_back(y);
+                                l[y].push_back(x);
+                            }
+
+                            void bfs(int src)
+                            {
+                                map<int,int> dist;
+                                queue<int> q;
+                                q.push(src);
+                                for(auto x:l)
+                                    dist[x.first] = INT_MAX;
+                                dist[src]=0;
+                                while(!q.empty())
+                                {
+                                    int temp = q.front();
+                                    q.pop();
+                                    for(int x:l[temp])
+                                    {
+                                        if(dist[x]==INT_MAX)
+                                        {
+                                            q.push(x);
+                                            dist[x]=dist[temp]+1;
+                                        }
+                                    }
+                                }
+                                for(auto x:dist)
+                                {
+                                    cout<<x.first<<" "<<x.second<<endl;
+                                }
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g;
+                            g.addEdge(0,1);
+                            g.addEdge(0,3);
+                            g.addEdge(1,2);
+                            g.addEdge(2,3);
+                            g.addEdge(3,4);
+                            g.addEdge(4,5);
+                            g.bfs(0);
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 274 :  {
+                        /*
+                        class Graph
+                        {
+                            map<int,list<int>> l;
+                            map<int,int> path;
 
+                            public:
+                            void addEdge(int x,int y)
+                            {   //only one edge
+                                l[x].push_back(y);
+                            }
+
+                            void bfs(int src, int dest)
+                            {
+                                map<int,int> dist;
+                                queue<int> q;
+                                q.push(src);
+                                for(auto x:l)
+                                    dist[x.first] = INT_MAX;
+                                dist[src]=0;
+                                while(!q.empty())
+                                {
+                                    int temp = q.front();
+                                    q.pop();
+                                    for(int x:l[temp])
+                                    {
+                                        if(dist[x]==INT_MAX)
+                                        {
+                                            q.push(x);
+                                            dist[x]=dist[temp]+1;
+                                            path[x] = temp;
+                                        }
+                                    }
+                                }
+                                for(auto x:dist)
+                                {
+                                    cout<<x.first<<" "<<x.second<<endl;
+                                }
+                                cout<<dist[dest];
+                                int temp = dest;
+                                while(temp != src)
+                                {
+                                    cout<<temp<<"<----";
+                                    temp = path[temp];
+                                }
+                                cout<<src<<endl;
+                            }
+                        };
+
+                        int main()
+                        {
+                            int board[50];
+                            memset(board,0,sizeof(board));
+                            board[2]=13;
+                            board[5]=2;
+                            board[9]=18;
+                            board[18]=11;
+                            board[17]=-13;
+                            board[20]=-14;
+                            board[24]=-8;
+                            board[25]=10;
+                            board[32]=-2;
+                            board[34]=-22;
+
+                            Graph g;
+                            for(int i=0;i<=36;i++)
+                            {
+                                for(int dice=1;dice<=6;dice++)
+                                {
+                                    int j = i+dice;
+                                    j += board[j];
+                                    if(j<=36)
+                                        g.addEdge(i,j);
+                                }
+                            }
+
+                            g.addEdge(36,36);
+                            g.bfs(0,36);
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 275 :  {
+                        /*
+                        class Graph
+                        {
+                            map<int,list<int>> l;
 
+                            public:
+                            void addEdge(int x,int y)
+                            {
+                                l[x].push_back(y);
+                                l[y].push_back(x);
+                            }
+
+                            void dfs_helper(int src, map<int,bool> &v)
+                            {
+                                cout<<src<<" ";
+                                v[src]=true;
+                                for(auto x:l[src])
+                                {
+                                    if(!v[x])
+                                    {
+                                        v[x] = true;
+                                        dfs_helper(x,v);
+                                    }
+                                }
+                            }
+
+                            void dfs(int src)
+                            {
+                                map<int,bool> visited;
+                                for(auto x:l)
+                                    visited[x.first] = false;
+                                dfs_helper(src,visited);
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g;
+                            g.addEdge(0,1);
+                            g.addEdge(0,3);
+                            g.addEdge(1,2);
+                            g.addEdge(2,3);
+                            g.addEdge(3,4);
+                            g.addEdge(4,5);
+                            g.dfs(0);
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 276 :  {
+                        /*
+                        class Graph
+                        {
+                            map<int,list<int>> l;
 
+                            public:
+                            void addEdge(int x,int y)
+                            {
+                                l[x].push_back(y);
+                                l[y].push_back(x);
+                            }
+
+                            void dfs_helper(int src, map<int,bool> &v)
+                            {
+                                cout<<src<<" ";
+                                v[src]=true;
+                                for(auto x:l[src])
+                                {
+                                    if(!v[x])
+                                    {
+                                        v[x] = true;
+                                        dfs_helper(x,v);
+                                    }
+                                }
+                            }
+
+                            void dfs()
+                            {
+                                map<int,bool> visited;
+                                for(auto x:l)
+                                    visited[x.first] = false;
+                                int c=0;
+                                for(auto p:l)
+                                {
+                                    if(!visited[p.first])
+                                    {
+                                        cout<<c<<"->";
+                                        dfs_helper(p.first,visited);
+                                        c++;
+                                        cout<<endl;
+                                    }
+                                }
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g;
+                            g.addEdge(0,1);
+                            g.addEdge(0,3);
+                            g.addEdge(1,2);
+                            g.addEdge(2,3);
+                            g.addEdge(3,4);
+                            g.addEdge(4,5);
+                            g.dfs();
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 277 :  {
+                        /*
+                        class Graph
+                        {
+                            map<int,list<int>> l;
 
+                            public:
+                            void addEdge(int x,int y)
+                            {
+                                l[x].push_back(y);
+                            }
+
+                            void dfs_helper(int src, map<int,bool> &v, list<int> &ordering)
+                            {
+                                v[src]=true;
+                                for(auto x:l[src])
+                                {
+                                    if(!v[x])
+                                    {
+                                        v[x] = true;
+                                        dfs_helper(x,v,ordering);
+                                    }
+                                }
+                                ordering.push_front(src);
+                            }
+
+                            void dfs()
+                            {
+                                map<int,bool> visited;
+                                list<int> ordering;
+
+                                for(auto x:l)
+                                    visited[x.first] = false;
+
+                                for(auto p:l)
+                                {
+                                    if(!visited[p.first])
+                                        dfs_helper(p.first,visited,ordering);
+                                }
+
+                                for(auto x:ordering)
+                                    cout<<x<< " ";
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g;
+                            g.addEdge(0,1);
+                            g.addEdge(0,3);
+                            g.addEdge(1,2);
+                            g.addEdge(2,3);
+                            g.addEdge(3,4);
+                            g.addEdge(4,5);
+                            g.dfs();
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 278 :  {
+                        /*
+                        class Graph
+                        {
+                            int v;
+                            list<int> *l;
 
+                            public:
+                            Graph(int v)
+                            {
+                                this->v = v;
+                                l = new list<int>[v];
+                            }
+
+                            void addEdge(int x, int y)
+                            {
+                                l[x].push_back(y);
+                            }
+
+                            void topologicalSort()
+                            {
+                                int inDegree[v];
+                                memset(inDegree,0,sizeof(inDegree));
+                                for(int i=0;i<v;i++)
+                                {
+                                    for(auto x:l[i])
+                                        inDegree[x]++;
+                                }
+                                queue<int> q;
+                                for(int i=0;i<v;i++)
+                                {
+                                    if(inDegree[i]==0)
+                                        q.push(i);
+                                }
+                                while(!q.empty())
+                                {
+                                    int node = q.front();
+                                    q.pop();
+                                    cout<<node<<" ";
+                                    for(auto x : l[node])
+                                    {
+                                        inDegree[x]--;
+                                        if(inDegree[x]==0)
+                                            q.push(x);
+                                    }
+                                }
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g(6);
+                            g.addEdge(0,2);
+                            g.addEdge(1,2);
+                            g.addEdge(1,4);
+                            g.addEdge(2,3);
+                            g.addEdge(2,5);
+                            g.addEdge(3,5);
+                            g.addEdge(4,5);
+                            g.topologicalSort();
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 279 :  {
+                        /*
+                        class Graph
+                        {
+                            int v;
+                            list<int> *l;
 
+                            public:
+                            Graph(int v)
+                            {
+                                this->v = v;
+                                l = new list<int>[v];
+                            }
+
+                            void addEdge(int x, int y)
+                            {
+                                l[x].push_back(y);
+                            }
+
+                            bool isTree()
+                            {
+                                bool visited[v];
+                                int parent[v];
+                                memset(visited,false,sizeof(visited));
+                                for(int i=0;i<v;i++)
+                                {
+                                    parent[i] = i;
+                                }
+                                int src=0;
+                                queue<int> q;
+                                q.push(src);
+                                visited[src]=true;
+                                while(!q.empty())
+                                {
+                                    int node = q.front();
+                                    q.pop();
+                                    for(int nbr : l[node])
+                                    {
+                                        if(visited[nbr]==true && parent[node]!=nbr)
+                                            return false;
+                                        else if(!visited[nbr])
+                                        {
+                                            visited[nbr]=true;
+                                            parent[nbr]=node;
+                                            q.push(nbr);
+                                        }
+                                    }
+                                }
+                                return true;
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g(4);
+                            g.addEdge(0,1);
+                            g.addEdge(3,2);
+                            g.addEdge(1,2);
+                            g.addEdge(0,3);
+                            cout<<g.isTree();
+                            return 0;
+                        }
+                        */
                         break;
                     }
         case 280 :  {
+                        /*
+                        class Graph
+                        {
+                            int v;
+                            list<int> *l;
 
+                            public:
+                            Graph(int v)
+                            {
+                                this->v = v;
+                                l = new list<int>[v];
+                            }
+
+                            void addEdge(int x, int y)
+                            {
+                                l[x].push_back(y);
+                            }
+
+                            bool cycleHelper(int node, bool visited[], bool stack[])
+                            {
+                                visited[node] = true;
+                                stack[node] = true;
+                                for(auto nbr : l[node])
+                                {
+                                    if(stack[node])
+                                        return true;
+                                    else if(visited[nbr]==false)
+                                    {
+                                        if(cycleHelper(nbr,visited,stack))
+                                            return true;
+                                    }
+                                }
+                                stack[node] = false;
+                                return false;
+                            }
+
+                            bool containsCycle()
+                            {
+                                bool visited[v],stack[v];
+                                memset(visited,false,sizeof(visited));
+                                memset(stack,false,sizeof(stack));
+                                return cycleHelper(0,visited,stack);
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g(7);
+                            g.addEdge(0,1);
+                            g.addEdge(1,2);
+                            g.addEdge(2,3);
+                            g.addEdge(3,4);
+                            g.addEdge(4,5);
+                            g.addEdge(1,5);
+                            g.addEdge(5,6);
+                            g.addEdge(4,2);
+                            cout<<g.containsCycle();
+                            return 0;
+                        }
+                        */
                         break;
                     }
-        case 301 :  {
+        case 281 :  {
+                        /*
+                        class Graph
+                        {
+                            int v;
+                            list<int> *l;
+
+                            public:
+                            Graph(int v)
+                            {
+                                this->v = v;
+                                l = new list<int>[v];
+                            }
+
+                            void addEdge(int x, int y)
+                            {
+                                l[x].push_back(y);
+                            }
+
+                            bool cycleHelper(int node, bool visited[], int parent)
+                            {
+                                visited[node] = true;
+                                for(auto nbr : l[node])
+                                {
+                                    if(!visited[nbr])
+                                    {
+                                        if(cycleHelper(nbr,visited,node))
+                                            return true;
+                                    }
+                                    else if(nbr!=parent)
+                                        return true;
+                                }
+                                return false;
+                            }
+
+                            bool containsCycle()
+                            {
+                                bool visited[v];
+                                memset(visited,false,sizeof(visited));
+                                return cycleHelper(0,visited,-1);
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g(4);
+                            g.addEdge(0,1);
+                            g.addEdge(3,2);
+                            g.addEdge(1,2);
+                            g.addEdge(0,3);
+                            cout<<g.containsCycle();
+                            return 0;
+                        }
+                        */
+                        break;
+                    }
+        case 282 :  {
+                        /*
+                        class Graph
+                        {
+                            map<int,list<pair<int,int>>> m;
+
+                            public:
+                            void addEdge(int x,int y, int z)
+                            {
+                                m[x].push_back(make_pair(y,z));
+                                m[y].push_back(make_pair(x,z));
+                            }
+
+                            void djikstra(int src)
+                            {
+                                map<int, int> dist;
+                                for(auto x:m)
+                                    dist[x.first] = INT_MAX;
+                                set<pair<int,int>> s;
+                                dist[src]=0;
+                                s.insert(make_pair(0,src));
+                                while(!s.empty())
+                                {
+                                    auto p = *(s.begin());
+                                    int node = p.second;
+                                    int distnode = p.first;
+                                    s.erase(s.begin());
+                                    for(auto y : m[node])
+                                    {
+                                        if(distnode + y.second < dist[y.first])
+                                        {
+                                            int dest = y.first;
+                                            if(s.find(make_pair(dist[dest],dest))!=s.end())
+                                                s.erase(s.find(make_pair(dist[dest],dest)));
+                                            dist[dest] = distnode + y.second;
+                                            s.insert(make_pair(dist[dest],dest));
+                                        }
+                                    }
+                                }
+                                for(auto x:dist)
+                                    cout<<x.first<<"="<<x.second<<endl;
+                            }
+                        };
+
+                        int main()
+                        {
+                            Graph g;
+                            g.addEdge(1,2,1);
+                            g.addEdge(1,3,4);
+                            g.addEdge(2,3,1);
+                            g.addEdge(3,4,2);
+                            g.addEdge(1,4,7);
+                            g.djikstra(1);
+                            return 0;
+                        }
+                        */
+                        break;
+                    }
+        case 283 :  {
                         int n;
                         cin >> n;
                         int a[n];
@@ -9209,24 +9959,28 @@ int main()
                         }
                         break;
                     }
-        case 302 :  {
+        case 284 :  {
                         char c[100];
                         cin.getline(c,100);
                         removeDuplicateUnsorted(c,100);
                         break;
                     }
-        case 303 :  {
+        case 285 :  {
                         char c[100];
                         cin.getline(c,100);
                         removeDuplicateSorted(c,100);
                         break;
                     }
+        case 400 :  {
+                        cout<<"Thank You!"<<endl;
+                        break;
+                    }
         default:    {
-                        cout<<"Try Again";
+                        cout<<"Try Again"<<endl;
                         break;
                     }
         }
     }
-    while(0);
+    while(ch!=400);
 	return 0;
 }
